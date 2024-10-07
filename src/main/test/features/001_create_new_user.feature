@@ -1,4 +1,4 @@
-Feature: Create a new user
+Feature: Create a new user (ID001)
 As a user, I wish to register my account in the system
 
     Background:
