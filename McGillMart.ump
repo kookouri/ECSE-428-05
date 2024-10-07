@@ -6,6 +6,7 @@ class McGillMart
 
 class User
 {
+  autounique id;
   unique String email;
   String name;
   String password;
@@ -17,11 +18,11 @@ class User
 
 class Item
 {
-  unique Integer idNumber;
+  autounique id;
   String name;
   Double price;
   String description;
-  enum Category { Electronics, Clothing, Books, Furniture, Other }
+  enum Category { Electronics, Clothing, Textbook, Furniture, Other }
 }
 
 class ShoppingCart {
@@ -29,6 +30,7 @@ class ShoppingCart {
 }
 
 class Transaction {
+  autounique id;
   Double amount;
   Date dateOfPurchase;
 }
