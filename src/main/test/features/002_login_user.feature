@@ -7,8 +7,7 @@ Feature: User Login (ID002)
     Given the following users exist in the system:
       | email                 | password    | name       |
       | user123@example.com    | pass123     | John Doe   |
-      | admin001@example.com   | adminPass   | Admin User |
-      | inactive_user@example.com | inactivePass | Jane Smith |
+      | bob@example.com   | bobPass   | Bob Bobert |
 
   Scenario: Successful login with valid credentials
     Given the user is on the McGillMart login page
@@ -36,6 +35,6 @@ Feature: User Login (ID002)
 
   Scenario: Failed login due to missing credentials
     Given the user is on the McGillMart login page
-    When the user clicks the "Login" button without entering an email or password
+    When the user clicks the Login button without entering an email or password
     Then an error message should be displayed saying "Please enter both email and password"
     And the user should remain on the login page
