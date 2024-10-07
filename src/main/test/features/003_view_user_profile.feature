@@ -1,4 +1,4 @@
-Feature: View User Profile
+Feature: View User Profile (ID003)
 As an end user, I would like to view my user profile so that I can see what information was stored.
 
 Background: 
