@@ -9,11 +9,11 @@ Feature: View User Profile (ID003)
 
   Scenario Outline: Successfully view one's user profile
 
-    The user's email, name, and phoneNumber should be displayed.
+    The user's email, name, and phone should be displayed.
 
     Given the user with id "<id>" is logged in
     When the user attempts to view their profile
-    Then the name "<name>", email "<email>", and phoneNumber "<phoneNumber>" shall be displayed
+    Then the name "<name>", email "<email>", and phone "<phone>" shall be displayed
 
     Examples:
       | id | name | email                | phone         | password      |
