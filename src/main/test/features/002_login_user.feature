@@ -5,9 +5,10 @@ Feature: User Login (ID002)
 
   Background:
     Given the following users exist in the system:
-      | email                 | password    | name       |
-      | user123@example.com    | pass123     | John Doe   |
-      | bob@example.com   | bobPass   | Bob Bobert |
+    | id | name         | email                | phone        | password    |
+    | 01 | John Doe     | user123@example.com  | 123-456-4890 | pass123     |
+    | 02 | Jane Smith   | jane@example.com     | 987-654-3210 | oldPassword2|
+    | 03 | Bob Johnson  | bob@example.com      | 555-123-4567 | oldPassword3|
 
   Scenario: Successful login with valid credentials
     Given the user is on the McGillMart login page
