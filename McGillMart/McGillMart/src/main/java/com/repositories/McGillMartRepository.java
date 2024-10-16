@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import com.model.McGillMart;
 
 public interface McGillMartRepository extends CrudRepository<McGillMart, Integer> {
-    McGillMart findSportCenterById(int id);
+    McGillMart findMcGillMartById(int id);
     @SuppressWarnings("null")
     List<McGillMart> findAll();
 }
