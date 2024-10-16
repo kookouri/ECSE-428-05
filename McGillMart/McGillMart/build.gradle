@@ -18,9 +18,19 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// API docs
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0'
+	// See https://springdoc.org/#javadoc-support
+	annotationProcessor 'com.github.therapi:therapi-runtime-javadoc-scribe:0.13.0'
+	implementation 'com.github.therapi:therapi-runtime-javadoc:0.13.0'
+	
+	implementation "org.springframework.boot:spring-boot-starter-security"
 }
 
 tasks.named('test') {
