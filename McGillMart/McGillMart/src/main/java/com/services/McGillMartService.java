@@ -24,27 +24,27 @@ public class McGillMartService {
     @Autowired
     private UserRepository userRepo;
 
-    //--------------------------// Create Sport Center //--------------------------//
+    //--------------------------// Create McGillMart //--------------------------//
 
     @Transactional
 	public McGillMart createMcGillMart() {
         if (getAllMcGillMarts().size() > 0) {
-            throw new IllegalArgumentException("Sport center already exists.");
+            throw new IllegalArgumentException("McGillMart already exists.");
         }
 		McGillMart createdMcGillMart = new McGillMart();
 		mcgillMartRepo.save(createdMcGillMart);
 		return createdMcGillMart;
 	}
 
-    //--------------------------// Delete Sport Center //--------------------------//
+    //--------------------------// Delete McGillMart //--------------------------//
 
     @Transactional
     public void deleteMcGillMart() {
-        getMcGillMart(); // Verify that there is at least one sport center
+        getMcGillMart(); // Verify that there is at least one McGillMart
         userRepo.deleteAll();
     }
 
-    //--------------------------// Getters Sport Center //--------------------------//
+    //--------------------------// Getters McGillMart //--------------------------//
     @Transactional
     public List<McGillMart> getAllMcGillMarts() {
         return toList(mcgillMartRepo.findAll());
@@ -53,7 +53,7 @@ public class McGillMartService {
     @Transactional
     public McGillMart getMcGillMart() {
         if (getAllMcGillMarts().size() == 0) {
-            throw new IllegalArgumentException("No sport center exist");
+            throw new IllegalArgumentException("No McGillMart exist");
         }
         return getAllMcGillMarts().get(0);
     }
