@@ -29,7 +29,7 @@ public class McGillMartService {
     @Transactional
 	public McGillMart createMcGillMart() {
         if (getAllMcGillMarts().size() > 0) {
-            throw new IllegalArgumentException("mcgill mart already exists.");
+            throw new IllegalArgumentException("McGillMart already exists.");
         }
 		McGillMart createdMcGillMart = new McGillMart();
 		mcgillMartRepo.save(createdMcGillMart);
@@ -40,7 +40,7 @@ public class McGillMartService {
 
     @Transactional
     public void deleteMcGillMart() {
-        getMcGillMart(); // Verify that there is at least one mcgill mart
+        getMcGillMart(); // Verify that there is at least one McGillMart
         userRepo.deleteAll();
     }
 
@@ -53,7 +53,7 @@ public class McGillMartService {
     @Transactional
     public McGillMart getMcGillMart() {
         if (getAllMcGillMarts().size() == 0) {
-            throw new IllegalArgumentException("No mcgill mart exist");
+            throw new IllegalArgumentException("No McGillMart exist");
         }
         return getAllMcGillMarts().get(0);
     }
