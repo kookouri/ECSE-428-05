@@ -17,15 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.model.User;
 import com.services.UserService;
-
-import com.dto.UserDTO;
+import com.dto.UserRequestDTO;
+import com.dto.UserResponseDTO;
 import com.dto.UserListDTO;
 
 /**
  * <p>Controller class in charge of managing users. It implements following use cases: </p>
  * <p>Create, update, read and delete a user </p>
  * @author Julia
-*/
+ */
 @CrossOrigin(origins = "http://127.0.0.1:8087")
 @RestController
 public class UserController {
@@ -34,25 +34,25 @@ public class UserController {
 
     //--------------------------// Create User //--------------------------//
     @PostMapping(value={"/users", "/users/", "/public/users"})
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user) {
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO user) {
         try {
             User createdUser = userService.createUser(user.getEmail(), user.getName(), user.getPassword(), user.getPhoneNumber());
-            return new ResponseEntity<UserDTO>(new UserDTO(createdUser), HttpStatus.CREATED);
+            return new ResponseEntity<UserResponseDTO>(new UserResponseDTO(createdUser), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<UserDTO>(new UserDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<UserResponseDTO>(new UserResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
-    
+
     //--------------------------// Update Account //--------------------------//
 
     @PutMapping(value={"/users/{id}", "/users/{id}/"})
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Integer id, @RequestBody UserDTO account) {
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Integer id, @RequestBody UserRequestDTO account) {
         try {
-            User updatedAccount = userService.updateUser(id, account.getEmail(),  account.getName(), account.getPassword(), account.getPhoneNumber());
-            return new ResponseEntity<UserDTO>(new UserDTO(updatedAccount), HttpStatus.ACCEPTED);
+            User updatedAccount = userService.updateUser(id, account.getEmail(), account.getName(), account.getPassword(), account.getPhoneNumber());
+            return new ResponseEntity<UserResponseDTO>(new UserResponseDTO(updatedAccount), HttpStatus.ACCEPTED);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<UserDTO>(new UserDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<UserResponseDTO>(new UserResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
     //--------------------------// Delete Account //--------------------------//
@@ -70,11 +70,11 @@ public class UserController {
 
 
     @GetMapping(value={"/users/{id}", "/users/{id}/"})
-    public ResponseEntity<UserDTO> findUserById(@PathVariable Integer id) {
+    public ResponseEntity<UserResponseDTO> findUserById(@PathVariable Integer id) {
         try {
-            return new ResponseEntity<UserDTO>(new UserDTO(userService.findUserById(id)), HttpStatus.FOUND);
+            return new ResponseEntity<UserResponseDTO>(new UserResponseDTO(userService.findUserById(id)), HttpStatus.FOUND);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<UserDTO>(new UserDTO(e.getMessage()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<UserResponseDTO>(new UserResponseDTO(e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
     // Can either get all user with /users
@@ -87,10 +87,10 @@ public class UserController {
             if (email!=null) {
                 List<User> list = new ArrayList<>();
                 list.add(userService.findUserByEmail(email));
-                userList.setAccounts(UserListDTO.userListToUserDTOList(list));
+                userList.setAccounts(UserListDTO.userListToUserResponseDTOList(list));
             }
             else {
-                userList.setAccounts(UserListDTO.userListToUserDTOList(userService.findAllUsers()));
+                userList.setAccounts(UserListDTO.userListToUserResponseDTOList(userService.findAllUsers()));
             }
 
             if (userList.getAccounts().size() > 0)

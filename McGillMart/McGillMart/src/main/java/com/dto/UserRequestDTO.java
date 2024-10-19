@@ -7,7 +7,7 @@ import com.model.Transaction;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UserDTO {
+public class UserRequestDTO {
     private int id;
     private String email;
     private String name;
@@ -18,10 +18,10 @@ public class UserDTO {
     private McGillMart mcGillMart;
     private String errorMessage;
 
-    public UserDTO() {
+    public UserRequestDTO() {
     }
 
-    public UserDTO(User user) {
+    public UserRequestDTO(User user) {
         this.email = user.getEmail();
         this.name = user.getName();
         this.password = user.getPassword();
@@ -32,7 +32,7 @@ public class UserDTO {
         this.id = user.getId();
     }
 
-    public UserDTO(String errorMessage) {
+    public UserRequestDTO(String errorMessage) {
         this.errorMessage = errorMessage;
     }
 
@@ -97,6 +97,7 @@ public class UserDTO {
 
 
 }
+
 
 
 

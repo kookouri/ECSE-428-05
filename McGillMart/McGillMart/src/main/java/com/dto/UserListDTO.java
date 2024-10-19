@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class UserListDTO {
 
-    List<UserDTO> users = new ArrayList<>();
+    List<UserResponseDTO> users = new ArrayList<>();
     String errorMessage;
 
     public UserListDTO() {
@@ -21,16 +21,16 @@ public class UserListDTO {
         this.errorMessage = errorMessage;
     }
 
-    public static List<UserDTO> userListToUserDTOList(List<User> users) {
-        return users.stream().map(UserDTO::new).collect(Collectors.toList());
+    public static List<UserResponseDTO> userListToUserResponseDTOList(List<User> users) {
+        return users.stream().map(UserResponseDTO::new).collect(Collectors.toList());
     }
 
-    public void setAccounts(List<UserDTO> users) {
-        for (UserDTO user : users) {
+    public void setAccounts(List<UserResponseDTO> users) {
+        for (UserResponseDTO user : users) {
             this.users.add(user);
         }
     }
 
-    public List<UserDTO> getAccounts() {return users;}
+    public List<UserResponseDTO> getAccounts() {return users;}
 
 }
