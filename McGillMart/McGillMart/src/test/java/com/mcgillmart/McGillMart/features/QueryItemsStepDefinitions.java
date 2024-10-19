@@ -1,4 +1,4 @@
-package stepDefinitions;
+package com.mcgillmart.McGillMart.features;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;

@@ -1,4 +1,4 @@
-package service;
+package com.mcgillmart.McGillMart.service;
 
 import static org.junit.Assert.*;
 
