@@ -18,12 +18,12 @@ public class ChangeUserInfoStepDefinitions {
         users.addAll(dataTable);
     }
 
-    @When("the user updates the name field to {string} and the phone field to {string} for user with id {string}")
-    public void the_user_updates_name_and_phone_for_user(String Newname, String Newphone, String userId) {
-        user = users.get(userId);
+    @When("the user updates the name field to {string} and the phone field to {string} for user with id {int}")
+    public void the_user_updates_name_and_phone_for_user(String Newname, String Newphone, int userId) {
+        user = users.getId(userId);
         if (user != null) {
             user.setName(Newname);
-            user.setPhone(Newphone);
+            user.setPhoneNumber(Newphone);
         }
     }
 
@@ -34,7 +34,7 @@ public class ChangeUserInfoStepDefinitions {
 
     @Then("the phone field should display {string}")
     public void the_phone_field_should_display(String expectedPhone) {
-        assertEquals(expectedPhone, user.getPhone());
+        assertEquals(expectedPhone, user.getPhoneNumber());
     }
 
     @Then("the email field should remain {string}")
