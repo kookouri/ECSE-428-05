@@ -15,7 +15,6 @@ import com.services.UserService;
 import java.util.List;
 import java.util.Map;
 
-
 @SpringBootTest
 @ContextConfiguration
 public class CreateNewUserStepDefinitions {
