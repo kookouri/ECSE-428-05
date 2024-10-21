@@ -1,29 +1,28 @@
 package com.model;
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
-
 
 import java.util.*;
 
-// line 29 "model.ump"
-// line 57 "model.ump"
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+
 public class ShoppingCart
 {
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
+  @Id
+  @GeneratedValue
+  private int id;
 
-  //ShoppingCart Associations
+  @OneToMany
   private List<Item> items;
+
+  @OneToOne
   private User user;
 
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
-
-  public ShoppingCart(User aUser)
+  public ShoppingCart(int aId, User aUser)
   {
+    id = aId;
     items = new ArrayList<Item>();
     if (aUser == null || aUser.getShoppingCart() != null)
     {
@@ -32,15 +31,25 @@ public class ShoppingCart
     user = aUser;
   }
 
-  public ShoppingCart(String aEmailForUser, String aNameForUser, String aPasswordForUser, String aPhoneNumberForUser, McGillMart aMcGillMartForUser)
+  public ShoppingCart(int aId, int aIdForUser, String aEmailForUser, String aNameForUser, String aPasswordForUser, String aPhoneNumberForUser, McGillMart aMcGillMartForUser)
   {
+    id = aId;
     items = new ArrayList<Item>();
     user = new User(aEmailForUser, aNameForUser, aPasswordForUser, aPhoneNumberForUser, this, aMcGillMartForUser);
   }
 
-  //------------------------
-  // INTERFACE
-  //------------------------
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getId()
+  {
+    return id;
+  }
   /* Code from template association_GetMany */
   public Item getItem(int index)
   {
@@ -145,4 +154,11 @@ public class ShoppingCart
     }
   }
 
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "id" + ":" + getId()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "user = "+(getUser()!=null?Integer.toHexString(System.identityHashCode(getUser())):"null");
+  }
 }

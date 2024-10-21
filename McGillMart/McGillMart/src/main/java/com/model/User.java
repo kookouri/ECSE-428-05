@@ -1,51 +1,45 @@
 package com.model;
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
-
 
 import java.util.*;
+
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+
 import java.sql.Date;
 
-// line 8 "model.ump"
-// line 47 "model.ump"
 public class User
 {
 
-  //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  private static int nextId = 1;
   private static Map<String, User> usersByEmail = new HashMap<String, User>();
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
+  @Id
+  @GeneratedValue
+  private int id;
 
-  //User Attributes
   private String email;
   private String name;
   private String password;
   private String phoneNumber;
 
-  //Autounique Attributes
-  private int id;
-
-  //User Associations
+  @OneToOne
   private ShoppingCart shoppingCart;
-  private List<Transaction> history;
-  private McGillMart mcGillMart;
 
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
+  @OneToMany
+  private List<Transaction> history;
+
+  @ManyToOne
+  @JoinColumn(name="mcgill_mart_id")
+  private McGillMart mcGillMart;
 
   public User(String aEmail, String aName, String aPassword, String aPhoneNumber, ShoppingCart aShoppingCart, McGillMart aMcGillMart)
   {
     name = aName;
     password = aPassword;
     phoneNumber = aPhoneNumber;
-    id = nextId++;
     if (!setEmail(aEmail))
     {
       throw new RuntimeException("Cannot create due to duplicate email. See https://manual.umple.org?RE003ViolationofUniqueness.html");
@@ -63,8 +57,9 @@ public class User
     }
   }
 
-  public User(String aEmail, String aName, String aPassword, String aPhoneNumber, McGillMart aMcGillMart)
+  public User(int aId, String aEmail, String aName, String aPassword, String aPhoneNumber, int aIdForShoppingCart, McGillMart aMcGillMart)
   {
+    id = aId;
     if (!setEmail(aEmail))
     {
       throw new RuntimeException("Cannot create due to duplicate email. See https://manual.umple.org?RE003ViolationofUniqueness.html");
@@ -72,8 +67,7 @@ public class User
     name = aName;
     password = aPassword;
     phoneNumber = aPhoneNumber;
-    id = nextId++;
-    shoppingCart = new ShoppingCart(this);
+    shoppingCart = new ShoppingCart(aIdForShoppingCart, this);
     history = new ArrayList<Transaction>();
     boolean didAddMcGillMart = setMcGillMart(aMcGillMart);
     if (!didAddMcGillMart)
@@ -85,6 +79,14 @@ public class User
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
 
   public boolean setEmail(String aEmail)
   {
@@ -129,6 +131,11 @@ public class User
     return wasSet;
   }
 
+  public int getId()
+  {
+    return id;
+  }
+
   public String getEmail()
   {
     return email;
@@ -157,11 +164,6 @@ public class User
   public String getPhoneNumber()
   {
     return phoneNumber;
-  }
-
-  public int getId()
-  {
-    return id;
   }
   /* Code from template association_GetOne */
   public ShoppingCart getShoppingCart()
@@ -209,9 +211,9 @@ public class User
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Transaction addHistory(double aAmount, Date aDateOfPurchase)
+  public Transaction addHistory(int aId, double aAmount, Date aDateOfPurchase)
   {
-    return new Transaction(aAmount, aDateOfPurchase, this);
+    return new Transaction(aId, aAmount, aDateOfPurchase, this);
   }
 
   public boolean addHistory(Transaction aHistory)
