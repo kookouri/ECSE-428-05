@@ -17,12 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.model.User;
 import com.services.UserService;
+import com.dto.UserRequestDTO;
+import com.dto.UserResponseDTO;
+import com.dto.UserListDTO;
 
 /**
  * <p>Controller class in charge of managing users. It implements following use cases: </p>
  * <p>Create, update, read and delete a user </p>
  * @author Julia
-*/
+ */
 @CrossOrigin(origins = "http://127.0.0.1:8087")
 @RestController
 public class UserController {
@@ -40,13 +43,13 @@ public class UserController {
         }
     }
 
-    
+
     //--------------------------// Update Account //--------------------------//
 
     @PutMapping(value={"/users/{id}", "/users/{id}/"})
     public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Integer id, @RequestBody UserRequestDTO account) {
         try {
-            User updatedAccount = userService.updateUser(id, account.getEmail(), account.getPassword(), account.getName(), account.getImageURL(), account.getPronouns());
+            User updatedAccount = userService.updateUser(id, account.getEmail(), account.getName(), account.getPassword(), account.getPhoneNumber());
             return new ResponseEntity<UserResponseDTO>(new UserResponseDTO(updatedAccount), HttpStatus.ACCEPTED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<UserResponseDTO>(new UserResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
