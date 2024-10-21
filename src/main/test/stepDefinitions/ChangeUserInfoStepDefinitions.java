@@ -20,7 +20,7 @@ public class ChangeUserInfoStepDefinitions {
 
     @When("the user updates the name field to {string} and the phone field to {string} for user with id {int}")
     public void the_user_updates_name_and_phone_for_user(String Newname, String Newphone, int userId) {
-        user = users.getId(userId);
+        user = users.getUser(userId); 
         if (user != null) {
             user.setName(Newname);
             user.setPhoneNumber(Newphone);
