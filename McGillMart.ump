@@ -23,6 +23,7 @@ class Item
   Double price;
   String description;
   enum Category { Electronics, Clothing, Textbook, Furniture, Other }
+  Category category;
 }
 
 class ShoppingCart {

@@ -1,11 +1,10 @@
-package com.model;
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
-
+package com.model;
 
 // line 20 "model.ump"
-// line 52 "model.ump"
+// line 54 "model.ump"
 public class Item
 {
 
@@ -29,6 +28,7 @@ public class Item
   private String name;
   private double price;
   private String description;
+  private Category category;
 
   //Autounique Attributes
   private int id;
@@ -40,11 +40,12 @@ public class Item
   // CONSTRUCTOR
   //------------------------
 
-  public Item(String aName, double aPrice, String aDescription, McGillMart aMcGillMart)
+  public Item(String aName, double aPrice, String aDescription, Category aCategory, McGillMart aMcGillMart)
   {
     name = aName;
     price = aPrice;
     description = aDescription;
+    category = aCategory;
     id = nextId++;
     boolean didAddMcGillMart = setMcGillMart(aMcGillMart);
     if (!didAddMcGillMart)
@@ -81,6 +82,14 @@ public class Item
     return wasSet;
   }
 
+  public boolean setCategory(Category aCategory)
+  {
+    boolean wasSet = false;
+    category = aCategory;
+    wasSet = true;
+    return wasSet;
+  }
+
   public String getName()
   {
     return name;
@@ -94,6 +103,11 @@ public class Item
   public String getDescription()
   {
     return description;
+  }
+
+  public Category getCategory()
+  {
+    return category;
   }
 
   public int getId()
@@ -143,6 +157,7 @@ public class Item
             "name" + ":" + getName()+ "," +
             "price" + ":" + getPrice()+ "," +
             "description" + ":" + getDescription()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "category" + "=" + (getCategory() != null ? !getCategory().equals(this)  ? getCategory().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "mcGillMart = "+(getMcGillMart()!=null?Integer.toHexString(System.identityHashCode(getMcGillMart())):"null");
   }
 }
