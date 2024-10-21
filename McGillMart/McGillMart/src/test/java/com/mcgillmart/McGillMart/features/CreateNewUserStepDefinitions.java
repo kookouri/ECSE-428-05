@@ -1,4 +1,4 @@
-package stepDefinitions;
+package com.mcgillmart.McGillMart.features;
 
 import static org.junit.Assert.*;
 
