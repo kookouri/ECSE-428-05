@@ -33,8 +33,9 @@ public class UserService {
 
     @Transactional
     public User createUser(String email, String name, String password, String phoneNumber) {
-        validUserInfo(email, password, name);
+        validUserInfo(email, password, name, phoneNumber);
         uniqueEmail(email);
+        uniquePhoneNumber(phoneNumber);
         
         User user = new User(email, name, password, phoneNumber, mcGillMartService.getMcGillMart());
         return userRepository.save(user);
@@ -44,7 +45,7 @@ public class UserService {
     
     @Transactional
     public User updateUser(Integer id, String email, String name, String password, String phoneNumber) {
-        validUserInfo(email, password, name);
+        validUserInfo(email, password, name, phoneNumber);
 
         User user = findUserById(id);
 
@@ -53,6 +54,13 @@ public class UserService {
             uniqueEmail(email);
             user.setEmail(email);
         }
+        
+        // If it is the same phone number, then dont check if it is unique (it is not since it is used for this exact account), else verify
+        if (!user.getPhoneNumber().equalsIgnoreCase(phoneNumber)) {
+            uniquePhoneNumber(phoneNumber);
+            user.setPhoneNumber(phoneNumber);
+        }
+        
 
         user.setPassword(password);
         user.setName(name);
@@ -111,8 +119,8 @@ public class UserService {
 
     //--------------------------// Input validations //--------------------------//
 
-    private void validUserInfo(String email, String password, String name) {
-        if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
+    private void validUserInfo(String email, String password, String name, String phoneNumber) {
+        if (email.isEmpty() || password.isEmpty() || name.isEmpty() || phoneNumber.isEmpty()) {
             throw new IllegalArgumentException("Empty fields for email, password or name are not valid");
         }
         if (!email.contains("@")) {
@@ -121,12 +129,24 @@ public class UserService {
         if (password.length() < 8) {
             throw new IllegalArgumentException("The password needs to have 8 characters or more");
         }
+        for (int i = 0; i < phoneNumber.length(); i++) {
+            char c = phoneNumber.charAt(i);
+            if (c != '-' && !Character.isDigit(c) && c != ' ') {
+                throw new IllegalArgumentException("The phone number has invalid characters");
+            }
+        }
     }
 
     private void uniqueEmail(String email) {
         if (userRepository.findUserByEmail(email) != null) {
+            throw new IllegalArgumentException("The email is already associated to a user");
+        }
+    }
 
-            throw new IllegalArgumentException("The email is already associated to an account");
+    private void uniquePhoneNumber(String phoneNumber) {
+        List<User> users = userRepository.findByPhoneNumber(phoneNumber);
+        if (!users.isEmpty()) {
+            throw new IllegalArgumentException("The phone number is already associated to a user");
         }
     }
 }

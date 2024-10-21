@@ -1,12 +1,11 @@
-package com.model;
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
-
+package com.model;
 
 import java.util.*;
 
 // line 2 "model.ump"
-// line 42 "model.ump"
+// line 44 "model.ump"
 public class McGillMart
 {
 
@@ -169,9 +168,9 @@ public class McGillMart
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Item addItem(String aName, double aPrice, String aDescription)
+  public Item addItem(String aName, double aPrice, String aDescription, Item.Category aCategory)
   {
-    return new Item(aName, aPrice, aDescription, this);
+    return new Item(aName, aPrice, aDescription, aCategory, this);
   }
 
   public boolean addItem(Item aItem)

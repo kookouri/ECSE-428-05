@@ -1,4 +1,4 @@
-package stepDefinitions;
+package com.mcgillmart.McGillMart.features;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class QueryItemsStepDefinitions {
+public class FilterItemsStepDefinitions {
 
     private List<Map<String, String>> items = new ArrayList<>();
     private List<Map<String, String>> filteredItems = new ArrayList<>();
