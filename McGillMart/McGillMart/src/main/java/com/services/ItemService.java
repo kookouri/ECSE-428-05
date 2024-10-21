@@ -88,14 +88,15 @@ public class ItemService {
      * @param name the name of the item
      * @param price the price of the item
      * @param description the description of the item
+     * @param category the category of the item
      * @param mcGillMart the McGillMart associated with the item
      * @return the created item
      */
     @Transactional
-    public Item createItem(String name, double price, String description, McGillMart mcGillMart) {
+    public Item createItem(String name, double price, String description, String category, McGillMart mcGillMart) {
         logger.info("Creating item with name: {}, price: {}, description: {}", name, price, description);
-        validateItemDetails(name, price, description, mcGillMart);
-        Item item = new Item(name, price, description, mcGillMart);
+        validateItemDetails(name, price, description, category, mcGillMart);
+        Item item = new Item(name, price, description, Item.Category.valueOf(category), mcGillMart);
         Item savedItem = itemRepository.save(item);
         logger.info("Created item with ID: {}", savedItem.getId());
         return savedItem;
@@ -108,17 +109,19 @@ public class ItemService {
      * @param name the new name of the item
      * @param price the new price of the item
      * @param description the new description of the item
+     * @param category the new category of the item
      * @param mcGillMart the new McGillMart associated with the item
      * @return the updated item
      */
     @Transactional
-    public Item updateItem(Integer id, String name, double price, String description, McGillMart mcGillMart) {
+    public Item updateItem(Integer id, String name, double price, String description, String category, McGillMart mcGillMart) {
         logger.info("Updating item with ID: {}", id);
-        validateItemDetails(name, price, description, mcGillMart);
+        validateItemDetails(name, price, description, category, mcGillMart);
         Item item = findItemById(id);
         item.setName(name);
         item.setPrice(price);
         item.setDescription(description);
+        item.setCategory(Item.Category.valueOf(category));
         item.setMcGillMart(mcGillMart);
         Item updatedItem = itemRepository.save(item);
         logger.info("Updated item with ID: {}", updatedItem.getId());
@@ -179,9 +182,10 @@ public class ItemService {
      * @param name the name of the item
      * @param price the price of the item
      * @param description the description of the item
+     * @param category the category of the item
      * @param mcGillMart the McGillMart associated with the item
      */
-    private void validateItemDetails(String name, double price, String description, McGillMart mcGillMart) {
+    private void validateItemDetails(String name, double price, String description, String category, McGillMart mcGillMart) {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty.");
         }
@@ -190,6 +194,9 @@ public class ItemService {
         }
         if (description == null || description.isEmpty()) {
             throw new IllegalArgumentException("Description cannot be null or empty.");
+        }
+        if (category == null || category.isEmpty()) {
+            throw new IllegalArgumentException("Category cannot be null or empty.");
         }
         if (mcGillMart == null) {
             throw new IllegalArgumentException("McGillMart cannot be null.");
