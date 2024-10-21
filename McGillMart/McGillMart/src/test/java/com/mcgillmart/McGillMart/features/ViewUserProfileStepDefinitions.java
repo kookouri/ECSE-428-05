@@ -1,4 +1,4 @@
-package com.example.steps;
+package com.mcgillmart.McGillMart.features;
 
 import io.cucumber.java.en.*;
 import io.cucumber.datatable.DataTable;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ContextConfiguration
-public class ViewUserProfileSteps {
+public class ViewUserProfileStepDefinitions {
 
     @Autowired
     private UserService userService;
