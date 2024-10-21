@@ -1,4 +1,4 @@
-package main.test.stepDefinitions;
+package com.mcgillmart.McGillMart.features;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
@@ -7,20 +7,21 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.model.User;
+
 public class ChangeUserInfoStepDefinitions {
 
-    private Map<String, User> users = new HashMap<>();
+    private List<Map<String, User>> users = new ArrayList<>();
     private User user;
 
     @Given("the following users exist in the system")
-    public void the_following_users_exist_in_the_system(Map<String, User>  dataTable) {
+    public void the_following_users_exist_in_the_system(List<Map<String, User>> dataTable) {
         users.clear();
         users.addAll(dataTable);
     }
 
     @When("the user updates the name field to {string} and the phone field to {string} for user with id {int}")
-    public void the_user_updates_name_and_phone_for_user(String Newname, String Newphone, int userId) {
-        user = users.getUser(userId); 
+    public void the_user_updates_name_and_phone_for_user(String Newname, String Newphone) {
         if (user != null) {
             user.setName(Newname);
             user.setPhoneNumber(Newphone);
