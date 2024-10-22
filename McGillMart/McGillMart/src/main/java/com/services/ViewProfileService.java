@@ -12,7 +12,7 @@ import jakarta.transaction.Transactional;
  * Most logic is identical to UserService aside from a few input validations
  */
 @Service
-public class ViewAccountService{
+public class ViewProfileService{
 	
 	@Autowired
 	private UserService userService;

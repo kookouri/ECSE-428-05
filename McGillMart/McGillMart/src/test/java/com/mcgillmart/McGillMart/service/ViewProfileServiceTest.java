@@ -17,22 +17,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.model.McGillMart;
 import com.model.User;
 import com.services.UserService;
-import com.services.ViewAccountService;
+import com.services.ViewProfileService;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
-public class ViewAccountServiceTest {
+public class ViewProfileServiceTest {
 	@Mock
 	private UserService userService;
 	@InjectMocks
-	private ViewAccountService viewAccService;
+	private ViewProfileService viewProfileService;
 	
 	@Test
-	public void testViewAccountWhenLoggedIn() {
+	public void testViewProfileWhenLoggedIn() {
 		User user = new User("joe@gmail.com", "joe", "validPass@123", "123-456-7890", new McGillMart()); 
 		lenient().when(userService.findUserByEmail(user.getEmail())).thenReturn(user);
 		
-		User account = viewAccService.viewUserProfile(user.getEmail());
+		User account = viewProfileService.viewUserProfile(user.getEmail());
 		
 		assertNotNull(account);
 		assertEquals(user.getEmail(), account.getEmail());
@@ -42,15 +42,15 @@ public class ViewAccountServiceTest {
 	}
 	
 	@Test
-	public void testViewAccountWhenLoggedOutFirstScenario() {
-		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> viewAccService.viewUserProfile(null));
+	public void testViewProfileWhenLoggedOutFirstScenario() {
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> viewProfileService.viewUserProfile(null));
 		assertNotNull(e);
 		assertEquals("User not logged in", e.getMessage());
 	}
 	
 	@Test
-	public void testViewAccountWhenLoggedOutSecondScenario() {
-		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> viewAccService.viewUserProfile(""));
+	public void testViewProfileWhenLoggedOutSecondScenario() {
+		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> viewProfileService.viewUserProfile(""));
 		assertNotNull(e);
 		assertEquals("User not logged in", e.getMessage());
 	}
