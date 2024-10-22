@@ -70,7 +70,8 @@ public class UserServiceTest {
         String name = "Julia";
         String phoneNumber = "333-333-3333";
         
-        User julia = new User(email, name, password, phoneNumber, toList(mcgillMartRepository.findAll()).get(0));
+        User julia = new User(email, name, password, phoneNumber, 
+            toList(mcgillMartRepository.findAll()).get(0));
 
         when(userRepository.save(any(User.class))).thenReturn(julia);
 
@@ -83,7 +84,8 @@ public class UserServiceTest {
         assertEquals(password, createdUser.getPassword());
         assertEquals(name, createdUser.getName());
         assertEquals(phoneNumber, createdUser.getPhoneNumber());
-        verify(userRepository, times(1)).save(any(User.class));
+        verify(userRepository, 
+            times(1)).save(any(User.class));
     }
 
     @Test
@@ -134,7 +136,8 @@ public class UserServiceTest {
                 toList(mcgillMartRepository.findAll()).get(0)));
 
 		assertNotNull(e);
-		assertEquals("The password needs to have 8 characters or more", e.getMessage());
+		assertEquals("The password needs to have 8 characters or more", 
+            e.getMessage());
     }
     
     @Test
@@ -151,7 +154,8 @@ public class UserServiceTest {
                 toList(mcgillMartRepository.findAll()).get(0)));
 
 		assertNotNull(e);
-		assertEquals("Empty fields for email, password, phone number or name are not valid", e.getMessage());
+		assertEquals("Empty fields for email, password, " +
+            "phone number or name are not valid", e.getMessage());
     }
 
     //--------------------------// Helper functions //--------------------------//
