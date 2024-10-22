@@ -29,7 +29,7 @@ public class ViewAccountServiceTest {
 	
 	@Test
 	public void testViewAccountWhenLoggedIn() {
-		User user = new User("joe@gmail.com", "joe", "validPass@123", "123-456-7890", null, new McGillMart()); 
+		User user = new User("joe@gmail.com", "joe", "validPass@123", "123-456-7890", new McGillMart()); 
 		lenient().when(userService.findUserByEmail(user.getEmail())).thenReturn(user);
 		
 		User account = viewAccService.viewUserProfile(user.getEmail());
@@ -45,14 +45,14 @@ public class ViewAccountServiceTest {
 	public void testViewAccountWhenLoggedOutFirstScenario() {
 		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> viewAccService.viewUserProfile(null));
 		assertNotNull(e);
-		assertEquals("User not logged in", e);
+		assertEquals("User not logged in", e.getMessage());
 	}
 	
 	@Test
 	public void testViewAccountWhenLoggedOutSecondScenario() {
 		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> viewAccService.viewUserProfile(""));
 		assertNotNull(e);
-		assertEquals("User not logged in", e);
+		assertEquals("User not logged in", e.getMessage());
 	}
 	
 }
