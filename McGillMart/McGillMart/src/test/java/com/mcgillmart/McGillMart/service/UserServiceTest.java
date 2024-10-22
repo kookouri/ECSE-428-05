@@ -8,7 +8,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,7 +85,75 @@ public class UserServiceTest {
         assertEquals(phoneNumber, createdUser.getPhoneNumber());
         verify(userRepository, times(1)).save(any(User.class));
     }
+
+    @Test
+    public void testCreateUserWithInvalidEmail() {
+        // Set up test
+        String email = "julia";
+        String password = "secretPassword";
+        String name = "Julia";
+        String phoneNumber = "333-333-3333";
+
+        IllegalArgumentException e = 
+            assertThrows(IllegalArgumentException.class, 
+            () -> new User(email, name, password, phoneNumber, 
+                toList(mcgillMartRepository.findAll()).get(0)));
+
+		assertNotNull(e);
+		assertEquals("Email has to contain the character @", e.getMessage());
+    }
+
+    @Test
+    public void testCreateUserWithInvalidPhoneNumber() {
+        // Set up test
+        String email = "julia";
+        String password = "secretPassword";
+        String name = "Julia";
+        String phoneNumber = "333-333-3333a";
+
+        IllegalArgumentException e = 
+            assertThrows(IllegalArgumentException.class, 
+            () -> new User(email, name, password, phoneNumber, 
+                toList(mcgillMartRepository.findAll()).get(0)));
+
+		assertNotNull(e);
+		assertEquals("The phone number has invalid characters", e.getMessage());
+    }
     
+    @Test
+    public void testCreateUserWithInvalidPassword() {
+        // Set up test
+        String email = "julia";
+        String password = "tiny";
+        String name = "Julia";
+        String phoneNumber = "333-333-3333";
+
+        IllegalArgumentException e = 
+            assertThrows(IllegalArgumentException.class, 
+            () -> new User(email, name, password, phoneNumber, 
+                toList(mcgillMartRepository.findAll()).get(0)));
+
+		assertNotNull(e);
+		assertEquals("The password needs to have 8 characters or more", e.getMessage());
+    }
+    
+    @Test
+    public void testCreateUserWithEmptyField() {
+        // Set up test
+        String email = "";
+        String password = "tiny";
+        String name = "Julia";
+        String phoneNumber = "333-333-3333";
+
+        IllegalArgumentException e = 
+            assertThrows(IllegalArgumentException.class, 
+            () -> new User(email, name, password, phoneNumber, 
+                toList(mcgillMartRepository.findAll()).get(0)));
+
+		assertNotNull(e);
+		assertEquals("Empty fields for email, password, phone number or name are not valid", e.getMessage());
+    }
+
     //--------------------------// Helper functions //--------------------------//
 
     private <T> List<T> toList(Iterable<T> iterable){

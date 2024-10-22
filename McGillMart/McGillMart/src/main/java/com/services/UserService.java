@@ -121,7 +121,7 @@ public class UserService {
 
     private void validUserInfo(String email, String password, String name, String phoneNumber) {
         if (email.isEmpty() || password.isEmpty() || name.isEmpty() || phoneNumber.isEmpty()) {
-            throw new IllegalArgumentException("Empty fields for email, password or name are not valid");
+            throw new IllegalArgumentException("Empty fields for email, password, phone number or name are not valid");
         }
         if (!email.contains("@")) {
             throw new IllegalArgumentException("Email has to contain the character @");
