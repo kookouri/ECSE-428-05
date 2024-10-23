@@ -6,16 +6,15 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 
-import io.cucumber.java.en.*;
 import io.cucumber.datatable.DataTable;
 
-import com.mcgillmart.McGillMart.model.McGillMart;
 import com.mcgillmart.McGillMart.model.User;
 import com.mcgillmart.McGillMart.services.UserService;
 
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -33,18 +32,18 @@ public class CreateNewUserStepDefinitions {
         initialCount = userService.findAllUsers().size();
         List<Map<String, String>> userMaps = dataTable.asMaps(String.class, String.class);
         for (Map<String, String> userMap : userMaps) {
-            String name = user.setName(userMap.get("name"));
-            String email = user.setEmail(userMap.get("email"));
-            String phone = user.setPhone(userMap.get("phone"));
-            String password = user.setPassword(userMap.get("password"));
-            userService.createUser(name, email, phone, password);
+            String name = userMap.get("name");
+            String email = userMap.get("email");
+            String phone = userMap.get("phone");
+            String password = userMap.get("password");
+            userService.createUser(email, name, password, phone);
         }
     }
 
     @When("a new user attempts to register with {string}, {string}, {string}, and {string}")
     public void a_new_user_attempts_to_register_with(String email, String name, String password, String phone) {
         try {
-            userService.createUser(name, email, phone, password);
+            userService.createUser(email, name, password, phone);
         } catch (Exception e) {
             caughtException = e;
         }
@@ -56,33 +55,33 @@ public class CreateNewUserStepDefinitions {
         User newUser = userService.findUserByEmail(email);
         assertEquals(name, newUser.getName());
         assertEquals(email, newUser.getEmail());
-        assertEquals(phone, newUser.getPhone());
+        assertEquals(phone, newUser.getPhoneNumber());
         assertEquals(password, newUser.getPassword());
     }
 
     @Then("the error {string} shall be raised")
     public void the_error_shall_be_raised(String errorMessage) {
-        assertNotNull(caughtException, "No exception was thrown");
+        assertNotNull(caughtException);
         assertEquals(errorMessage, caughtException.getMessage());
     }
 
     @Then("the number of users in the system shall be {int}")
     public void the_number_of_users_in_the_system_shall_be(int users){
         int count = userService.findAllUsers().size() - initialCount;
-        asserEquals(users, count);
+        assertEquals(users, count);
     }
     @Then("the following users shall exist in the system")
-    public void the_following_user_accounts_exist_in_the_system(DataTable dataTable) {
+    public void the_following_users_shall_exist_in_the_system(DataTable dataTable) {
         List<Map<String, String>> userMaps = dataTable.asMaps(String.class, String.class);
         for (Map<String, String> userMap : userMaps) {
-            String name = user.setName(userMap.get("name"));
-            String email = user.setEmail(userMap.get("email"));
-            String phone = user.setPhone(userMap.get("phone"));
-            String password = user.setPassword(userMap.get("password"));
-            User user = userService.findByEmail(email);
+            String name = userMap.get("name");
+            String email = userMap.get("email");
+            String phone = userMap.get("phone");
+            String password = userMap.get("password");
+            User user = userService.findUserByEmail(email);
             assertEquals(name, user.getName());
             assertEquals(email, user.getEmail());
-            assertEquals(phone, user.getPhone());
+            assertEquals(phone, user.getPhoneNumber());
             assertEquals(password, user.getPassword());
         }
     }
