@@ -114,8 +114,7 @@ public class UserServiceTest {
 
         IllegalArgumentException e = 
             assertThrows(IllegalArgumentException.class, 
-            () -> new User(email, name, password, phoneNumber, 
-                toList(mcgillMartRepository.findAll()).get(0)));
+            () -> userService.createUser(email, name, password, phoneNumber));
 
 		assertNotNull(e);
 		assertEquals("The phone number has invalid characters", e.getMessage());
@@ -131,8 +130,7 @@ public class UserServiceTest {
 
         IllegalArgumentException e = 
             assertThrows(IllegalArgumentException.class, 
-            () -> new User(email, name, password, phoneNumber, 
-                toList(mcgillMartRepository.findAll()).get(0)));
+            () -> userService.createUser(email, name, password, phoneNumber));
 
 		assertNotNull(e);
 		assertEquals("The password needs to have 8 characters or more", 
