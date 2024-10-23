@@ -1,25 +1,23 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 package com.model;
 
 import java.util.*;
 
-// line 2 "model.ump"
-// line 44 "model.ump"
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+
 public class McGillMart
 {
+  @Id
+  @GeneratedValue
+  private int id;
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //McGillMart Associations
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   private List<User> users;
-  private List<Item> items;
 
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Item> items;
 
   public McGillMart()
   {
@@ -27,9 +25,18 @@ public class McGillMart
     items = new ArrayList<Item>();
   }
 
-  //------------------------
-  // INTERFACE
-  //------------------------
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getId()
+  {
+    return id;
+  }
   /* Code from template association_GetMany */
   public User getUser(int index)
   {
@@ -96,7 +103,7 @@ public class McGillMart
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public User addUser(String aEmail, String aName, String aPassword, String aPhoneNumber, ShoppingCart aShoppingCart)
+  public User addUser(int aId, String aEmail, String aName, String aPassword, String aPhoneNumber, ShoppingCart aShoppingCart)
   {
     return new User(aEmail, aName, aPassword, aPhoneNumber, aShoppingCart, this);
   }
@@ -168,7 +175,7 @@ public class McGillMart
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Item addItem(String aName, double aPrice, String aDescription, Item.Category aCategory)
+  public Item addItem(int aId, String aName, double aPrice, String aDescription, Item.Category aCategory)
   {
     return new Item(aName, aPrice, aDescription, aCategory, this);
   }
@@ -253,4 +260,10 @@ public class McGillMart
     
   }
 
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "id" + ":" + getId()+ "]";
+  }
 }

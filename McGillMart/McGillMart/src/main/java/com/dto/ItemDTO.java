@@ -9,6 +9,7 @@ public class ItemDTO {
     private String name;
     private double price;
     private String description;
+    private String category;
     private McGillMart mcGillMart;
 
     public ItemDTO() {
@@ -39,6 +40,14 @@ public class ItemDTO {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getDescription() {

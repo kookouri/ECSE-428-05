@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.model.McGillMart;
+import com.model.ShoppingCart;
 import com.model.User;
 import com.repositories.McGillMartRepository;
 import com.repositories.UserRepository;
+import com.repositories.ShoppingCartRepository;
 
 /**
 * <p>Service class in charge of managing users. It implements following use cases: </p>
@@ -29,15 +31,19 @@ public class UserService {
     @Autowired
     private McGillMartService mcGillMartService;
 
+    @Autowired
+    private ShoppingCartRepository shoppingCartRepository;
+
     //--------------------------// Create User //--------------------------//
 
     @Transactional
-    public User createUser(String email, String name, String password, String phoneNumber) {
+    public User createUser(String email, String name, String password, String phoneNumber, int shoppingCartId) {
         validUserInfo(email, password, name, phoneNumber);
         uniqueEmail(email);
-        uniquePhoneNumber(phoneNumber);
+
+        ShoppingCart shoppingCart = shoppingCartRepository.findById(shoppingCartId);
         
-        User user = new User(email, name, password, phoneNumber, mcGillMartService.getMcGillMart());
+        User user = new User(email, name, password, phoneNumber, shoppingCart, mcGillMartService.getMcGillMart());
         return userRepository.save(user);
     }
 
