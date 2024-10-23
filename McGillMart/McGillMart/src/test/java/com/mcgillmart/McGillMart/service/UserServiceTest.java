@@ -223,7 +223,6 @@ public class UserServiceTest {
         assertEquals("444-444-4444", user.getPhoneNumber());
     }
     
-    // not yet implemented in UserService updateUser() method
     @Test
     public void testUpdateUserWithInvalidPassword() {
 
@@ -241,7 +240,6 @@ public class UserServiceTest {
         assertEquals("The password needs to have 8 characters or more", e.getMessage());
     }
 
-    // not yet implemented in UserService updateUser() method
     @Test
     public void testUpdateUserWithEmptyField() {
 
@@ -259,7 +257,7 @@ public class UserServiceTest {
         assertEquals("Empty fields for email, password, phone number or name are not valid", e.getMessage());
     }
 
-    // not yet implemented in UserService updateUser() method
+    
     @Test 
     public void testUpdateUserWithInvalidEmail() {
 
@@ -277,7 +275,7 @@ public class UserServiceTest {
         assertEquals("Email has to contain the character @", e.getMessage());
     }
 
-    // not yet implemented in UserService updateUser() method
+    
     @Test 
     public void testUpdateUserWithInvalidPhoneNumber() {
 
