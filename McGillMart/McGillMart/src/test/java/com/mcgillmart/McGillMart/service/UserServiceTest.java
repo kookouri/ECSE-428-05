@@ -98,8 +98,7 @@ public class UserServiceTest {
 
         IllegalArgumentException e = 
             assertThrows(IllegalArgumentException.class, 
-            () -> new User(email, name, password, phoneNumber, 
-                toList(mcgillMartRepository.findAll()).get(0)));
+            () -> userService.createUser(email, name, password, phoneNumber));
 
 		assertNotNull(e);
 		assertEquals("Email has to contain the character @", e.getMessage());
@@ -150,8 +149,7 @@ public class UserServiceTest {
 
         IllegalArgumentException e = 
             assertThrows(IllegalArgumentException.class, 
-            () -> new User(email, name, password, phoneNumber, 
-                toList(mcgillMartRepository.findAll()).get(0)));
+            () -> userService.createUser(email, name, password, phoneNumber));
 
 		assertNotNull(e);
 		assertEquals("Empty fields for email, password, " +
