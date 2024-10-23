@@ -85,7 +85,7 @@ public class ItemService {
     @Transactional
     public Item createItem(String name, double price, String description, String category) {
         logger.info("Creating item with name: {}, price: {}, description: {}", name, price, description);
-        validateItemDetails(name, price, description);
+        validateItemDetails(name, price, description,category);
         Item item = new Item(name, price, description, Item.Category.valueOf(category), mcGillMartService.getMcGillMart());
         Item savedItem = itemRepository.save(item);
         logger.info("Created item with ID: {}", savedItem.getId());
@@ -187,9 +187,6 @@ public class ItemService {
         }
         if (category == null || category.isEmpty()) {
             throw new IllegalArgumentException("Category cannot be null or empty.");
-        }
-        if (mcGillMart == null) {
-            throw new IllegalArgumentException("McGillMart cannot be null.");
         }
     }
 }

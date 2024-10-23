@@ -152,6 +152,7 @@ import com.mcgillmart.McGillMart.model.Item.Category;
 import com.mcgillmart.McGillMart.repositories.ItemRepository;
 import com.mcgillmart.McGillMart.repositories.McGillMartRepository;
 import com.mcgillmart.McGillMart.services.ItemService;
+import com.mcgillmart.McGillMart.util.ServiceUtils;
 
 @SpringBootTest
 public class ItemServiceTests {
@@ -176,24 +177,63 @@ public class ItemServiceTests {
 
     @Test
     public void testFilterItemsByName() {
-        String name = "aName";
-        String description = "aDescription";
-        Integer price = 100;
-        Category category = Category.Clothing;
-        String error = null;
+        Item item1 = new Item();
+        String name1 = "aName1";
+        String description1 = "aDescription1";
+        Integer price1 = 100;
+        String category1 = Category.Clothing.toString();
+        item1.setName(name1);
+        item1.setDescription(description1);
+        item1.setPrice(price1);
+        item1.setCategory(Item.Category.valueOf(category1));
 
-        try {
-            item = service.createItem(name, 0, description, "Clothing");
+
+        Item item2 = new Item();
+        String name2 = "aName2";
+        String description2 = "aDescription2";
+        Integer price2 = 100;
+        String category2 = Category.Clothing.toString();
+        item2.setName(name2);
+        item2.setDescription(description2);
+        item2.setPrice(price2);
+        item2.setCategory(Item.Category.valueOf(category2));
+
+
+        Item item3 = new Item();
+        String name3 = "aName3";
+        String description3 = "aDescription3";
+        Integer price3 = 100;
+        String category3 = Category.Textbook.toString();
+        item3.setName(name3);
+        item3.setDescription(description3);
+        item3.setPrice(price3);
+        item3.setCategory(Item.Category.valueOf(category3));
+
+        ITEMS.add(item1);
+        ITEMS.add(item2);
+        ITEMS.add(item3);
+
+        when(itemDao.findAll()).thenReturn(ITEMS);
+
+        List<Item> clothing = service.filterItemsByCategory(Item.Category.Clothing.toString());
+
+        for (Item item : clothing) {
+            assertEquals(Item.Category.Clothing, item.getCategory());
         }
-
-
-
-
 
     }
 
     @Test
     public void testFilterItemsByCategory() {
+
+
+        when(itemDao.findAll()).thenReturn(ITEMS);
+
+        List<Item> clothing = service.filterItemsByCategory(Item.Category.Clothing.toString());
+
+        for (Item item : clothing) {
+            assertEquals(Item.Category.Clothing, item.getCategory());
+        }
 
     }
 

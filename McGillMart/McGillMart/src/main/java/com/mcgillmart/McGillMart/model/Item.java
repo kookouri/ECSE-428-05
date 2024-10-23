@@ -37,6 +37,11 @@ public class Item
   @JoinColumn(name="mcgill_mart_id")
   private McGillMart mcGillMart;
 
+
+  public Item() { 
+
+  }
+  
   public Item(String aName, double aPrice, String aDescription, Category aCategory, McGillMart aMcGillMart)
   {
     name = aName;
