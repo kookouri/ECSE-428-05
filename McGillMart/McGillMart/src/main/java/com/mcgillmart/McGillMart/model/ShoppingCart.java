@@ -1,4 +1,4 @@
-package com.model;
+package com.mcgillmart.McGillMart.model;
 
 import java.util.*;
 

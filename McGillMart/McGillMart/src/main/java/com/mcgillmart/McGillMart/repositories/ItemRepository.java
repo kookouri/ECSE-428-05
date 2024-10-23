@@ -1,11 +1,12 @@
-package com.repositories;
+package com.mcgillmart.McGillMart.repositories;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import com.model.Item;
 import org.springframework.data.repository.query.Param;
+
+import com.mcgillmart.McGillMart.model.Item;
 
 public interface ItemRepository extends CrudRepository<Item, Integer> {
 

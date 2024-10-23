@@ -1,9 +1,10 @@
-package com.dto;
+package com.mcgillmart.McGillMart.dto;
 
-import com.model.Item;
-import com.model.McGillMart;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.mcgillmart.McGillMart.model.Item;
+import com.mcgillmart.McGillMart.model.McGillMart;
 
 public class ItemDTO {
     private String name;

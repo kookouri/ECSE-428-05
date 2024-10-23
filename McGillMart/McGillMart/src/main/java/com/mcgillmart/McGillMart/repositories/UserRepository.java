@@ -1,8 +1,10 @@
-package com.repositories;
+package com.mcgillmart.McGillMart.repositories;
 
 import org.springframework.data.repository.CrudRepository;
+
+import com.mcgillmart.McGillMart.model.User;
+
 import java.util.List;
-import com.model.User;
 
 public interface UserRepository extends CrudRepository<User, Integer> {
     User findUserById(int id);

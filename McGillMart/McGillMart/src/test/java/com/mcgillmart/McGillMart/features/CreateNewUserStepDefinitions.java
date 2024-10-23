@@ -8,9 +8,10 @@ import io.cucumber.java.en.Then;
 
 import io.cucumber.java.en.*;
 import io.cucumber.datatable.DataTable;
-import com.model.McGillMart;
-import com.model.User;
-import com.services.UserService;
+
+import com.mcgillmart.McGillMart.model.McGillMart;
+import com.mcgillmart.McGillMart.model.User;
+import com.mcgillmart.McGillMart.services.UserService;
 
 import java.util.List;
 import java.util.Map;

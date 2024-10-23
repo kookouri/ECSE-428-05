@@ -1,9 +1,9 @@
-package com.services;
+package com.mcgillmart.McGillMart.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.model.User;
+import com.mcgillmart.McGillMart.model.User;
 
 import jakarta.transaction.Transactional;
 

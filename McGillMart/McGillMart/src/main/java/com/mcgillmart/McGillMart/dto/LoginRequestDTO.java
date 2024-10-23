@@ -1,6 +1,6 @@
-package com.dto;
+package com.mcgillmart.McGillMart.dto;
 
-import com.model.User;
+import com.mcgillmart.McGillMart.model.User;
 
 public class LoginRequestDTO {
     private String username;

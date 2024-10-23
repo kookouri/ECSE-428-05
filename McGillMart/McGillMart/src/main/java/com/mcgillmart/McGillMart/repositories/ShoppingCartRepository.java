@@ -1,8 +1,8 @@
-package com.repositories;
+package com.mcgillmart.McGillMart.repositories;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.model.ShoppingCart;
+import com.mcgillmart.McGillMart.model.ShoppingCart;
 
 public interface ShoppingCartRepository extends CrudRepository<ShoppingCart, Integer> {
     

@@ -1,8 +1,11 @@
-package com.controllers;
+package com.mcgillmart.McGillMart.controllers;
 
 import java.util.*;
 
-import com.dto.ItemDTO;
+import com.mcgillmart.McGillMart.dto.ItemDTO;
+import com.mcgillmart.McGillMart.model.Item;
+import com.mcgillmart.McGillMart.services.ItemService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.model.Item;
-import com.services.ItemService;
 
 /**
  * <p>Controller class in charge of managing items. It implements the following use cases: </p>
