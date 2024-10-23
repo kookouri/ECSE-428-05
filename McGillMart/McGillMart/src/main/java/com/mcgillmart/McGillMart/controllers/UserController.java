@@ -1,4 +1,4 @@
-package com.controllers;
+package com.mcgillmart.McGillMart.controllers;
 
 import java.util.*;
 
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.model.User;
 import com.services.UserService;
-import com.services.ViewAccountService;
+import com.services.ViewProfileService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -36,7 +36,7 @@ public class UserController {
     @Autowired
     UserService userService;
     @Autowired
-    ViewAccountService viewAccountService;
+    ViewProfileService viewAccountService;
 
     //--------------------------// Create User //--------------------------//
     @PostMapping(value={"/users", "/users/", "/public/users"})

@@ -14,10 +14,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.model.McGillMart;
-import com.model.User;
-import com.services.UserService;
-import com.services.ViewProfileService;
+import com.mcgillmart.McGillMart.model.McGillMart;
+import com.mcgillmart.McGillMart.model.User;
+import com.mcgillmart.McGillMart.services.UserService;
+import com.mcgillmart.McGillMart.services.ViewProfileService;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest

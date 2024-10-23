@@ -18,11 +18,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.model.McGillMart;
-import com.model.User;
-import com.repositories.McGillMartRepository;
-import com.repositories.UserRepository;
-import com.services.UserService;
+import com.mcgillmart.McGillMart.model.McGillMart;
+import com.mcgillmart.McGillMart.model.User;
+import com.mcgillmart.McGillMart.repositories.McGillMartRepository;
+import com.mcgillmart.McGillMart.repositories.UserRepository;
+import com.mcgillmart.McGillMart.services.UserService;
 
 @SpringBootTest
 public class UserServiceTest {
