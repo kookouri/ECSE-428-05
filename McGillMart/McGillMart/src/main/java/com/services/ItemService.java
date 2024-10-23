@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import com.util.ServiceUtils;
 import com.model.Item;
 import com.model.McGillMart;
+import com.model.Item.Category;
 import com.repositories.ItemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +96,7 @@ public class ItemService {
     @Transactional
     public Item createItem(String name, double price, String description, String category, McGillMart mcGillMart) {
         logger.info("Creating item with name: {}, price: {}, description: {}", name, price, description);
-        validateItemDetails(name, price, description, category, mcGillMart);
+        validateItemDetails(name, price, description, mcGillMart);
         Item item = new Item(name, price, description, Item.Category.valueOf(category), mcGillMart);
         Item savedItem = itemRepository.save(item);
         logger.info("Created item with ID: {}", savedItem.getId());
@@ -121,7 +122,7 @@ public class ItemService {
         item.setName(name);
         item.setPrice(price);
         item.setDescription(description);
-        item.setCategory(Item.Category.valueOf(category));
+        item.setCategory(Category.valueOf(category));
         item.setMcGillMart(mcGillMart);
         Item updatedItem = itemRepository.save(item);
         logger.info("Updated item with ID: {}", updatedItem.getId());

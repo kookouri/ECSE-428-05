@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.model.User;
 import com.services.UserService;
+import com.services.ViewAccountService;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import com.dto.UserRequestDTO;
 import com.dto.UserResponseDTO;
 import com.dto.UserListDTO;
@@ -31,12 +35,15 @@ import com.dto.UserListDTO;
 public class UserController {
     @Autowired
     UserService userService;
+    @Autowired
+    ViewAccountService viewAccountService;
 
     //--------------------------// Create User //--------------------------//
     @PostMapping(value={"/users", "/users/", "/public/users"})
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO user) {
         try {
-            User createdUser = userService.createUser(user.getEmail(), user.getName(), user.getPassword(), user.getPhoneNumber());
+            int shoppingCartId = user.getShoppingCart().getId();
+            User createdUser = userService.createUser(user.getEmail(), user.getName(), user.getPassword(), user.getPhoneNumber(), shoppingCartId);
             return new ResponseEntity<UserResponseDTO>(new UserResponseDTO(createdUser), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<UserResponseDTO>(new UserResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -79,14 +86,18 @@ public class UserController {
     }
     // Can either get all user with /users
     // Or get a specific user with its email /users?email=julia@mail.com
-    @GetMapping(value={"/users", "/users/"})
-    public ResponseEntity<UserListDTO> findAllUsers(@RequestParam(name = "email", required = false) String email) {
+    @GetMapping(value={"/users", "/users/", "/users/account", "/users/account/"})
+    public ResponseEntity<UserListDTO> findAllUsers(@RequestParam(name = "email", required = false) String email, HttpServletRequest request) {
         try {
             UserListDTO userList = new UserListDTO();
 
             if (email!=null) {
                 List<User> list = new ArrayList<>();
-                list.add(userService.findUserByEmail(email));
+                if (request.getRequestURI().contains("/account")) {
+                	list.add(viewAccountService.viewUserProfile(email));
+                } else {
+                	list.add(userService.findUserByEmail(email));
+                }
                 userList.setAccounts(UserListDTO.userListToUserResponseDTOList(list));
             }
             else {
