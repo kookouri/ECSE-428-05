@@ -20,19 +20,19 @@ public class LoginService {
         if (username.isEmpty()) {
             throw new IllegalArgumentException("Email cannot be empty.");
         }
-        if (password.isEmpty()) {
+        else if (password.isEmpty()) {
             throw new IllegalArgumentException("Password cannot be empty.");
         }
-        if (!username.contains("@")) {
+        else if (!username.contains("@")) {
             throw new IllegalArgumentException("Email has to contain the character @.");
         }
-        if (password.length() < 8) {
+        else if (password.length() < 8) {
             throw new IllegalArgumentException("The password needs to have 8 characters or more.");
         }
-        if (user == null) {
+        else if (user == null) {
             throw new IllegalArgumentException("User " + username + " not found.");
         }
-        if (!user.getPassword().equals(password)) {
+        else if (!user.getPassword().equals(password)) {
             throw new IllegalArgumentException("Incorrect password.");
         }
         return true; // Login successful
