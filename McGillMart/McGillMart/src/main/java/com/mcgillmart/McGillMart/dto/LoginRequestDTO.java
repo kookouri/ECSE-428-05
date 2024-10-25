@@ -1,18 +1,11 @@
 package com.mcgillmart.McGillMart.dto;
 
-import com.mcgillmart.McGillMart.model.User;
-
 public class LoginRequestDTO {
     private String username;
     private String password;
 
     public LoginRequestDTO() {
     }
-
-    // public LoginRequestDTO(User user) { //Create LoginRequestDTO from exisiting User
-    //     this.username = user.getUsername();
-    //     this.password = user.getPassword();
-    // }
 
     public LoginRequestDTO(String username, String password) {
         this.username = username;
