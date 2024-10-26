@@ -5,8 +5,12 @@ import java.util.*;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
 
+@Entity
+@Table(name = "mcgill_mart")
 public class McGillMart
 {
   @Id
@@ -19,11 +23,19 @@ public class McGillMart
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Item> items;
 
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
   public McGillMart()
   {
     users = new ArrayList<User>();
     items = new ArrayList<Item>();
   }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
 
   public boolean setId(int aId)
   {
@@ -103,9 +115,9 @@ public class McGillMart
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public User addUser(int aId, String aEmail, String aName, String aPassword, String aPhoneNumber, ShoppingCart aShoppingCart)
+  public User addUser(String aEmail, String aName, String aPassword, String aPhoneNumber)
   {
-    return new User(aEmail, aName, aPassword, aPhoneNumber, aShoppingCart, this);
+    return new User(aEmail, aName, aPassword, aPhoneNumber, this);
   }
 
   public boolean addUser(User aUser)
@@ -175,7 +187,7 @@ public class McGillMart
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Item addItem(int aId, String aName, double aPrice, String aDescription, Item.Category aCategory)
+  public Item addItem(String aName, double aPrice, String aDescription, Item.Category aCategory)
   {
     return new Item(aName, aPrice, aDescription, aCategory, this);
   }

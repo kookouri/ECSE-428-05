@@ -2,10 +2,12 @@ package com.mcgillmart.McGillMart.model;
 
 import java.sql.Date;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
+@Entity
 public class Transaction
 {
   @Id
