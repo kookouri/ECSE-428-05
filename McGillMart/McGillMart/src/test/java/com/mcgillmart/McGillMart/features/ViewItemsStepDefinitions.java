@@ -1,7 +1,7 @@
 package com.mcgillmart.McGillMart.features;
 
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
