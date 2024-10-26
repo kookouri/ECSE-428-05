@@ -42,7 +42,7 @@ public class ItemService {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty.");
         }
-        List<Item> items = itemRepository.findByNameContainingOrDescriptionContaining(name, "");
+        List<Item> items = itemRepository.findByName(name);
 
         logger.info("Filtered items by name: {}", name);
         return items;

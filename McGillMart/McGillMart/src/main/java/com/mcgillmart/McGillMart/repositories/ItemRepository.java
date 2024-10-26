@@ -16,4 +16,6 @@ public interface ItemRepository extends CrudRepository<Item, Integer> {
 
     List<Item> findByCategory(Item.Category category);
 
+    List<Item> findByName(String name);
+
 }
