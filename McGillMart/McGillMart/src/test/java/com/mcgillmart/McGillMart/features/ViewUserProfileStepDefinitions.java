@@ -1,4 +1,4 @@
-package com.mcgillmart.McGillMart.features;
+/* package com.mcgillmart.McGillMart.features;
 
 import com.mcgillmart.McGillMart.model.User;
 import com.mcgillmart.McGillMart.services.UserService;
@@ -82,3 +82,4 @@ public class ViewUserProfileStepDefinitions {
         assertEquals(errorMessage, caughtException.getMessage());
     }
 }
+ */

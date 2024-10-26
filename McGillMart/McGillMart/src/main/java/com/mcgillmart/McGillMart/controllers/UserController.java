@@ -41,8 +41,7 @@ public class UserController {
     @PostMapping(value={"/users", "/users/", "/public/users"})
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRequestDTO user) {
         try {
-            int shoppingCartId = user.getShoppingCart().getId();
-            User createdUser = userService.createUser(user.getEmail(), user.getName(), user.getPassword(), user.getPhoneNumber(), shoppingCartId);
+            User createdUser = userService.createUser(user.getEmail(), user.getName(), user.getPassword(), user.getPhoneNumber());
             return new ResponseEntity<UserResponseDTO>(new UserResponseDTO(createdUser), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<UserResponseDTO>(new UserResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);

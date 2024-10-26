@@ -8,10 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mcgillmart.McGillMart.model.McGillMart;
-import com.mcgillmart.McGillMart.model.ShoppingCart;
 import com.mcgillmart.McGillMart.model.User;
 import com.mcgillmart.McGillMart.repositories.McGillMartRepository;
-import com.mcgillmart.McGillMart.repositories.ShoppingCartRepository;
 import com.mcgillmart.McGillMart.repositories.UserRepository;
 
 /**
@@ -31,19 +29,15 @@ public class UserService {
     @Autowired
     private McGillMartService mcGillMartService;
 
-    @Autowired
-    private ShoppingCartRepository shoppingCartRepository;
 
     //--------------------------// Create User //--------------------------//
 
     @Transactional
-    public User createUser(String email, String name, String password, String phoneNumber, int shoppingCartId) {
+    public User createUser(String email, String name, String password, String phoneNumber) {
         validUserInfo(email, password, name, phoneNumber);
         uniqueEmail(email);
-
-        ShoppingCart shoppingCart = shoppingCartRepository.findById(shoppingCartId);
         
-        User user = new User(email, name, password, phoneNumber, shoppingCart, mcGillMartService.getMcGillMart());
+        User user = new User(email, name, password, phoneNumber, mcGillMartService.getMcGillMart());
         return userRepository.save(user);
     }
 
