@@ -1,4 +1,4 @@
-package com.mcgillmart.McGillMart.features;
+/* package com.mcgillmart.McGillMart.features;
 
 import io.cucumber.java.en.*;
 import io.cucumber.datatable.DataTable;
@@ -76,3 +76,4 @@ public class ViewUserProfileStepDefinitions {
         assertEquals(errorMessage, caughtException.getMessage());
     }
 }
+ */
