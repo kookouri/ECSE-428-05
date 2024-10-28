@@ -22,6 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.Time;
+import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,12 +93,12 @@ public class ItemServiceTests {
 
         when(itemDao.findAll()).thenReturn(ITEMS);
 
-        List<Item> items = service.filterItemsByName(item1.getName());
+        Item item = service.filterItemsByName(item1.getName());
 
-        assertTrue(items.get(0).getName().equals(item1.getName()));
-        assertTrue(items.get(0).getDescription().equals(item1.getDescription()));
-        assertTrue(items.get(0).getPrice() == item1.getPrice());
-        assertTrue(items.get(0).getCategory().equals(item1.getCategory()));
+        assertTrue(item.equals(item1.getName()));
+        assertTrue(item.getDescription().equals(item1.getDescription()));
+        assertTrue(item.getPrice() == item1.getPrice());
+        assertTrue(item.getCategory().equals(item1.getCategory()));
 
         
     }
@@ -147,8 +148,67 @@ public class ItemServiceTests {
         }
     }
 
+    @Test
+    public void testFindItemById() {
+        Item item = new Item();
+        item.setId(1);
+        item.setName("Test Item");
+        item.setDescription("A test item description");
+        item.setPrice(200);
+        item.setCategory(Category.Clothing);
+        when(itemDao.findById(1)).thenReturn(Optional.of(item));
+        Item foundItem = service.findItemById(1);
+        assertNotNull(foundItem);
+        assertEquals(item.getId(), foundItem.getId());
+        assertEquals(item.getName(), foundItem.getName());
+        assertEquals(item.getDescription(), foundItem.getDescription());
+        assertEquals(item.getPrice(), foundItem.getPrice());
+        assertEquals(item.getCategory(), foundItem.getCategory());
+        verify(itemDao, times(1)).findById(1);
+    }
 
-    
+    @Test
+    public void testFindItemByIdNotFound() {
+        when(itemDao.findById(999)).thenReturn(Optional.empty());
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            service.findItemById(999);
+        });
+        assertEquals("There is no item with ID 999.", exception.getMessage());
+        verify(itemDao, times(1)).findById(999);
+    }
 
+    @Test
+    public void testFindAllItems() {
+        Item item1 = new Item();
+        item1.setId(1);
+        item1.setName("Item1");
+        item1.setDescription("Description1");
+        item1.setPrice(100);
+        item1.setCategory(Category.Clothing);
+        Item item2 = new Item();
+        item2.setId(2);
+        item2.setName("Item2");
+        item2.setDescription("Description2");
+        item2.setPrice(150);
+        item2.setCategory(Category.Textbook);
+        ITEMS.add(item1);
+        ITEMS.add(item2);
+        when(itemDao.findAll()).thenReturn(ITEMS);
+        List<Item> items = service.findAllItems();
+        assertNotNull(items);
+        assertEquals(2, items.size());
+        assertTrue(items.contains(item1));
+        assertTrue(items.contains(item2));
+        verify(itemDao, times(1)).findAll();
+    }
+
+    @Test
+    public void testFindAllItemsEmpty() {
+        when(itemDao.findAll()).thenReturn(new ArrayList<>());
+        List<Item> items = service.findAllItems();
+        assertNotNull(items);
+        assertTrue(items.isEmpty());
+        verify(itemDao, times(1)).findAll();
+    }
 
 }

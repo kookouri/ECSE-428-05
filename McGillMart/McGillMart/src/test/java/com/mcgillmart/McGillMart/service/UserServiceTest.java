@@ -191,20 +191,20 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUserWithSameEmail() {
-        
+        int id = 69;
         String email = "same@mail.com";
         String name = "Old Name";
         String password = "oldPassword";
         String phoneNumber ="987-654-3210";
-        User user = userService.createUser(email, name, password, phoneNumber);
+        User user1 = userService.createUser(email, name, password, phoneNumber);
 
-        user = userService.updateUser(user.getId(), "same@mail.com", "Updated Name", "updatedPassword", "987-654-3210");
+        user1 = userService.updateUser(id, "same@mail.com", "Updated Name", "updatedPassword", "987-654-3210");
     
-        assertNotNull(user);
-        assertEquals("same@mail.com", user.getEmail()); 
-        assertEquals("Updated Name", user.getName());
-        assertEquals("updatedPassword", user.getPassword());
-        assertEquals("987-654-3210", user.getPhoneNumber());
+        assertNotNull(user1);
+        assertEquals("same@mail.com", user1.getEmail()); 
+        assertEquals("Updated Name", user1.getName());
+        assertEquals("updatedPassword", user1.getPassword());
+        assertEquals("987-654-3210", user1.getPhoneNumber());
     }
 
     @Test
@@ -220,25 +220,25 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUserWithSamePhoneNumber() {
-
+        int id = 68;
         String email = "user6@mail.com";
         String name = "User Six";
         String password = "password";
         String phoneNumber = "444-444-4444";
-        User user = userService.createUser(email, name, password, phoneNumber);
+        User user2 = userService.createUser(email, name, password, phoneNumber);
 
-        user = userService.updateUser(user.getId(), "new6@mail.com", "Updated Name", "newPassword", "444-444-4444");
+        user2 = userService.updateUser(id, "new6@mail.com", "Updated Name", "newPassword", "444-444-4444");
 
-        assertNotNull(user);
-        assertEquals("new6@mail.com", user.getEmail());
-        assertEquals("Updated Name", user.getName());
-        assertEquals("newPassword", user.getPassword());
-        assertEquals("444-444-4444", user.getPhoneNumber());
+        assertNotNull(user2);
+        assertEquals("new6@mail.com", user2.getEmail());
+        assertEquals("Updated Name", user2.getName());
+        assertEquals("newPassword", user2.getPassword());
+        assertEquals("444-444-4444", user2.getPhoneNumber());
     }
     
     @Test
     public void testUpdateUserWithInvalidPassword() {
-
+        int id = 70;
         String email = "user7@mail.com";
         String name = "User Seven";
         String password = "password";
@@ -246,7 +246,7 @@ public class UserServiceTest {
         User user = userService.createUser(email, name, password, phoneNumber);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
-            userService.updateUser(user.getId(), "new7@mail.com", "User Seven", "short", "098-765-4321");
+            userService.updateUser(id, "new7@mail.com", "User Seven", "short", "098-765-4321");
         });
 
         assertNotNull(e);
@@ -255,7 +255,7 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUserWithEmptyField() {
-
+        int id = 71;
         String email = "user8@mail.com";
         String name = "User Eight";
         String password = "password";
@@ -263,7 +263,7 @@ public class UserServiceTest {
         User user = userService.createUser(email, name, password, phoneNumber);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
-            userService.updateUser(user.getId(), "", "User Eight", "password", "098-765-4321");
+            userService.updateUser(id, "", "User Eight", "password", "098-765-4321");
         });
 
         assertNotNull(e);
@@ -273,15 +273,15 @@ public class UserServiceTest {
     
     @Test 
     public void testUpdateUserWithInvalidEmail() {
-
+        int id = 72;
         String email = "user@mail.com";
         String name = "Name";
         String password = "password";
         String phoneNumber = "555-555-5555";
-        User user = userService.createUser(email, name, password, phoneNumber);
+        User user5 = userService.createUser(email, name, password, phoneNumber);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
-            userService.updateUser(user.getId(), "invalidEmail", "New Name", "newPassword", "098-765-4321");
+            userService.updateUser(id, "invalidEmail", "New Name", "newPassword", "098-765-4321");
         });
 
         assertNotNull(e);
@@ -291,7 +291,7 @@ public class UserServiceTest {
     
     @Test 
     public void testUpdateUserWithInvalidPhoneNumber() {
-
+        int id = 78;
         String email = "user@mail.com";
         String name = "Name";
         String password = "password";
@@ -299,7 +299,7 @@ public class UserServiceTest {
         User user = userService.createUser(email, name, password, phoneNumber);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
-            userService.updateUser(user.getId(), "user@mail.com", "New Name", "newPassword", "invalidPhone");
+            userService.updateUser(id, "user@mail.com", "New Name", "newPassword", "invalidPhone");
         });
 
         assertNotNull(e);
