@@ -93,7 +93,7 @@ public class ItemServiceTests {
 
         when(itemDao.findAll()).thenReturn(ITEMS);
 
-        List<Item> item = service.filterItemsByName(item1.getName());
+        Item item = service.filterItemsByName(item1.getName());
 
         assertTrue(item.equals(item1.getName()));
         assertTrue(item.getDescription().equals(item1.getDescription()));
