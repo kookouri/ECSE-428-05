@@ -1,37 +1,44 @@
 class McGillMart
 {
+  Integer id;
   1 <@>- * User users;
   1 <@>- * Item items;
 }
 
 class User
 {
-  autounique id;
+  Integer id;
   unique String email;
   String name;
   String password;
   String phoneNumber;
   
-  1 <@>- 1 ShoppingCart shoppingCart;
+  1 -> * Item shoppingCart;
   1 <@>- 0..* Transaction history;
 }
 
 class Item
 {
-  autounique id;
+  Integer id;
   String name;
   Double price;
   String description;
   enum Category { Electronics, Clothing, Textbook, Furniture, Other }
   Category category;
-}
 
-class ShoppingCart {
-  0..* -> * Item items;
+  1 <@>- 0..* Review reviews;
 }
 
 class Transaction {
-  autounique id;
+  Integer id;
   Double amount;
   Date dateOfPurchase;
+}
+
+class Review {
+  Integer id;
+  Integer rating;
+  String comment;
+  Date datePosted;
+  String username;
 }

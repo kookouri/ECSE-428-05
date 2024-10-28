@@ -1,12 +1,10 @@
-package com.dto;
+package com.mcgillmart.McGillMart.dto;
 
-import com.model.User;
-import com.model.ShoppingCart;
-import com.model.McGillMart;
-import com.model.Transaction;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+
+import com.mcgillmart.McGillMart.model.User;
 
 public class UserListDTO {
 

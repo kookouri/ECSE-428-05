@@ -1,14 +1,16 @@
-package com.dto;
+package com.mcgillmart.McGillMart.dto;
 
-import com.model.Item;
-import com.model.McGillMart;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.mcgillmart.McGillMart.model.Item;
+import com.mcgillmart.McGillMart.model.McGillMart;
 
 public class ItemDTO {
     private String name;
     private double price;
     private String description;
+    private String category;
     private McGillMart mcGillMart;
 
     public ItemDTO() {
@@ -39,6 +41,14 @@ public class ItemDTO {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getDescription() {

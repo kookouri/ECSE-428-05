@@ -1,4 +1,4 @@
-package com.services;
+package com.mcgillmart.McGillMart.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.model.McGillMart;
-import com.repositories.McGillMartRepository;
-import com.repositories.UserRepository;
+import com.mcgillmart.McGillMart.model.McGillMart;
+import com.mcgillmart.McGillMart.repositories.McGillMartRepository;
+import com.mcgillmart.McGillMart.repositories.UserRepository;
 
 /*
 * Service class in charge of managing accounts. It implements following use cases:

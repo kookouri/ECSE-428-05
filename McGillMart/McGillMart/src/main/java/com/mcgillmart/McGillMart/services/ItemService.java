@@ -1,16 +1,16 @@
-package com.services;
+package com.mcgillmart.McGillMart.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-import com.util.ServiceUtils;
-import com.model.Item;
-import com.model.McGillMart;
-import com.repositories.ItemRepository;
+import com.mcgillmart.McGillMart.util.ServiceUtils;
+import com.mcgillmart.McGillMart.model.Item;
+import com.mcgillmart.McGillMart.model.Item.Category;
+
+import com.mcgillmart.McGillMart.repositories.ItemRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +27,9 @@ public class ItemService {
     @Autowired
     private ItemRepository itemRepository;
 
+    @Autowired
+    private McGillMartService mcGillMartService;
+
     /**
      * Filters items by name.
      *
@@ -34,21 +37,15 @@ public class ItemService {
      * @return a list of items matching the name
      */
     @Transactional(readOnly = true)
-    public List<Map<String, String>> filterItemsByName(String name) {
+    public List<Item> filterItemsByName(String name) {
         logger.info("Filtering items by name: {}", name);
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty.");
         }
-        List<Item> items = itemRepository.findItemsByKeywordInNameOrDescription(name);
-        List<Map<String, String>> result = items.stream()
-                .map(item -> Map.of(
-                        "name", item.getName(),
-                        "price", String.valueOf(item.getPrice()),
-                        "description", item.getDescription()
-                ))
-                .collect(Collectors.toList());
+        List<Item> items = itemRepository.findByName(name);
+
         logger.info("Filtered items by name: {}", name);
-        return result;
+        return items;
     }
 
     /**
@@ -58,7 +55,7 @@ public class ItemService {
      * @return a list of items matching the category
      */
     @Transactional(readOnly = true)
-    public List<Map<String, String>> filterItemsByCategory(String category) {
+    public List<Item> filterItemsByCategory(String category) {
         logger.info("Filtering items by category: {}", category);
         if (category == null || category.isEmpty()) {
             throw new IllegalArgumentException("Category cannot be null or empty.");
@@ -71,15 +68,9 @@ public class ItemService {
             throw new IllegalArgumentException("Invalid category: " + category);
         }
         List<Item> items = itemRepository.findByCategory(targetCategory);
-        List<Map<String, String>> result = items.stream()
-                .map(item -> Map.of(
-                        "name", item.getName(),
-                        "price", String.valueOf(item.getPrice()),
-                        "description", item.getDescription()
-                ))
-                .collect(Collectors.toList());
+
         logger.info("Filtered items by category: {}", category);
-        return result;
+        return items;   
     }
 
     /**
@@ -88,14 +79,15 @@ public class ItemService {
      * @param name the name of the item
      * @param price the price of the item
      * @param description the description of the item
+     * @param category the category of the item
      * @param mcGillMart the McGillMart associated with the item
      * @return the created item
      */
     @Transactional
-    public Item createItem(String name, double price, String description, McGillMart mcGillMart) {
+    public Item createItem(String name, double price, String description, String category) {
         logger.info("Creating item with name: {}, price: {}, description: {}", name, price, description);
-        validateItemDetails(name, price, description, mcGillMart);
-        Item item = new Item(name, price, description, mcGillMart);
+        validateItemDetails(name, price, description,category);
+        Item item = new Item(name, price, description, Item.Category.valueOf(category), mcGillMartService.getMcGillMart());
         Item savedItem = itemRepository.save(item);
         logger.info("Created item with ID: {}", savedItem.getId());
         return savedItem;
@@ -108,18 +100,20 @@ public class ItemService {
      * @param name the new name of the item
      * @param price the new price of the item
      * @param description the new description of the item
+     * @param category the new category of the item
      * @param mcGillMart the new McGillMart associated with the item
      * @return the updated item
      */
     @Transactional
-    public Item updateItem(Integer id, String name, double price, String description, McGillMart mcGillMart) {
+    public Item updateItem(Integer id, String name, double price, String description, String category) {
         logger.info("Updating item with ID: {}", id);
-        validateItemDetails(name, price, description, mcGillMart);
+        validateItemDetails(name, price, description, category);
         Item item = findItemById(id);
         item.setName(name);
         item.setPrice(price);
         item.setDescription(description);
-        item.setMcGillMart(mcGillMart);
+        item.setCategory(Category.valueOf(category));
+        item.setMcGillMart(mcGillMartService.getMcGillMart());
         Item updatedItem = itemRepository.save(item);
         logger.info("Updated item with ID: {}", updatedItem.getId());
         return updatedItem;
@@ -179,9 +173,10 @@ public class ItemService {
      * @param name the name of the item
      * @param price the price of the item
      * @param description the description of the item
+     * @param category the category of the item
      * @param mcGillMart the McGillMart associated with the item
      */
-    private void validateItemDetails(String name, double price, String description, McGillMart mcGillMart) {
+    private void validateItemDetails(String name, double price, String category, String description) {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty.");
         }
@@ -191,8 +186,8 @@ public class ItemService {
         if (description == null || description.isEmpty()) {
             throw new IllegalArgumentException("Description cannot be null or empty.");
         }
-        if (mcGillMart == null) {
-            throw new IllegalArgumentException("McGillMart cannot be null.");
+        if (category == null || category.isEmpty()) {
+            throw new IllegalArgumentException("Category cannot be null or empty.");
         }
     }
 }

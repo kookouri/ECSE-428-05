@@ -1,17 +1,17 @@
 package com.mcgillmart.McGillMart.features;
 
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 
-import com.model.McGillMart;
-import com.model.Item;
-import com.model.Item.Category;
-
 import java.util.List;
 import java.util.Map;
+
+import com.mcgillmart.McGillMart.model.Item;
+import com.mcgillmart.McGillMart.model.McGillMart;
+import com.mcgillmart.McGillMart.model.Item.Category;
 
 public class ViewItemsStepDefinitions {
 

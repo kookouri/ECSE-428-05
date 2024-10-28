@@ -1,8 +1,11 @@
-package com.controllers;
+package com.mcgillmart.McGillMart.controllers;
 
 import java.util.*;
 
-import com.dto.ItemDTO;
+import com.mcgillmart.McGillMart.dto.ItemDTO;
+import com.mcgillmart.McGillMart.model.Item;
+import com.mcgillmart.McGillMart.services.ItemService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.model.Item;
-import com.services.ItemService;
 
 /**
  * <p>Controller class in charge of managing items. It implements the following use cases: </p>
@@ -33,7 +33,7 @@ public class ItemController {
     @PostMapping(value = {"/items", "/items/", "/public/items"})
     public ResponseEntity<ItemDTO> createItem(@RequestBody ItemDTO item) {
         try {
-            Item createdItem = itemService.createItem(item.getName(), item.getPrice(), item.getDescription(), item.getMcGillMart());
+            Item createdItem = itemService.createItem(item.getName(), item.getPrice(), item.getDescription(), item.getCategory());
             return new ResponseEntity<ItemDTO>(new ItemDTO(createdItem), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<ItemDTO>(new ItemDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -44,7 +44,7 @@ public class ItemController {
     @PutMapping(value = {"/items/{id}", "/items/{id}/"})
     public ResponseEntity<ItemDTO> updateItem(@PathVariable Integer id, @RequestBody ItemDTO item) {
         try {
-            Item updatedItem = itemService.updateItem(id, item.getName(), item.getPrice(), item.getDescription(), item.getMcGillMart());
+            Item updatedItem = itemService.updateItem(id, item.getName(), item.getPrice(), item.getDescription(), item.getCategory());
             return new ResponseEntity<ItemDTO>(new ItemDTO(updatedItem), HttpStatus.ACCEPTED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<ItemDTO>(new ItemDTO(e.getMessage()), HttpStatus.BAD_REQUEST);

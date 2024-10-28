@@ -1,4 +1,4 @@
-package com.controllers;
+package com.mcgillmart.McGillMart.controllers;
 
 import java.util.*;
 
@@ -15,15 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.model.User;
-import com.services.UserService;
-import com.services.ViewAccountService;
-
 import jakarta.servlet.http.HttpServletRequest;
 
-import com.dto.UserRequestDTO;
-import com.dto.UserResponseDTO;
-import com.dto.UserListDTO;
+import com.mcgillmart.McGillMart.dto.UserListDTO;
+import com.mcgillmart.McGillMart.dto.UserRequestDTO;
+import com.mcgillmart.McGillMart.dto.UserResponseDTO;
+import com.mcgillmart.McGillMart.model.User;
+import com.mcgillmart.McGillMart.services.UserService;
+import com.mcgillmart.McGillMart.services.ViewProfileService;
 
 /**
  * <p>Controller class in charge of managing users. It implements following use cases: </p>
@@ -36,7 +35,7 @@ public class UserController {
     @Autowired
     UserService userService;
     @Autowired
-    ViewAccountService viewAccountService;
+    ViewProfileService viewAccountService;
 
     //--------------------------// Create User //--------------------------//
     @PostMapping(value={"/users", "/users/", "/public/users"})

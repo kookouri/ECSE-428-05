@@ -1,20 +1,26 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
-package com.model;
+package com.mcgillmart.McGillMart.model;
 
 import java.util.*;
 
-// line 2 "model.ump"
-// line 44 "model.ump"
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+
+@Entity
+@Table(name = "mcgill_mart")
 public class McGillMart
 {
+  @Id
+  @GeneratedValue
+  private int id;
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //McGillMart Associations
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   private List<User> users;
+
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Item> items;
 
   //------------------------
@@ -30,6 +36,19 @@ public class McGillMart
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getId()
+  {
+    return id;
+  }
   /* Code from template association_GetMany */
   public User getUser(int index)
   {
@@ -96,9 +115,9 @@ public class McGillMart
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public User addUser(String aEmail, String aName, String aPassword, String aPhoneNumber, ShoppingCart aShoppingCart)
+  public User addUser(String aEmail, String aName, String aPassword, String aPhoneNumber)
   {
-    return new User(aEmail, aName, aPassword, aPhoneNumber, aShoppingCart, this);
+    return new User(aEmail, aName, aPassword, aPhoneNumber, this);
   }
 
   public boolean addUser(User aUser)
@@ -253,4 +272,10 @@ public class McGillMart
     
   }
 
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "id" + ":" + getId()+ "]";
+  }
 }

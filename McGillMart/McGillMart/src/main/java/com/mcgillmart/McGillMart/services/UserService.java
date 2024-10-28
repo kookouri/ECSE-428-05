@@ -1,4 +1,4 @@
-package com.services;
+package com.mcgillmart.McGillMart.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.model.McGillMart;
-import com.model.User;
-import com.repositories.McGillMartRepository;
-import com.repositories.UserRepository;
+import com.mcgillmart.McGillMart.model.McGillMart;
+import com.mcgillmart.McGillMart.model.User;
+import com.mcgillmart.McGillMart.repositories.McGillMartRepository;
+import com.mcgillmart.McGillMart.repositories.UserRepository;
 
 /**
 * <p>Service class in charge of managing users. It implements following use cases: </p>
@@ -29,13 +29,13 @@ public class UserService {
     @Autowired
     private McGillMartService mcGillMartService;
 
+
     //--------------------------// Create User //--------------------------//
 
     @Transactional
     public User createUser(String email, String name, String password, String phoneNumber) {
         validUserInfo(email, password, name, phoneNumber);
         uniqueEmail(email);
-        uniquePhoneNumber(phoneNumber);
         
         User user = new User(email, name, password, phoneNumber, mcGillMartService.getMcGillMart());
         return userRepository.save(user);
@@ -121,7 +121,7 @@ public class UserService {
 
     private void validUserInfo(String email, String password, String name, String phoneNumber) {
         if (email.isEmpty() || password.isEmpty() || name.isEmpty() || phoneNumber.isEmpty()) {
-            throw new IllegalArgumentException("Empty fields for email, password or name are not valid");
+            throw new IllegalArgumentException("Empty fields for email, password, phone number or name are not valid");
         }
         if (!email.contains("@")) {
             throw new IllegalArgumentException("Email has to contain the character @");

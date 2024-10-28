@@ -1,44 +1,30 @@
-package com.model;
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
-
+package com.mcgillmart.McGillMart.model;
 
 import java.sql.Date;
 
-// line 33 "model.ump"
-// line 62 "model.ump"
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
+@Entity
 public class Transaction
 {
+  @Id
+  @GeneratedValue
+  private int id;
 
-  //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  private static int nextId = 1;
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //Transaction Attributes
   private double amount;
   private Date dateOfPurchase;
 
-  //Autounique Attributes
-  private int id;
-
-  //Transaction Associations
+  @ManyToOne
   private User user;
 
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
-
-  public Transaction(double aAmount, Date aDateOfPurchase, User aUser)
+  public Transaction(int aId, double aAmount, Date aDateOfPurchase, User aUser)
   {
+    id = aId;
     amount = aAmount;
     dateOfPurchase = aDateOfPurchase;
-    id = nextId++;
     boolean didAddUser = setUser(aUser);
     if (!didAddUser)
     {
@@ -46,9 +32,14 @@ public class Transaction
     }
   }
 
-  //------------------------
-  // INTERFACE
-  //------------------------
+
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
 
   public boolean setAmount(double aAmount)
   {
@@ -66,6 +57,11 @@ public class Transaction
     return wasSet;
   }
 
+  public int getId()
+  {
+    return id;
+  }
+
   public double getAmount()
   {
     return amount;
@@ -74,11 +70,6 @@ public class Transaction
   public Date getDateOfPurchase()
   {
     return dateOfPurchase;
-  }
-
-  public int getId()
-  {
-    return id;
   }
   /* Code from template association_GetOne */
   public User getUser()
