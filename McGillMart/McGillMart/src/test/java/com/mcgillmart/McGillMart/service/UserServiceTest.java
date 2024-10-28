@@ -200,7 +200,7 @@ public class UserServiceTest {
 
         user1 = userService.updateUser(id, "same@mail.com", "Updated Name", "updatedPassword", "987-654-3210");
     
-        assertNotNull(user);
+        assertNotNull(user1);
         assertEquals("same@mail.com", user1.getEmail()); 
         assertEquals("Updated Name", user1.getName());
         assertEquals("updatedPassword", user1.getPassword());
