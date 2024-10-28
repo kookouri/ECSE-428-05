@@ -92,19 +92,8 @@ public class User
   public boolean setEmail(String aEmail)
   {
     boolean wasSet = false;
-    String anOldEmail = getEmail();
-    if (anOldEmail != null && anOldEmail.equals(aEmail)) {
-      return true;
-    }
-    if (hasWithEmail(aEmail)) {
-      return wasSet;
-    }
-    email = aEmail;
+    email = aEmail.toLowerCase();
     wasSet = true;
-    if (anOldEmail != null) {
-      usersByEmail.remove(anOldEmail);
-    }
-    usersByEmail.put(aEmail, this);
     return wasSet;
   }
 
@@ -140,16 +129,6 @@ public class User
   public String getEmail()
   {
     return email;
-  }
-  /* Code from template attribute_GetUnique */
-  public static User getWithEmail(String aEmail)
-  {
-    return usersByEmail.get(aEmail);
-  }
-  /* Code from template attribute_HasUnique */
-  public static boolean hasWithEmail(String aEmail)
-  {
-    return getWithEmail(aEmail) != null;
   }
 
   public String getName()

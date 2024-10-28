@@ -8,7 +8,7 @@ class McGillMart
 class User
 {
   Integer id;
-  unique String email;
+  String email;
   String name;
   String password;
   String phoneNumber;
