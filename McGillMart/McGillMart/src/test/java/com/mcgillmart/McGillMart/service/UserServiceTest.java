@@ -207,6 +207,7 @@ public class UserServiceTest {
         assertEquals("987-654-3210", user1.getPhoneNumber());
     }
 
+    //to be fixed
     @Test
     public void testUpdateUserWithNonExistentId() {
 
@@ -243,7 +244,7 @@ public class UserServiceTest {
         String name = "User Seven";
         String password = "password";
         String phoneNumber = "777-777-7777";
-        User user = userService.createUser(email, name, password, phoneNumber);
+        User user3 = userService.createUser(email, name, password, phoneNumber);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
             userService.updateUser(id, "new7@mail.com", "User Seven", "short", "098-765-4321");
@@ -260,7 +261,7 @@ public class UserServiceTest {
         String name = "User Eight";
         String password = "password";
         String phoneNumber = "888-888-8888";
-        User user = userService.createUser(email, name, password, phoneNumber);
+        User user4 = userService.createUser(email, name, password, phoneNumber);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
             userService.updateUser(id, "", "User Eight", "password", "098-765-4321");
