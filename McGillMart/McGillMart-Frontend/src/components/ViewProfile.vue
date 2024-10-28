@@ -1,12 +1,15 @@
 <template>
-    <div id="view-profile-component">
-        <h2 style="margin-top: 10%;">NAME: {{user.name}}</h2>
-        <hr/>
-        <div id="profile-values">
-            <p><b>Email:</b></p>
-            <p style="margin-bottom: 2%;"> {{user.email}} </p>
-            <p><b>Phone Number:</b></p>
-            <p style="margin-bottom: 2%;"> {{user.phoneNumber}} </p>
+    <div>
+        <toolbar/>
+        <div id="view-profile-component">
+            <h2 style="margin-top: 10%; color: #fc0339">NAME: {{user.name}}</h2>
+            <hr/>
+            <div id="profile-values">
+                <p><b>Email:</b></p>
+                <p style="margin-bottom: 2%;"> {{user.email}} </p>
+                <p><b>Phone Number:</b></p>
+                <p style="margin-bottom: 2%;"> {{user.phoneNumber}} </p>
+            </div>
         </div>
     </div>
 </template>
@@ -40,7 +43,7 @@ export default {
             if (response.data.accounts[0].errorMessage !== null) {
                 alert(response.data.errorMessage);
             } else {
-                this.user.name = response.data.accounts[0].name;
+                this.user.name = response.data.accounts[0].name.toUpperCase();
                 this.user.phoneNumber = response.data.accounts[0].phoneNumber;
                 this.user.email = response.data.accounts[0].email;
             }
