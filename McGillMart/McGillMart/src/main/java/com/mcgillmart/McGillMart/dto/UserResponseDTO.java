@@ -34,6 +34,10 @@ public class UserResponseDTO {
         this.errorMessage = errorMessage;
     }
 
+    public String getErrorMessage() {
+    	return this.errorMessage;
+    }
+    
     public int getId()
     {
         return id;

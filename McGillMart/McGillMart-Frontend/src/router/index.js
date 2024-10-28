@@ -12,25 +12,10 @@ Vue.use(VueCookies);
 export default new Router({
   routes: [
     {
-      path: "/",
-      name: "Home",
-      component: Home,
-    },
-    {
-      path: "/login",
-      name: "McGillMart Login page",
-      component: SignIn,
-    },
-    {
-      path: "/registration",
-      name: "Registration",
-      component: Registration,
-    },
-    {
-      path: "/settings",
-      name: "Settings",
-      component: Settings,
-    },
+      path: '/',
+      name: 'Hello',
+      component: Hello
+    }
   ]
 })
 
