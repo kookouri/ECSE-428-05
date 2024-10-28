@@ -32,6 +32,10 @@ public class Transaction
     }
   }
 
+  public Transaction() { 
+    
+  }
+
 
   public boolean setId(int aId)
   {
