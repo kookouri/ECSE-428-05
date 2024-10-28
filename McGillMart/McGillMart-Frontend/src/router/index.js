@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import ViewProfile from '@/components/ViewProfile'
 import VueCookies from 'vue-cookies'
 import Home from '@/components/Home'
 import SignIn from '@/components/SignIn'
@@ -31,6 +32,11 @@ export default new Router({
       name: "Settings",
       component: Settings,
     },
+    {
+      path: '/profile/view',
+      name: 'View Profile',
+      component: ViewProfile,
+    }
   ]
 })
 
