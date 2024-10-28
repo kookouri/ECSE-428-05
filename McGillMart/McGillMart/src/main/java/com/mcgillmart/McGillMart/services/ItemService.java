@@ -37,15 +37,15 @@ public class ItemService {
      * @return a list of items matching the name
      */
     @Transactional(readOnly = true)
-    public List<Item> filterItemsByName(String name) {
+    public Item filterItemsByName(String name) {
         logger.info("Filtering items by name: {}", name);
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty.");
         }
-        List<Item> items = itemRepository.findByName(name);
+        Item item = itemRepository.findByName(name);
 
         logger.info("Filtered items by name: {}", name);
-        return items;
+        return item;
     }
 
     /**
