@@ -35,8 +35,8 @@ export default {
     },
     async created() {
         try {
-            // Currently Hard-coded; will retrieve email based on current login information, either from cookies or internalStorage
-            const response = await client.get('/users/account?email=' + 'joe@gmail.com');
+            // Assuming username is the user's email
+            const response = await client.get('/users/account?email=' + this.$cookies.get('username'));
             if (response.data.accounts[0].errorMessage !== null) {
                 alert(response.data.errorMessage);
             } else {
