@@ -17,12 +17,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.mcgillmart.McGillMart.model.McGillMart;
 import com.mcgillmart.McGillMart.model.User;
 import com.mcgillmart.McGillMart.repositories.McGillMartRepository;
 import com.mcgillmart.McGillMart.repositories.UserRepository;
+import com.mcgillmart.McGillMart.services.McGillMartService;
 import com.mcgillmart.McGillMart.services.UserService;
 
 @SpringBootTest
@@ -35,6 +37,9 @@ public class UserServiceTest {
 
     @InjectMocks
     private UserService userService;
+
+    @Mock
+    private McGillMartService mcGillMartService;
     
     /**
      * Clear the sportcenter database before each test.
@@ -42,10 +47,10 @@ public class UserServiceTest {
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
+        
         userRepository.deleteAll();
         mcgillMartRepository.deleteAll();
     }
-
     
     /**
      * Create and save a McGillMart instance before each test.
@@ -58,6 +63,8 @@ public class UserServiceTest {
         List<McGillMart> listMcGillMarts = new ArrayList<>();
         listMcGillMarts.add(mcgillMart);
         when(mcgillMartRepository.findAll()).thenReturn(listMcGillMarts);
+
+        when(mcGillMartService.getMcGillMart()).thenReturn(mcgillMart);
     }
 
     
@@ -108,7 +115,7 @@ public class UserServiceTest {
     @Test
     public void testCreateUserWithInvalidPhoneNumber() {
         // Set up test
-        String email = "julia";
+        String email = "julia@mail.com";
         String password = "secretPassword";
         String name = "Julia";
         String phoneNumber = "333-333-3333a";
@@ -124,7 +131,7 @@ public class UserServiceTest {
     @Test
     public void testCreateUserWithInvalidPassword() {
         // Set up test
-        String email = "julia";
+        String email = "julia@mail.com";
         String password = "tiny";
         String name = "Julia";
         String phoneNumber = "333-333-3333";
@@ -159,14 +166,20 @@ public class UserServiceTest {
 
     @Test 
     public void testUpdateUserInfo() {
-        String email = "";
+        int id = 64;
+        String email = "julia@mail.com";
         String password = "oldpassword";
         String name = "Lina";
         String phoneNumber = "333-333-3333";
         
-        User user = userService.createUser(email, name, password, phoneNumber);
-        int userId = user.getId();
-        user = userService.updateUser(userId, "new@mail.com", "New Name", "newPassword", "098-765-4321");
+        User julia = new User(email, name, password, phoneNumber, 
+            toList(mcgillMartRepository.findAll()).get(0));
+        
+        // Mocking the repository since we want to test the Service
+        when(userRepository.save(any(User.class))).thenReturn(julia);
+        when(userRepository.findUserById(id)).thenReturn(julia);
+
+        User user = userService.updateUser(id, "new@mail.com", "New Name", "newPassword", "098-765-4321");
 
         assertNotNull(user);
         assertEquals("new@mail.com", user.getEmail());
@@ -202,7 +215,7 @@ public class UserServiceTest {
         });
 
         assertNotNull(e);
-        assertEquals("User not found with the given ID", e.getMessage());
+        assertEquals("There is no user with ID 999.", e.getMessage());
     }
 
     @Test
