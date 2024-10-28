@@ -17,12 +17,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.mcgillmart.McGillMart.model.McGillMart;
 import com.mcgillmart.McGillMart.model.User;
 import com.mcgillmart.McGillMart.repositories.McGillMartRepository;
 import com.mcgillmart.McGillMart.repositories.UserRepository;
+import com.mcgillmart.McGillMart.services.McGillMartService;
 import com.mcgillmart.McGillMart.services.UserService;
 
 @SpringBootTest
@@ -35,6 +37,9 @@ public class UserServiceTest {
 
     @InjectMocks
     private UserService userService;
+
+    @Mock
+    private McGillMartService mcGillMartService;
     
     /**
      * Clear the sportcenter database before each test.
@@ -42,10 +47,10 @@ public class UserServiceTest {
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
+        
         userRepository.deleteAll();
         mcgillMartRepository.deleteAll();
     }
-
     
     /**
      * Create and save a McGillMart instance before each test.
@@ -58,6 +63,8 @@ public class UserServiceTest {
         List<McGillMart> listMcGillMarts = new ArrayList<>();
         listMcGillMarts.add(mcgillMart);
         when(mcgillMartRepository.findAll()).thenReturn(listMcGillMarts);
+
+        when(mcGillMartService.getMcGillMart()).thenReturn(mcgillMart);
     }
 
     
@@ -108,7 +115,7 @@ public class UserServiceTest {
     @Test
     public void testCreateUserWithInvalidPhoneNumber() {
         // Set up test
-        String email = "julia";
+        String email = "julia@mail.com";
         String password = "secretPassword";
         String name = "Julia";
         String phoneNumber = "333-333-3333a";
@@ -124,7 +131,7 @@ public class UserServiceTest {
     @Test
     public void testCreateUserWithInvalidPassword() {
         // Set up test
-        String email = "julia";
+        String email = "julia@mail.com";
         String password = "tiny";
         String name = "Julia";
         String phoneNumber = "333-333-3333";
@@ -159,14 +166,20 @@ public class UserServiceTest {
 
     @Test 
     public void testUpdateUserInfo() {
-        String email = "";
+        int id = 64;
+        String email = "julia@mail.com";
         String password = "oldpassword";
         String name = "Lina";
         String phoneNumber = "333-333-3333";
         
-        User user = userService.createUser(email, name, password, phoneNumber);
-        int userId = user.getId();
-        user = userService.updateUser(userId, "new@mail.com", "New Name", "newPassword", "098-765-4321");
+        User julia = new User(email, name, password, phoneNumber, 
+            toList(mcgillMartRepository.findAll()).get(0));
+        
+        // Mocking the repository since we want to test the Service
+        when(userRepository.save(any(User.class))).thenReturn(julia);
+        when(userRepository.findUserById(id)).thenReturn(julia);
+
+        User user = userService.updateUser(id, "new@mail.com", "New Name", "newPassword", "098-765-4321");
 
         assertNotNull(user);
         assertEquals("new@mail.com", user.getEmail());
@@ -178,20 +191,20 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUserWithSameEmail() {
-        
+        int id = 69;
         String email = "same@mail.com";
         String name = "Old Name";
         String password = "oldPassword";
         String phoneNumber ="987-654-3210";
-        User user = userService.createUser(email, name, password, phoneNumber);
+        User user1 = userService.createUser(email, name, password, phoneNumber);
 
-        user = userService.updateUser(user.getId(), "same@mail.com", "Updated Name", "updatedPassword", "987-654-3210");
+        user1 = userService.updateUser(id, "same@mail.com", "Updated Name", "updatedPassword", "987-654-3210");
     
-        assertNotNull(user);
-        assertEquals("same@mail.com", user.getEmail()); 
-        assertEquals("Updated Name", user.getName());
-        assertEquals("updatedPassword", user.getPassword());
-        assertEquals("987-654-3210", user.getPhoneNumber());
+        assertNotNull(user1);
+        assertEquals("same@mail.com", user1.getEmail()); 
+        assertEquals("Updated Name", user1.getName());
+        assertEquals("updatedPassword", user1.getPassword());
+        assertEquals("987-654-3210", user1.getPhoneNumber());
     }
 
     @Test
@@ -202,30 +215,30 @@ public class UserServiceTest {
         });
 
         assertNotNull(e);
-        assertEquals("User not found with the given ID", e.getMessage());
+        assertEquals("There is no user with ID 999.", e.getMessage());
     }
 
     @Test
     public void testUpdateUserWithSamePhoneNumber() {
-
+        int id = 68;
         String email = "user6@mail.com";
         String name = "User Six";
         String password = "password";
         String phoneNumber = "444-444-4444";
-        User user = userService.createUser(email, name, password, phoneNumber);
+        User user2 = userService.createUser(email, name, password, phoneNumber);
 
-        user = userService.updateUser(user.getId(), "new6@mail.com", "Updated Name", "newPassword", "444-444-4444");
+        user2 = userService.updateUser(id, "new6@mail.com", "Updated Name", "newPassword", "444-444-4444");
 
-        assertNotNull(user);
-        assertEquals("new6@mail.com", user.getEmail());
-        assertEquals("Updated Name", user.getName());
-        assertEquals("newPassword", user.getPassword());
-        assertEquals("444-444-4444", user.getPhoneNumber());
+        assertNotNull(user2);
+        assertEquals("new6@mail.com", user2.getEmail());
+        assertEquals("Updated Name", user2.getName());
+        assertEquals("newPassword", user2.getPassword());
+        assertEquals("444-444-4444", user2.getPhoneNumber());
     }
     
     @Test
     public void testUpdateUserWithInvalidPassword() {
-
+        int id = 70;
         String email = "user7@mail.com";
         String name = "User Seven";
         String password = "password";
@@ -233,7 +246,7 @@ public class UserServiceTest {
         User user = userService.createUser(email, name, password, phoneNumber);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
-            userService.updateUser(user.getId(), "new7@mail.com", "User Seven", "short", "098-765-4321");
+            userService.updateUser(id, "new7@mail.com", "User Seven", "short", "098-765-4321");
         });
 
         assertNotNull(e);
@@ -242,7 +255,7 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUserWithEmptyField() {
-
+        int id = 71;
         String email = "user8@mail.com";
         String name = "User Eight";
         String password = "password";
@@ -250,7 +263,7 @@ public class UserServiceTest {
         User user = userService.createUser(email, name, password, phoneNumber);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
-            userService.updateUser(user.getId(), "", "User Eight", "password", "098-765-4321");
+            userService.updateUser(id, "", "User Eight", "password", "098-765-4321");
         });
 
         assertNotNull(e);
@@ -260,15 +273,15 @@ public class UserServiceTest {
     
     @Test 
     public void testUpdateUserWithInvalidEmail() {
-
+        int id = 72;
         String email = "user@mail.com";
         String name = "Name";
         String password = "password";
         String phoneNumber = "555-555-5555";
-        User user = userService.createUser(email, name, password, phoneNumber);
+        User user5 = userService.createUser(email, name, password, phoneNumber);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
-            userService.updateUser(user.getId(), "invalidEmail", "New Name", "newPassword", "098-765-4321");
+            userService.updateUser(id, "invalidEmail", "New Name", "newPassword", "098-765-4321");
         });
 
         assertNotNull(e);
@@ -278,7 +291,7 @@ public class UserServiceTest {
     
     @Test 
     public void testUpdateUserWithInvalidPhoneNumber() {
-
+        int id = 78;
         String email = "user@mail.com";
         String name = "Name";
         String password = "password";
@@ -286,7 +299,7 @@ public class UserServiceTest {
         User user = userService.createUser(email, name, password, phoneNumber);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
-            userService.updateUser(user.getId(), "user@mail.com", "New Name", "newPassword", "invalidPhone");
+            userService.updateUser(id, "user@mail.com", "New Name", "newPassword", "invalidPhone");
         });
 
         assertNotNull(e);

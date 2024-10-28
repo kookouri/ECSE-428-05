@@ -1,4 +1,4 @@
-/* package com.mcgillmart.McGillMart.features;
+package com.mcgillmart.McGillMart.features;
 
 import com.mcgillmart.McGillMart.model.User;
 import com.mcgillmart.McGillMart.services.UserService;
@@ -32,16 +32,14 @@ public class ViewUserProfileStepDefinitions {
                     userMap.get("email"),
                     userMap.get("name"),
                     userMap.get("password"),
-                    userMap.get("phoneNumber"),
-                    null,  // ShoppingCart not initialized here
-                    null   // McGillMart association not handled in this step
+                    userMap.get("phoneNumber"), 
+                    null
             );
             userService.createUser(
                     user.getEmail(),
                     user.getName(),
                     user.getPassword(),
-                    user.getPhoneNumber(),
-                    0 // assuming default shopping cart ID for simplicity
+                    user.getPhoneNumber()
             );
         }
     }
@@ -82,4 +80,3 @@ public class ViewUserProfileStepDefinitions {
         assertEquals(errorMessage, caughtException.getMessage());
     }
 }
- */
