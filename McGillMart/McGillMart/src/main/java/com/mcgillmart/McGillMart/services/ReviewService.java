@@ -55,7 +55,7 @@ public class ReviewService {
         User user = validateUser(email, phone, password);
 
         // Find the item
-        Item item = itemRepository.findByName(itemName);
+        Item item = itemRepository.findItemByName(itemName);
         if (item == null) {
             throw new IllegalArgumentException("Item not found: " + itemName);
         }
@@ -85,7 +85,7 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public List<Review> getReviewsForItem(String itemName) {
         logger.info("Retrieving reviews for item: {}", itemName);
-        Item item = itemRepository.findByName(itemName);
+        Item item = itemRepository.findItemByName(itemName);
         if (item == null) {
             throw new IllegalArgumentException("Item not found: " + itemName);
         }
