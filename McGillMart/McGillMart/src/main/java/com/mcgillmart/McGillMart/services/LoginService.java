@@ -14,26 +14,16 @@ public class LoginService {
     private UserService userService;
     
     public boolean login(String username, String password) {
+        
+        User user;
+        try {
+            user = userService.findUserByEmail(username);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Email not found, please register");
+        }
 
-        User user = userService.findUserByEmail(username);
-
-        if (username.isEmpty()) {
-            throw new IllegalArgumentException("Email cannot be empty.");
-        }
-        else if (password.isEmpty()) {
-            throw new IllegalArgumentException("Password cannot be empty.");
-        }
-        else if (!username.contains("@")) {
-            throw new IllegalArgumentException("Email has to contain the character @.");
-        }
-        else if (password.length() < 8) {
-            throw new IllegalArgumentException("The password needs to have 8 characters or more.");
-        }
-        else if (user == null) {
-            throw new IllegalArgumentException("User " + username + " not found.");
-        }
-        else if (!user.getPassword().equals(password)) {
-            throw new IllegalArgumentException("Incorrect password.");
+        if (!user.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Incorrect password, please try again");
         }
         return true; // Login successful
     }
