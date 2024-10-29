@@ -1,25 +1,23 @@
 package com.mcgillmart.McGillMart.features;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
-
-import com.mcgillmart.McGillMart.McGillMartApplication;
-import com.mcgillmart.McGillMart.model.McGillMart;
-import com.mcgillmart.McGillMart.model.User;
-import com.mcgillmart.McGillMart.services.LoginService;
-import com.mcgillmart.McGillMart.services.McGillMartService;
-import com.mcgillmart.McGillMart.services.UserService;
-import com.mcgillmart.McGillMart.services.ViewProfileService;
-
-import io.cucumber.java.en.*;
-
-import org.mockito.InjectMocks;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.mcgillmart.McGillMart.model.User;
+import com.mcgillmart.McGillMart.services.LoginService;
+import com.mcgillmart.McGillMart.services.UserService;
+import com.mcgillmart.McGillMart.services.ViewProfileService;
+
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 
 @SpringBootTest
 public class ViewUserProfileStepDefinitions {

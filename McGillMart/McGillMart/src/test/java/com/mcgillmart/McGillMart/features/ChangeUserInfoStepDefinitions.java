@@ -1,19 +1,19 @@
 package com.mcgillmart.McGillMart.features;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import io.cucumber.datatable.DataTable;
-
-import com.mcgillmart.McGillMart.services.UserService;
-import com.mcgillmart.McGillMart.model.McGillMart;
-import com.mcgillmart.McGillMart.model.User;
-
-import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.mcgillmart.McGillMart.model.User;
+import com.mcgillmart.McGillMart.services.UserService;
+
+import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 
 
 public class ChangeUserInfoStepDefinitions {
