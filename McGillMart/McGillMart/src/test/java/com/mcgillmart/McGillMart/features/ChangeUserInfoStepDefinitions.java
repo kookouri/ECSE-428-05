@@ -6,6 +6,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.datatable.DataTable;
 
 import com.mcgillmart.McGillMart.services.UserService;
+import com.mcgillmart.McGillMart.model.McGillMart;
 import com.mcgillmart.McGillMart.model.User;
 
 import static org.junit.jupiter.api.Assertions.*;

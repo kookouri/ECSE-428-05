@@ -38,8 +38,9 @@ public class LoginService {
         else if (user == null) {
             throw new IllegalArgumentException("User with email" + email + " not found.");
         }
-        else if (!user.getPassword().equals(password)) {
-            throw new IllegalArgumentException("Incorrect password.");
+
+        if (!user.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Incorrect password, please try again");
         }
         return true; // Login successful
     }
