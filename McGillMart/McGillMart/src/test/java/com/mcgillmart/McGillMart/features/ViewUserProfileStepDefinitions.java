@@ -25,9 +25,6 @@ import io.cucumber.datatable.DataTable;
 public class ViewUserProfileStepDefinitions {
 
     @Autowired
-    private McGillMartService mcGillMartService;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
@@ -41,6 +38,7 @@ public class ViewUserProfileStepDefinitions {
 
     private String errorMessage;
     private User loggedInUser;
+    private String loggedInEmail;
     private User viewedUser;
 
     @Given("the following user accounts exist in the system \\(ID003)")
@@ -58,28 +56,32 @@ public class ViewUserProfileStepDefinitions {
         });
     }
 
-    @Given("the user with id {int} is logged in \\(ID003)")
-    public void the_user_with_id_is_logged_in(int id) {
+    @Given("the user with id {string} is logged in \\(ID003)")
+    public void the_user_with_id_is_logged_in(String id) {
         try {
-            loggedInUser = userService.findUserById(id);
-            loginService.login(loggedInUser.getName(), loggedInUser.getPassword());
+            loggedInUser = userService.findUserById(Integer.parseInt(id));
+            loggedInEmail = loggedInUser.getEmail();
+            loginService.login(loggedInEmail, loggedInUser.getPassword());
         } catch (Exception e) {
             errorMessage = e.getMessage();
             loggedInUser = null;
+            loggedInEmail = null;
         }
     }
 
     @Given("the user is not logged in \\(ID003)")
     public void the_user_is_not_logged_in() {
         loggedInUser = null;
+        loggedInEmail = null;
     }
 
     @When("the user attempts to view their profile \\(ID003)")
     public void the_user_attempts_to_view_their_profile() {
         try {
-            viewedUser = viewProfileService.viewUserProfile(loggedInUser.getEmail());
+            viewedUser = viewProfileService.viewUserProfile(loggedInEmail);
         } catch (Exception e) {
             errorMessage = e.getMessage();
+            viewedUser = null;
         }
     }
 
