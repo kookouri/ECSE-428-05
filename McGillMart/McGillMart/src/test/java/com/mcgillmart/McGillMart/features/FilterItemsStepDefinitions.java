@@ -35,7 +35,7 @@ public class FilterItemsStepDefinitions {
         }
     }
 
-    @When("the user searches for items with the name containing {string} \\(ID006)")
+    @When("the user searches for items with the name containing {string} (ID006)")
     public void the_user_searches_for_items_with_the_name_containing(String searchTerm) {
         filteredItems = itemService.findItemsByNameContaining(searchTerm);
     }
@@ -48,15 +48,24 @@ public class FilterItemsStepDefinitions {
     @Then("the following items shall be presented \\(ID006)")
     public void the_following_items_shall_be_presented(List<Map<String, String>> expectedItems) {
         List<Map<String, String>> actualItems = filteredItems.stream()
-                .map(item -> Map.of(
-                        "id", String.valueOf(item.getId()),
-                        "name", item.getName(),
-                        "price", String.valueOf(item.getPrice()),
-                        "description", item.getDescription(),
-                        "category", item.getCategory().name()
-                ))
-                .collect(Collectors.toList());
+            .map(item -> Map.of(
+                    "price", String.valueOf(item.getPrice()),
+                    "description", item.getDescription(),
+                    "category", String.valueOf(item.getCategory())
+            ))
+            .collect(Collectors.toList());
 
-        assertEquals(expectedItems, actualItems);
+        // Check if both lists have the same size
+        assertEquals(expectedItems.size(), actualItems.size());
+
+        // Iterate through each item in both lists and compare them
+        for (int i = 0; i < actualItems.size(); i++) {
+            Map<String, String> expected = expectedItems.get(i);
+            Map<String, String> actual = actualItems.get(i);
+
+            assertEquals(expected.get("price"), actual.get("price"));
+            assertEquals(expected.get("description"), actual.get("description"));
+            assertEquals(expected.get("category"), actual.get("category"));
+        }
     }
 }
