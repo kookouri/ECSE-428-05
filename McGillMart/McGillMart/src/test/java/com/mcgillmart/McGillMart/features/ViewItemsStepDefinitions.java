@@ -9,20 +9,17 @@ import io.cucumber.java.en.Then;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.mcgillmart.McGillMart.model.Item;
-import com.mcgillmart.McGillMart.model.McGillMart;
-import com.mcgillmart.McGillMart.model.Item.Category;
+import com.mcgillmart.McGillMart.services.ItemService;
 
 public class ViewItemsStepDefinitions {
 
-    // The McGillMart object that holds the items
-    private McGillMart mcGillMart;
     private List<Item> viewedItems;
 
-    // This runs before any scenarios to set up the environment
-    public ViewItemsStepDefinitions() {
-        mcGillMart = new McGillMart();
-    }
+    @Autowired
+    private ItemService itemService;
 
     // Given the following items exist in the system
     @Given("the following items exist in the system \\(ID005)")
@@ -31,20 +28,17 @@ public class ViewItemsStepDefinitions {
             String name = itemData.get("name");
             double price = Double.parseDouble(itemData.get("price"));
             String description = itemData.get("description");
-            String categoryString = itemData.get("category");
-            Category category = Category.valueOf(categoryString);
+            String category = itemData.get("category");
 
             // Create a new Item and add it to the McGillMart
-            Item item = new Item(name, price, description, category, mcGillMart);
-            mcGillMart.getItems().add(item);
+            itemService.createItem(name, price, description, category);
         }
     }
 
     // When the user attempts to view all items in the system
     @When("the user attempts to view all items in the system \\(ID005)")
     public void the_user_attempts_to_view_all_items_in_the_system_id005() {
-        // View all items from McGillMart
-        viewedItems = mcGillMart.getItems();
+        viewedItems = itemService.findAllItems();
     }
 
     // Then the following items shall be presented
@@ -60,7 +54,7 @@ public class ViewItemsStepDefinitions {
 
             // Check item details match
             assertEquals(expectedItemData.get("name"), actualItem.getName());
-            assertEquals(Double.parseDouble(expectedItemData.get("price")), actualItem.getPrice(), 0.01);
+            assertEquals(Double.parseDouble(expectedItemData.get("price")), actualItem.getPrice());
             assertEquals(expectedItemData.get("description"), actualItem.getDescription());
             assertEquals(expectedItemData.get("category"), actualItem.getCategory().name()); // Convert enum to string
         }
