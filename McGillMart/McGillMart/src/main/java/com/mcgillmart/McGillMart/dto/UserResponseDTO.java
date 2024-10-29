@@ -12,9 +12,8 @@ public class UserResponseDTO {
     private String email;
     private String name;
     private String phoneNumber;
-    private List<Item> shoppingCart;
+    private List<ItemResponseDTO> shoppingCart;
     private List<Transaction> history;
-    private McGillMart mcGillMart;
     private String errorMessage;
 
     public UserResponseDTO() {
@@ -24,9 +23,8 @@ public class UserResponseDTO {
         this.email = user.getEmail();
         this.name = user.getName();
         this.phoneNumber = user.getPhoneNumber();
-        this.shoppingCart = user.getShoppingCart();
+        this.shoppingCart = ItemResponseDTO.itemListToItemResponseDTOList(user.getShoppingCart());
         this.history = user.getHistory();
-        this.mcGillMart = user.getMcGillMart();
         this.id = user.getId();
     }
 
@@ -58,7 +56,7 @@ public class UserResponseDTO {
         return phoneNumber;
     }
 
-    public List<Item> getShoppingCart()
+    public List<ItemResponseDTO> getShoppingCart()
     {
         return shoppingCart;
     }
@@ -80,7 +78,7 @@ public class UserResponseDTO {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setShoppingCart(List<Item> shoppingCart)
+    public void setShoppingCart(List<ItemResponseDTO> shoppingCart)
     {
         this.shoppingCart = shoppingCart;
     }
