@@ -38,8 +38,10 @@ public class CommonStepDefinitions {
 
     private void clearDatabase(){
         reviewRepo.deleteAll();
-        itemRepo.deleteAll();
         mcgillmartRepo.deleteAll();
+        itemRepo.deleteAll();
         userRepo.deleteAll();
+        
+        
     }
 }
