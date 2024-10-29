@@ -1,5 +1,6 @@
 package com.mcgillmart.McGillMart.features;
 
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.mcgillmart.McGillMart.model.McGillMart;
@@ -31,7 +32,7 @@ public class CommonStepDefinitions {
         mcgillmartRepo.save(new McGillMart());
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         clearDatabase();
     }
@@ -41,7 +42,5 @@ public class CommonStepDefinitions {
         mcgillmartRepo.deleteAll();
         itemRepo.deleteAll();
         userRepo.deleteAll();
-        
-        
     }
 }
