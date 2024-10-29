@@ -56,10 +56,10 @@ public class ViewUserProfileStepDefinitions {
         });
     }
 
-    @Given("the user with id {string} is logged in \\(ID003)")
-    public void the_user_with_id_is_logged_in(String id) {
+    @Given("the user with email {string} is logged in \\(ID003)")
+    public void the_user_with_id_is_logged_in(String email) {
         try {
-            loggedInUser = userService.findUserById(Integer.parseInt(id));
+            loggedInUser = userService.findUserByEmail(email);
             loggedInEmail = loggedInUser.getEmail();
             loginService.login(loggedInEmail, loggedInUser.getPassword());
         } catch (Exception e) {
