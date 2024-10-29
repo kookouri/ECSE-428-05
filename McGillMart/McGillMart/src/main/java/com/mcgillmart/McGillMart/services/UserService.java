@@ -123,6 +123,26 @@ public class UserService {
         if (email.isEmpty() || password.isEmpty() || name.isEmpty() || phoneNumber.isEmpty()) {
             throw new IllegalArgumentException("Empty fields for email, password, phone number or name are not valid");
         }
+        if (email.strip().contains(" ")) {
+            throw new IllegalArgumentException("Email must not contain any spaces");
+        }
+        
+        if (email.charAt(0) == '@') {
+            throw new IllegalArgumentException("Invalid email");
+        }
+        boolean encounteredPeriod = false;
+        for (int i = email.indexOf("@"); i < email.length(); i++){
+            if (email.charAt(i) == '.'){
+                if (i == email.indexOf("@") + 1 || i == email.length() - 1) {
+                    throw new IllegalArgumentException("Invalid email");
+                }
+                encounteredPeriod = true;
+            }
+        }
+        if (!encounteredPeriod) {
+            throw new IllegalArgumentException("Invalid email");
+        }
+
         if (!email.contains("@")) {
             throw new IllegalArgumentException("Email has to contain the character @");
         }

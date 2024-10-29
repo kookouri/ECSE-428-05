@@ -9,18 +9,18 @@ Feature: Change User Information (ID004)
     | 03  | Bob Johnson  | bob@example.com      | 555-123-4567 | oldPassword3  |
 
   Scenario: Successfully update user name and phone number
-    When the user updates the "name" field to "Johnny Doe" and the "phone" field to "321-654-9870" for user with id "01" (ID004)
-    Then the user profile should show the updated "name" as "Johnny Doe" (ID004)
-    And the "phone" field should display "321-654-9870" (ID004)
-    And the "email" field should remain "john@example.com" (ID004)
+    When the user updates the name field to "Johnny Doe" and the phone field to "321-654-9870" for user with email "john@example.com" (ID004)
+    Then the name field should display "Johnny Doe" (ID004)
+    And the phone field should display "321-654-9870" (ID004)
+    And the email field should display "john@example.com" (ID004)
 
   Scenario: Successfully update user email
-    When the user updates the "email" field to "johnny@example.com" for user with id "01" (ID004)
-    Then the user profile should show the updated "email" as "johnny@example.com" (ID004)
-    And the "name" field should remain "John Doe" (ID004)
-    And the "phone" field should remain "123-456-4890" (ID004)
+    When the user updates the email field to "johnny@example.com" for user with email "john@example.com" (ID004)
+    Then the email field should display "johnny@example.com" (ID004)
+    And the name field should display "John Doe" (ID004)
+    And the phone field should display "123-456-4890" (ID004)
 
   Scenario: Successfully update user password
-    When the user changes the "password" field for user with id "02" to "newPassword2" (ID004)
+    When the user changes the password field for user with email "bob@example.com" to "newPassword2" (ID004)
     Then the user should be able to log in with the new password "newPassword2" (ID004)
     And the old password "oldPassword2" should no longer be valid (ID004)

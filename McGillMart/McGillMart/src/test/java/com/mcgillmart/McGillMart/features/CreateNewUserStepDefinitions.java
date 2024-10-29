@@ -24,6 +24,7 @@ public class CreateNewUserStepDefinitions {
 
     @Autowired
     private UserService userService;
+
     private Exception caughtException;
     private int initialCount = 0;
 
