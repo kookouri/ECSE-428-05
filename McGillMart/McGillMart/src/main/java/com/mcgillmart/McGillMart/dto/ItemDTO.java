@@ -12,6 +12,8 @@ public class ItemDTO {
     private String description;
     private String category;
     private McGillMart mcGillMart;
+    private int reviewCount;
+    private List<ReviewDTO> reviews;
 
     public ItemDTO() {
     }
@@ -21,6 +23,10 @@ public class ItemDTO {
         this.price = item.getPrice();
         this.description = item.getDescription();
         this.mcGillMart = item.getMcGillMart();
+        this.category = item.getCategory().toString();
+        this.reviewCount = item.getReviews().size();
+        this.reviews = item.getReviews().stream().map(ReviewDTO::new).collect(Collectors.toList());
+
     }
 
     public ItemDTO(String errorMessage) {
@@ -65,6 +71,22 @@ public class ItemDTO {
 
     public void setMcGillMart(McGillMart mcGillMart) {
         this.mcGillMart = mcGillMart;
+    }
+
+    public int getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(int reviewCount) {
+        this.reviewCount = reviewCount;
+    }
+
+    public List<ReviewDTO> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<ReviewDTO> reviews) {
+        this.reviews = reviews;
     }
 
     public static List<ItemDTO> itemListToItemDTOList(List<Item> items) {

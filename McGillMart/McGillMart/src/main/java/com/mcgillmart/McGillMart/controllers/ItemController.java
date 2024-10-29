@@ -1,10 +1,14 @@
 package com.mcgillmart.McGillMart.controllers;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.mcgillmart.McGillMart.dto.ItemDTO;
+import com.mcgillmart.McGillMart.dto.ReviewDTO;
 import com.mcgillmart.McGillMart.model.Item;
+import com.mcgillmart.McGillMart.model.Review;
 import com.mcgillmart.McGillMart.services.ItemService;
+import com.mcgillmart.McGillMart.services.ReviewService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,10 +20,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <p>Controller class in charge of managing items. It implements the following use cases: </p>
+ * <p>Controller class in charge of managing items. It implements the following use cases: </p> 
  * <p>Create, update, read and delete an item </p>
  * @author Anastasiia
  */
@@ -28,6 +33,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ItemController {
     @Autowired
     ItemService itemService;
+
+    @Autowired
+    ReviewService reviewService;
 
     //--------------------------// Create Item //--------------------------//
     @PostMapping(value = {"/items", "/items/", "/public/items"})
@@ -82,4 +90,45 @@ public class ItemController {
             return new ResponseEntity<List<ItemDTO>>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    //--------------------------// Add Review to Item //--------------------------//
+    @PostMapping(value = {"/items/{itemName}/reviews"})
+    public ResponseEntity<ReviewDTO> addReviewToItem(
+            @PathVariable String itemName,
+            @RequestParam String email,
+            @RequestParam String phone,
+            @RequestParam String password,
+            @RequestParam int rating,
+            @RequestParam String comment) {
+        try {
+            Review newReview = reviewService.addReview(email, phone, password, itemName, rating, comment);
+            return new ResponseEntity<ReviewDTO>(new ReviewDTO(newReview), HttpStatus.ACCEPTED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<ReviewDTO>(new ReviewDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //--------------------------// Get Reviews for Item //--------------------------//
+    @GetMapping(value = {"/items/{itemName}/reviews"})
+    public ResponseEntity<List<ReviewDTO>> getReviewsForItem(@PathVariable String itemName) {
+        try {
+            List<ReviewDTO> reviews = reviewService.getReviewsForItem(itemName).stream()
+                    .map(ReviewDTO::new).collect(Collectors.toList());
+            return new ResponseEntity<>(reviews, HttpStatus.FOUND);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //--------------------------// Delete Review //--------------------------//
+    @DeleteMapping(value = {"/reviews/{reviewId}"})
+    public ResponseEntity<String> deleteReview(@PathVariable Integer reviewId) {
+        try {
+            reviewService.deleteReview(reviewId);
+            return new ResponseEntity<>("Review deleted successfully", HttpStatus.NO_CONTENT);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
