@@ -35,7 +35,7 @@ public class FilterItemsStepDefinitions {
         }
     }
 
-    @When("the user searches for items with the name containing {string} (ID006)")
+    @When("the user searches for items with the name containing {string} \\(ID006)")
     public void the_user_searches_for_items_with_the_name_containing(String searchTerm) {
         filteredItems = itemService.findItemsByNameContaining(searchTerm);
     }
