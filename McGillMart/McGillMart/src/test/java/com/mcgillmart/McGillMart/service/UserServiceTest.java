@@ -175,7 +175,7 @@ public class UserServiceTest {
         User julia = new User(email, name, password, phoneNumber, 
             toList(mcgillMartRepository.findAll()).get(0));
         
-        // Mocking the repository since we want to test the Service
+        
         when(userRepository.save(any(User.class))).thenReturn(julia);
         when(userRepository.findUserById(id)).thenReturn(julia);
 
