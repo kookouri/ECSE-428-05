@@ -33,7 +33,7 @@ public class ItemService {
     /**
      * Filters items by name.
      *
-     * @param name the name to filter items by
+     * @param name the name to filter items by 
      * @return the item matching the name
      */
     @Transactional(readOnly = true)
@@ -49,6 +49,13 @@ public class ItemService {
         return item;
     }
 
+
+    /**
+     * Filters items by containing a name.
+     *
+     * @param name the name to filter items containing
+     * @return the item matching the name
+     */
     @Transactional(readOnly = true)
     public List<Item> findItemsByNameContaining(String name) {
         logger.info("Filtering items by name: {}", name);
