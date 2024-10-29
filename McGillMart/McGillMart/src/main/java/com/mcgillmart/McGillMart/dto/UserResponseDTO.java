@@ -2,8 +2,6 @@ package com.mcgillmart.McGillMart.dto;
 
 import java.util.List;
 
-import com.mcgillmart.McGillMart.model.Item;
-import com.mcgillmart.McGillMart.model.McGillMart;
 import com.mcgillmart.McGillMart.model.Transaction;
 import com.mcgillmart.McGillMart.model.User;
 

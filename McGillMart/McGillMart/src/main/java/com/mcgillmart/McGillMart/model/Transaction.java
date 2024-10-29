@@ -111,6 +111,7 @@ public class Transaction
   }
 
 
+  @SuppressWarnings("unlikely-arg-type")
   public String toString()
   {
     return super.toString() + "["+
