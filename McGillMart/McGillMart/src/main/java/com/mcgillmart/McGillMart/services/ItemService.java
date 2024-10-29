@@ -49,6 +49,19 @@ public class ItemService {
         return item;
     }
 
+    @Transactional(readOnly = true)
+    public List<Item> findItemsByNameContaining(String name) {
+        logger.info("Filtering items by name: {}", name);
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be null or empty.");
+        }
+
+        List<Item> items = itemRepository.findByNameContaining(name);
+
+        logger.info("Filtered item by name: {}", name);
+        return items;
+    }
+
     /**
      * Filters items by category.
      *

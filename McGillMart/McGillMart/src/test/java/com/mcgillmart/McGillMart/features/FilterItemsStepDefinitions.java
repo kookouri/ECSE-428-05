@@ -4,43 +4,59 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import static org.junit.jupiter.api.Assertions.*;
+
+import com.mcgillmart.McGillMart.model.Item;
+import com.mcgillmart.McGillMart.services.ItemService;
+
+import io.cucumber.datatable.DataTable;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FilterItemsStepDefinitions {
 
-    private List<Map<String, String>> items = new ArrayList<>();
-    private List<Map<String, String>> filteredItems = new ArrayList<>();
+    @Autowired
+    private ItemService itemService;
+
+    private List<Item> filteredItems = new ArrayList<>();
 
     @Given("the following items exist in the system \\(ID006)")
-    public void the_following_items_exist_in_the_system_id006(List<Map<String, String>> dataTable) {
-        items.clear();
-        items.addAll(dataTable);
+    public void the_following_items_exist_in_the_system(DataTable data) {
+        List<Map<String, String>> dataTable = data.asMaps(String.class, String.class);
+        for (Map<String, String> row : dataTable) {
+            String name = row.get("name");
+            double price = Double.parseDouble(row.get("price"));
+            String description = row.get("description");
+            String category = row.get("category");
+            itemService.createItem(name, price, description, category);
+        }
     }
 
     @When("the user searches for items with the name containing {string} \\(ID006)")
-    public void the_user_searches_for_items_with_the_name_containing_id006(String searchTerm) {
-        filteredItems.clear();
-        for (Map<String, String> item : items) {
-            if (item.get("name").contains(searchTerm)) {
-                filteredItems.add(item);
-            }
-        }
+    public void the_user_searches_for_items_with_the_name_containing(String searchTerm) {
+        filteredItems = itemService.findItemsByNameContaining(searchTerm);
     }
 
     @When("the user attempts to only view the {string} items in the system \\(ID006)")
-    public void the_user_attempts_to_only_view_the_category_items_in_the_system_id006(String category) {
-        filteredItems.clear();
-        for (Map<String, String> item : items) {
-            if (item.get("category").equals(category)) {
-                filteredItems.add(item);
-            }
-        }
+    public void the_user_attempts_to_only_view_the_items_in_the_system(String category) {
+        filteredItems = itemService.filterItemsByCategory(category);
     }
 
     @Then("the following items shall be presented \\(ID006)")
-    public void the_following_items_shall_be_presented_id006(List<Map<String, String>> expectedItems) {
-        assertEquals(expectedItems, filteredItems);
+    public void the_following_items_shall_be_presented(List<Map<String, String>> expectedItems) {
+        List<Map<String, String>> actualItems = filteredItems.stream()
+                .map(item -> Map.of(
+                        "id", String.valueOf(item.getId()),
+                        "name", item.getName(),
+                        "price", String.valueOf(item.getPrice()),
+                        "description", item.getDescription(),
+                        "category", item.getCategory().name()
+                ))
+                .collect(Collectors.toList());
+
+        assertEquals(expectedItems, actualItems);
     }
 }
