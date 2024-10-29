@@ -1,27 +1,27 @@
 package com.mcgillmart.McGillMart.dto;
 
 public class LoginRequestDTO {
-    private String username;
+    private String email;
     private String password;
 
     public LoginRequestDTO() {
     }
 
-    public LoginRequestDTO(String username, String password) {
-        this.username = username;
+    public LoginRequestDTO(String email, String password) {
+        this.email = email;
         this.password = password;
     }
 
     public LoginRequestDTO(String errorMessage) {
-        this.username = errorMessage;
+        this.email = errorMessage;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

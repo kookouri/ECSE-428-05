@@ -31,9 +31,9 @@ public class LoginController {
     @PostMapping(value = { "/login", "/login/" })
     public ResponseEntity<LoginRequestDTO> login(@RequestBody LoginRequestDTO userLogin) {
         try {
-            boolean validLogin = loginService.login(userLogin.getUsername(), userLogin.getPassword());
+            boolean validLogin = loginService.login(userLogin.getEmail(), userLogin.getPassword());
             if (validLogin) {
-                return new ResponseEntity<LoginRequestDTO>(new LoginRequestDTO(userLogin.getUsername(), userLogin.getPassword()), HttpStatus.ACCEPTED);
+                return new ResponseEntity<LoginRequestDTO>(new LoginRequestDTO(userLogin.getEmail(), userLogin.getPassword()), HttpStatus.ACCEPTED);
             } else {
                 return new ResponseEntity<LoginRequestDTO>(new LoginRequestDTO("Invalid login credentials"), HttpStatus.BAD_REQUEST);
             }
