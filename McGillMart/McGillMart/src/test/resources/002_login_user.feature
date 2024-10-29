@@ -6,12 +6,12 @@ Feature: User Login (ID002)
   Background:
     Given the following users exist in the system (ID002)
     | id | name         | email                | phone        | password    |
-    | 01 | John Doe     | user123@example.com  | 123-456-4890 | pass123     |
+    | 01 | John Doe     | user123@example.com  | 123-456-4890 | password123 |
     | 02 | Jane Smith   | jane@example.com     | 987-654-3210 | oldPassword2|
     | 03 | Bob Johnson  | bob@example.com      | 555-123-4567 | oldPassword3|
 
   Scenario: Successful login with valid credentials
-    When the user attempts to login with the email "user123@example.com" and the password "pass123" (ID002)
+    When the user attempts to login with the email "user123@example.com" and the password "password123" (ID002)
     Then "John Doe" should be displayed in the account section (ID002)
 
   Scenario: Failed login due to incorrect password
