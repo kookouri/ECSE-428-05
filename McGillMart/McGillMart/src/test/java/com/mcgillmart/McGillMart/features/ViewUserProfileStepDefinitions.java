@@ -39,7 +39,7 @@ public class ViewUserProfileStepDefinitions {
     private String errorMessage;
     private User loggedInUser;
     private String loggedInEmail;
-    private User viewedUser;
+    private User viewedUser = null;
 
     @Given("the following user accounts exist in the system \\(ID003)")
     public void the_following_user_accounts_exist_in_the_system(DataTable dataTable) {
@@ -81,7 +81,6 @@ public class ViewUserProfileStepDefinitions {
             viewedUser = viewProfileService.viewUserProfile(loggedInEmail);
         } catch (Exception e) {
             errorMessage = e.getMessage();
-            viewedUser = null;
         }
     }
 

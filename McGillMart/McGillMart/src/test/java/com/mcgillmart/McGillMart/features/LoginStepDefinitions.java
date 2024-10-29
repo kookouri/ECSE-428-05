@@ -1,6 +1,7 @@
 package com.mcgillmart.McGillMart.features;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,7 @@ public class LoginStepDefinitions {
 
     @Then("an error message should be displayed saying {string} \\(ID002)")
     public void an_error_message_should_be_displayed(String error) {
+        System.out.println("ACTUAL ERROR MESSAGE: " + errorMessage);
         assertEquals(error, errorMessage);
     }
 }
