@@ -175,7 +175,7 @@ public class UserServiceTest {
         User julia = new User(email, name, password, phoneNumber, 
             toList(mcgillMartRepository.findAll()).get(0));
         
-        // Mocking the repository since we want to test the Service
+        
         when(userRepository.save(any(User.class))).thenReturn(julia);
         when(userRepository.findUserById(id)).thenReturn(julia);
 
@@ -200,7 +200,7 @@ public class UserServiceTest {
         User userx = new User(email, name, password, phoneNumber, 
         toList(mcgillMartRepository.findAll()).get(0));
     
-        // Mocking the repository since we want to test the Service
+        
         when(userRepository.save(any(User.class))).thenReturn(userx);
         when(userRepository.findUserById(id)).thenReturn(userx);
 
@@ -236,7 +236,7 @@ public class UserServiceTest {
         User lina = new User(email, name, password, phoneNumber, 
         toList(mcgillMartRepository.findAll()).get(0));
     
-        // Mocking the repository since we want to test the Service
+        
         when(userRepository.save(any(User.class))).thenReturn(lina);
         when(userRepository.findUserById(id)).thenReturn(lina);
 
