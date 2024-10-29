@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.mcgillmart.McGillMart.model.User;
 
+import org.springframework.beans.factory.annotation.Autowired;
 /**
 * <p>Service class in charge of logging in users. It implements following use cases: </p>
 * <p>Validate login to account</p>
@@ -11,6 +12,7 @@ import com.mcgillmart.McGillMart.model.User;
 */
 @Service("loginService")
 public class LoginService {
+    @Autowired
     private UserService userService;
     
     public boolean login(String username, String password) {
