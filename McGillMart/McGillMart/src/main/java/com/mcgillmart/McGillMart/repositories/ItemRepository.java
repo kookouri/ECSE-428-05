@@ -30,6 +30,6 @@ public interface ItemRepository extends CrudRepository<Item, Integer> {
     @Query("SELECT i FROM Item i WHERE i.description LIKE %:keyword%")
     List<Item> findByDescriptionContaining(String keyword);
 
-    @Query("SELECT i FROM Item i WHERE i.description LIKE %:keyword%")
+    @Query("SELECT i FROM Item i WHERE i.name LIKE %:keyword%")
     List<Item> findByNameContaining(String keyword);
 }
