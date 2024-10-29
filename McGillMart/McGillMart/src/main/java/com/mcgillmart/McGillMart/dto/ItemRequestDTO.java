@@ -3,33 +3,30 @@ package com.mcgillmart.McGillMart.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.mcgillmart.McGillMart.model.Item;
-import com.mcgillmart.McGillMart.model.McGillMart;
 
-public class ItemDTO {
+import com.mcgillmart.McGillMart.model.Item;
+
+public class ItemRequestDTO {
     private String name;
     private double price;
     private String description;
     private String category;
-    private McGillMart mcGillMart;
     private int reviewCount;
-    private List<ReviewDTO> reviews;
+    private List<ReviewResponseDTO> reviews;
 
-    public ItemDTO() {
+    public ItemRequestDTO() {
     }
 
-    public ItemDTO(Item item) {
+    public ItemRequestDTO(Item item) {
         this.name = item.getName();
         this.price = item.getPrice();
         this.description = item.getDescription();
-        this.mcGillMart = item.getMcGillMart();
         this.category = item.getCategory().toString();
         this.reviewCount = item.getReviews().size();
-        this.reviews = item.getReviews().stream().map(ReviewDTO::new).collect(Collectors.toList());
-
+        this.reviews = item.getReviews().stream().map(ReviewResponseDTO::new).collect(Collectors.toList());
     }
 
-    public ItemDTO(String errorMessage) {
+    public ItemRequestDTO(String errorMessage) {
         this.description = errorMessage;
     }
 
@@ -65,14 +62,6 @@ public class ItemDTO {
         this.description = description;
     }
 
-    public McGillMart getMcGillMart() {
-        return mcGillMart;
-    }
-
-    public void setMcGillMart(McGillMart mcGillMart) {
-        this.mcGillMart = mcGillMart;
-    }
-
     public int getReviewCount() {
         return reviewCount;
     }
@@ -81,15 +70,15 @@ public class ItemDTO {
         this.reviewCount = reviewCount;
     }
 
-    public List<ReviewDTO> getReviews() {
+    public List<ReviewResponseDTO> getReviews() {
         return reviews;
     }
 
-    public void setReviews(List<ReviewDTO> reviews) {
+    public void setReviews(List<ReviewResponseDTO> reviews) {
         this.reviews = reviews;
     }
 
-    public static List<ItemDTO> itemListToItemDTOList(List<Item> items) {
-        return items.stream().map(ItemDTO::new).collect(Collectors.toList());
+    public static List<ItemRequestDTO> itemListToItemRequestDTOList(List<Item> items) {
+        return items.stream().map(ItemRequestDTO::new).collect(Collectors.toList());
     }
 }

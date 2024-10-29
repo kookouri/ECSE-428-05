@@ -1,6 +1,6 @@
 package com.mcgillmart.McGillMart.model;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,12 +15,12 @@ public class Transaction
   private int id;
 
   private double amount;
-  private Date dateOfPurchase;
+  private LocalDate dateOfPurchase;
 
   @ManyToOne
   private User user;
 
-  public Transaction(int aId, double aAmount, Date aDateOfPurchase, User aUser)
+  public Transaction(int aId, double aAmount, LocalDate aDateOfPurchase, User aUser)
   {
     id = aId;
     amount = aAmount;
@@ -53,7 +53,7 @@ public class Transaction
     return wasSet;
   }
 
-  public boolean setDateOfPurchase(Date aDateOfPurchase)
+  public boolean setDateOfPurchase(LocalDate  aDateOfPurchase)
   {
     boolean wasSet = false;
     dateOfPurchase = aDateOfPurchase;
@@ -71,7 +71,7 @@ public class Transaction
     return amount;
   }
 
-  public Date getDateOfPurchase()
+  public LocalDate getDateOfPurchase()
   {
     return dateOfPurchase;
   }
