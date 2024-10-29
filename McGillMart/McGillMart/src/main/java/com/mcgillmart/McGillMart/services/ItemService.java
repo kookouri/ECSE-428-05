@@ -112,9 +112,8 @@ public class ItemService {
             throw new IllegalArgumentException("Item with name " + name + " already exists.");
         }
         Item item = new Item(name, price, description, Item.Category.valueOf(category), mcGillMartService.getMcGillMart());
-        Item savedItem = itemRepository.save(item);
-        logger.info("Created item with ID: {}", savedItem.getId());
-        return savedItem;
+        
+        return itemRepository.save(item);
     }
 
     /**
