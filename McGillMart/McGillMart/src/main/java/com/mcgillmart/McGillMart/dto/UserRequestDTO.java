@@ -13,9 +13,8 @@ public class UserRequestDTO {
     private String name;
     private String password;
     private String phoneNumber;
-    private List<Item> shoppingCart;
+    private List<ItemResponseDTO> shoppingCart;
     private List<Transaction> history;
-    private McGillMart mcGillMart;
     private String errorMessage;
 
     public UserRequestDTO() {
@@ -26,9 +25,8 @@ public class UserRequestDTO {
         this.name = user.getName();
         this.password = user.getPassword();
         this.phoneNumber = user.getPhoneNumber();
-        this.shoppingCart = user.getShoppingCart();
+        this.shoppingCart = ItemResponseDTO.itemListToItemResponseDTOList(user.getShoppingCart());
         this.history = user.getHistory();
-        this.mcGillMart = user.getMcGillMart();
         this.id = user.getId();
     }
 
@@ -62,7 +60,7 @@ public class UserRequestDTO {
     }
 
 
-    public List<Item> getShoppingCart()
+    public List<ItemResponseDTO> getShoppingCart()
     {
         return shoppingCart;
     }
@@ -89,13 +87,13 @@ public class UserRequestDTO {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setShoppingCart(List<Item> shoppingCart)
+    public void setShoppingCart(List<ItemResponseDTO> shoppingCart)
     {
         this.shoppingCart = shoppingCart;
     }
 
     public void setHistory( List<Transaction> history) { this.history = history;}
-
+    
 
 }
 

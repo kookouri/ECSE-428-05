@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -56,7 +55,7 @@ public class ReviewService {
         User user = validateUser(email, phone, password);
 
         // Find the item
-        Item item = itemRepository.findByName(itemName);
+        Item item = itemRepository.findItemByName(itemName);
         if (item == null) {
             throw new IllegalArgumentException("Item not found: " + itemName);
         }
@@ -65,7 +64,7 @@ public class ReviewService {
         validateReviewDetails(rating, comment);
 
         // Get the current date
-        Date currentDate = Date.valueOf(LocalDate.now());
+        LocalDate currentDate = LocalDate.now();
 
         // Create and save the review
         Review review = new Review(0, rating, comment, currentDate, user.getName(), item);
@@ -86,7 +85,7 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public List<Review> getReviewsForItem(String itemName) {
         logger.info("Retrieving reviews for item: {}", itemName);
-        Item item = itemRepository.findByName(itemName);
+        Item item = itemRepository.findItemByName(itemName);
         if (item == null) {
             throw new IllegalArgumentException("Item not found: " + itemName);
         }

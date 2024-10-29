@@ -2,37 +2,23 @@ package com.mcgillmart.McGillMart.dto;
 
 import com.mcgillmart.McGillMart.model.Review;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
-public class ReviewDTO {
-    private int id;
+public class ReviewRequestDTO {
     private int rating;
     private String comment;
-    private Date datePosted;
+    private LocalDate datePosted;
     private String username;
     private String itemName;
 
-    public ReviewDTO() {}
+    public ReviewRequestDTO() {}
 
-    public ReviewDTO(Review review) {
-        this.id = review.getId();
-        this.rating = review.getRating();
-        this.comment = review.getComment();
-        this.datePosted = review.getDatePosted();
-        this.username = review.getUsername();
-        this.itemName = review.getItem().getName(); 
-    }
-
-    public ReviewDTO(String errorMessage) {
-        this.comment = errorMessage;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public ReviewRequestDTO(int rating, String comment, LocalDate datePosted, String username, String itemName) {
+        this.rating = rating;
+        this.comment = comment;
+        this.datePosted = datePosted;
+        this.username = username;
+        this.itemName = itemName;
     }
 
     public int getRating() {
@@ -51,11 +37,11 @@ public class ReviewDTO {
         this.comment = comment;
     }
 
-    public Date getDatePosted() {
+    public LocalDate getDatePosted() {
         return datePosted;
     }
 
-    public void setDatePosted(Date datePosted) {
+    public void setDatePosted(LocalDate  datePosted) {
         this.datePosted = datePosted;
     }
 

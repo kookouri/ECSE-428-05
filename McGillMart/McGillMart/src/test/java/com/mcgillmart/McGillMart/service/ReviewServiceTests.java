@@ -14,12 +14,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class ReviewServiceTests {
@@ -62,7 +63,7 @@ public class ReviewServiceTests {
         testReview = new Review();
         testReview.setRating(5);
         testReview.setComment("Great product!");
-        testReview.setDatePosted(new Date(System.currentTimeMillis()));
+        testReview.setDatePosted(LocalDate.now());
         testReview.setUsername(testUser.getEmail());
         testReview.setItem(testItem); // Associate the review with the item
 
@@ -82,7 +83,7 @@ public class ReviewServiceTests {
     @Test
     public void testAddReview() {
         when(userRepository.findUserByEmail(testUser.getEmail())).thenReturn(testUser);
-        when(itemRepository.findByName(testItem.getName())).thenReturn(testItem);
+        when(itemRepository.findItemByName(testItem.getName())).thenReturn(testItem);
         when(reviewRepository.save(any(Review.class))).thenReturn(testReview);
 
         Review savedReview = reviewService.addReview(
@@ -110,7 +111,7 @@ public class ReviewServiceTests {
 
     @Test
     public void testGetReviewsForItem() {
-        when(itemRepository.findByName(testItem.getName())).thenReturn(testItem);
+        when(itemRepository.findItemByName(testItem.getName())).thenReturn(testItem);
 
         List<Review> reviews = reviewService.getReviewsForItem(testItem.getName());
 
@@ -122,7 +123,7 @@ public class ReviewServiceTests {
 
     @Test
     public void testGetReviewsForItemNotFound() {
-        when(itemRepository.findByName("Non-Existent Item")).thenReturn(null);
+        when(itemRepository.findItemByName("Non-Existent Item")).thenReturn(null);
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             reviewService.getReviewsForItem("Non-Existent Item");
