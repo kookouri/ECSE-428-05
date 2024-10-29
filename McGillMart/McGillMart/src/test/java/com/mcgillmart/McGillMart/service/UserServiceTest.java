@@ -207,7 +207,6 @@ public class UserServiceTest {
         assertEquals("987-654-3210", user1.getPhoneNumber());
     }
 
-    //to be fixed
     @Test
     public void testUpdateUserWithNonExistentId() {
 
