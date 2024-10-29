@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.mcgillmart.McGillMart.model.User;
 import com.mcgillmart.McGillMart.repositories.UserRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 /**
 * <p>Service class in charge of logging in users. It implements following use cases: </p>
 * <p>Validate login to account</p>
@@ -21,13 +22,8 @@ public class LoginService {
     
     public boolean login(String email, String password) {
 
-        User user = userService.findUserByEmail(email);
-
-        if (email.isEmpty()) {
-            throw new IllegalArgumentException("Email cannot be empty.");
-        }
-        else if (password.isEmpty()) {
-            throw new IllegalArgumentException("Password cannot be empty.");
+        if (email.equals("") || password.equals("")) {
+            throw new IllegalArgumentException("Please enter both email and password");
         }
         else if (!email.contains("@")) {
             throw new IllegalArgumentException("Email has to contain the character @.");
@@ -35,11 +31,16 @@ public class LoginService {
         else if (password.length() < 8) {
             throw new IllegalArgumentException("The password needs to have 8 characters or more.");
         }
-        else if (user == null) {
-            throw new IllegalArgumentException("User with email" + email + " not found.");
+
+        User user;
+        try {
+            user = userService.findUserByEmail(email);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Email not found, please register");
         }
-        else if (!user.getPassword().equals(password)) {
-            throw new IllegalArgumentException("Incorrect password.");
+
+        if (!user.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Incorrect password, please try again");
         }
         return true; // Login successful
     }

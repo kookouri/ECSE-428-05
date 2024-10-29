@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import com.mcgillmart.McGillMart.model.McGillMart;
-import com.mcgillmart.McGillMart.model.ShoppingCart;
-import com.mcgillmart.McGillMart.model.Transaction;
 import com.mcgillmart.McGillMart.model.User;
 
 public class UserListDTO {

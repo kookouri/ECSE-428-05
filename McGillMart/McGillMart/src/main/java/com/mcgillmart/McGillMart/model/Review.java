@@ -1,11 +1,13 @@
 package com.mcgillmart.McGillMart.model;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
+@Entity
 public class Review
 {
   @Id
@@ -14,13 +16,13 @@ public class Review
 
   private int rating;
   private String comment;
-  private Date datePosted;
+  private LocalDate datePosted;
   private String username;
 
   @ManyToOne
   private Item item;
 
-  public Review(int aId, int aRating, String aComment, Date aDatePosted, String aUsername, Item aItem)
+  public Review(int aId, int aRating, String aComment, LocalDate aDatePosted, String aUsername, Item aItem)
   {
     id = aId;
     rating = aRating;
@@ -34,6 +36,9 @@ public class Review
     }
   }
 
+  public Review(){
+    
+  }
   //------------------------
   // INTERFACE
   //------------------------
@@ -62,7 +67,7 @@ public class Review
     return wasSet;
   }
 
-  public boolean setDatePosted(Date aDatePosted)
+  public boolean setDatePosted(LocalDate  aDatePosted)
   {
     boolean wasSet = false;
     datePosted = aDatePosted;
@@ -93,7 +98,7 @@ public class Review
     return comment;
   }
 
-  public Date getDatePosted()
+  public LocalDate getDatePosted()
   {
     return datePosted;
   }

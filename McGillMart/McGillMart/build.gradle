@@ -1,18 +1,14 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.3.4'
+	id 'org.springframework.boot' version '3.2.11'
 	id 'io.spring.dependency-management' version '1.1.6'
 }
-
-
 
 group = 'com.mcgillmart'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+	sourceCompatibility = '17'
 }
 
 repositories {
@@ -22,28 +18,27 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-
+	
 	// API docs
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0'
 	// See https://springdoc.org/#javadoc-support
 	annotationProcessor 'com.github.therapi:therapi-runtime-javadoc-scribe:0.13.0'
 	implementation 'com.github.therapi:therapi-runtime-javadoc:0.13.0'
 	
-	implementation "org.springframework.boot:spring-boot-starter-security"
-	// JUnit
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-
+	// implementation "org.springframework.boot:spring-boot-starter-security"
+	
 	// Cucumber for JUnit
 	testImplementation 'io.cucumber:cucumber-java:7.0.0'
 	testImplementation 'io.cucumber:cucumber-spring:7.0.0'
 	testImplementation 'io.cucumber:cucumber-junit:7.0.0'
+	testImplementation 'io.cucumber:cucumber-java:6.10.4'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.junit.vintage:junit-vintage-engine:5.7.2'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+

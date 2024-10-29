@@ -2,20 +2,36 @@ package com.mcgillmart.McGillMart.model;
 
 import java.util.*;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
+// line 9 "model.ump"
+// line 56 "model.ump"
+@Entity
+// In PostgreSQL, user is a reserved keyword, 
+// so using it as a table name without additional handling will lead to conflicts
+@Table(name = "\"user\"") 
 public class User
 {
 
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
   private static Map<String, User> usersByEmail = new HashMap<String, User>();
 
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //User Attributes
   @Id
   @GeneratedValue
   private int id;
@@ -25,9 +41,9 @@ public class User
   private String password;
   private String phoneNumber;
 
-  @OneToOne
-  private ShoppingCart shoppingCart;
-
+  //User Associations
+  @OneToMany
+  private List<Item> shoppingCart;
   @OneToMany
   private List<Transaction> history;
 
@@ -35,39 +51,23 @@ public class User
   @JoinColumn(name="mcgill_mart_id")
   private McGillMart mcGillMart;
 
-  public User(String aEmail, String aName, String aPassword, String aPhoneNumber, ShoppingCart aShoppingCart, McGillMart aMcGillMart)
-  {
-    name = aName;
-    password = aPassword;
-    phoneNumber = aPhoneNumber;
-    if (!setEmail(aEmail))
-    {
-      throw new RuntimeException("Cannot create due to duplicate email. See https://manual.umple.org?RE003ViolationofUniqueness.html");
-    }
-    if (aShoppingCart == null || aShoppingCart.getUser() != null)
-    {
-      throw new RuntimeException("Unable to create User due to aShoppingCart. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-    shoppingCart = aShoppingCart;
-    history = new ArrayList<Transaction>();
-    boolean didAddMcGillMart = setMcGillMart(aMcGillMart);
-    if (!didAddMcGillMart)
-    {
-      throw new RuntimeException("Unable to create user due to mcGillMart. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  public User() {
+	  
   }
-
-  public User(int aId, String aEmail, String aName, String aPassword, String aPhoneNumber, int aIdForShoppingCart, McGillMart aMcGillMart)
+  
+  public User(String aEmail, String aName, String aPassword, String aPhoneNumber, McGillMart aMcGillMart)
   {
-    id = aId;
+    name = aName;
+    password = aPassword;
+    phoneNumber = aPhoneNumber;
     if (!setEmail(aEmail))
     {
       throw new RuntimeException("Cannot create due to duplicate email. See https://manual.umple.org?RE003ViolationofUniqueness.html");
     }
-    name = aName;
-    password = aPassword;
-    phoneNumber = aPhoneNumber;
-    shoppingCart = new ShoppingCart(aIdForShoppingCart, this);
+    shoppingCart = new ArrayList<Item>();
     history = new ArrayList<Transaction>();
     boolean didAddMcGillMart = setMcGillMart(aMcGillMart);
     if (!didAddMcGillMart)
@@ -95,19 +95,8 @@ public class User
   public boolean setEmail(String aEmail)
   {
     boolean wasSet = false;
-    String anOldEmail = getEmail();
-    if (anOldEmail != null && anOldEmail.equals(aEmail)) {
-      return true;
-    }
-    if (hasWithEmail(aEmail)) {
-      return wasSet;
-    }
-    email = aEmail;
+    email = aEmail.toLowerCase();
     wasSet = true;
-    if (anOldEmail != null) {
-      usersByEmail.remove(anOldEmail);
-    }
-    usersByEmail.put(aEmail, this);
     return wasSet;
   }
 
@@ -144,16 +133,6 @@ public class User
   {
     return email;
   }
-  /* Code from template attribute_GetUnique */
-  public static User getWithEmail(String aEmail)
-  {
-    return usersByEmail.get(aEmail);
-  }
-  /* Code from template attribute_HasUnique */
-  public static boolean hasWithEmail(String aEmail)
-  {
-    return getWithEmail(aEmail) != null;
-  }
 
   public String getName()
   {
@@ -169,10 +148,35 @@ public class User
   {
     return phoneNumber;
   }
-  /* Code from template association_GetOne */
-  public ShoppingCart getShoppingCart()
+  /* Code from template association_GetMany */
+  public Item getShoppingCart(int index)
   {
-    return shoppingCart;
+    Item aShoppingCart = shoppingCart.get(index);
+    return aShoppingCart;
+  }
+
+  public List<Item> getShoppingCart()
+  {
+    List<Item> newShoppingCart = Collections.unmodifiableList(shoppingCart);
+    return newShoppingCart;
+  }
+
+  public int numberOfShoppingCart()
+  {
+    int number = shoppingCart.size();
+    return number;
+  }
+
+  public boolean hasShoppingCart()
+  {
+    boolean has = shoppingCart.size() > 0;
+    return has;
+  }
+
+  public int indexOfShoppingCart(Item aShoppingCart)
+  {
+    int index = shoppingCart.indexOf(aShoppingCart);
+    return index;
   }
   /* Code from template association_GetMany */
   public Transaction getHistory(int index)
@@ -210,12 +214,69 @@ public class User
     return mcGillMart;
   }
   /* Code from template association_MinimumNumberOfMethod */
+  public static int minimumNumberOfShoppingCart()
+  {
+    return 0;
+  }
+  /* Code from template association_AddUnidirectionalMany */
+  public boolean addShoppingCart(Item aShoppingCart)
+  {
+    boolean wasAdded = false;
+    if (shoppingCart.contains(aShoppingCart)) { return false; }
+    shoppingCart.add(aShoppingCart);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeShoppingCart(Item aShoppingCart)
+  {
+    boolean wasRemoved = false;
+    if (shoppingCart.contains(aShoppingCart))
+    {
+      shoppingCart.remove(aShoppingCart);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  public boolean addShoppingCartAt(Item aShoppingCart, int index)
+  {  
+    boolean wasAdded = false;
+    if(addShoppingCart(aShoppingCart))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfShoppingCart()) { index = numberOfShoppingCart() - 1; }
+      shoppingCart.remove(aShoppingCart);
+      shoppingCart.add(index, aShoppingCart);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveShoppingCartAt(Item aShoppingCart, int index)
+  {
+    boolean wasAdded = false;
+    if(shoppingCart.contains(aShoppingCart))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfShoppingCart()) { index = numberOfShoppingCart() - 1; }
+      shoppingCart.remove(aShoppingCart);
+      shoppingCart.add(index, aShoppingCart);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addShoppingCartAt(aShoppingCart, index);
+    }
+    return wasAdded;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfHistory()
   {
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Transaction addHistory(int aId, double aAmount, Date aDateOfPurchase)
+  public Transaction addHistory(int aId, double aAmount, LocalDate aDateOfPurchase)
   {
     return new Transaction(aId, aAmount, aDateOfPurchase, this);
   }
@@ -304,12 +365,7 @@ public class User
   public void delete()
   {
     usersByEmail.remove(getEmail());
-    ShoppingCart existingShoppingCart = shoppingCart;
-    shoppingCart = null;
-    if (existingShoppingCart != null)
-    {
-      existingShoppingCart.delete();
-    }
+    shoppingCart.clear();
     while (history.size() > 0)
     {
       Transaction aHistory = history.get(history.size() - 1);
@@ -334,7 +390,6 @@ public class User
             "name" + ":" + getName()+ "," +
             "password" + ":" + getPassword()+ "," +
             "phoneNumber" + ":" + getPhoneNumber()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "shoppingCart = "+(getShoppingCart()!=null?Integer.toHexString(System.identityHashCode(getShoppingCart())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "mcGillMart = "+(getMcGillMart()!=null?Integer.toHexString(System.identityHashCode(getMcGillMart())):"null");
   }
 }

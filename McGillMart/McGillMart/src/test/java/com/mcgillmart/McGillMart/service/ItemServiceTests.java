@@ -1,128 +1,11 @@
-// package com.mcgillmart.McGillMart.service;
-
-// import static org.junit.Assert.*;
-
-// import com.services.ItemService;
-// import org.junit.Before;
-// import org.junit.Test;
-// import org.mockito.InjectMocks;
-
-// import java.util.ArrayList;
-// import java.util.HashMap;
-// import java.util.List;
-// import java.util.Map;
-
-// public class ItemServiceTest {
-
-//     @InjectMocks
-//     private ItemService service;
-
-//     @Before
-//     public void setUp() {
-//         List<Map<String, String>> items = new ArrayList<>();
-
-//         Map<String, String> item1 = new HashMap<>();
-//         item1.put("id", "01");
-//         item1.put("name", "science hoodie");
-//         item1.put("price", "40");
-//         item1.put("description", "soft hoodie for science students");
-//         item1.put("category", "Clothing");
-
-//         Map<String, String> item2 = new HashMap<>();
-//         item2.put("id", "02");
-//         item2.put("name", "med hoodie");
-//         item2.put("price", "40");
-//         item2.put("description", "soft hoodie for med students");
-//         item2.put("category", "Clothing");
-
-//         Map<String, String> item3 = new HashMap<>();
-//         item3.put("id", "03");
-//         item3.put("name", "nurse hoodie");
-//         item3.put("price", "40");
-//         item3.put("description", "soft hoodie for nursing students");
-//         item3.put("category", "Clothing");
-
-//         Map<String, String> item4 = new HashMap<>();
-//         item4.put("id", "04");
-//         item4.put("name", "signals & networks book");
-//         item4.put("price", "250");
-//         item4.put("description", "textbook for ecse 316");
-//         item4.put("category", "Textbook");
-
-//         Map<String, String> item5 = new HashMap<>();
-//         item5.put("id", "05");
-//         item5.put("name", "operating systems book");
-//         item5.put("price", "250");
-//         item5.put("description", "textbook for ecse 427");
-//         item5.put("category", "Textbook");
-
-//         items.add(item1);
-//         items.add(item2);
-//         items.add(item3);
-//         items.add(item4);
-//         items.add(item5);
-
-//         itemService = new ItemService(items);
-//     }
-
-//     @Test
-//     public void testFilterItemsByName() {
-//         String keyword = "hoodie";
-
-//         List<Map<String, String>> filteredItems = itemService.filterItemsByName(keyword);
-
-//         assertEquals(3, filteredItems.size());
-
-//         for (Map<String, String> item : filteredItems) {
-//             String itemName = item.get("name").toLowerCase(); // Convert to lowercase to make it case-insensitive
-//             assertTrue(itemName.contains(keyword.toLowerCase()));
-//         }
-
-//         Map<String, String> firstItem = filteredItems.get(0);
-//         assertEquals("01", firstItem.get("id"));
-//         assertEquals("science hoodie", firstItem.get("name"));
-//     }
-
-//     @Test
-//     public void testFilterItemsByCategoryClothing() {
-//         List<Map<String, String>> filteredItems = itemService.filterItemsByCategory("Clothing");
-
-//         assertEquals(3, filteredItems.size());
-
-//         Map<String, String> firstItem = filteredItems.get(0);
-//         assertEquals("01", firstItem.get("id"));
-//         assertEquals("science hoodie", firstItem.get("name"));
-
-//         Map<String, String> lastItem = filteredItems.get(2);
-//         assertEquals("03", lastItem.get("id"));
-//         assertEquals("nurse hoodie", lastItem.get("name"));
-//     }
-
-//     @Test
-//     public void testFilterItemsByCategoryTextbook() {
-//         List<Map<String, String>> filteredItems = itemService.filterItemsByCategory("Textbook");
-
-//         assertEquals(2, filteredItems.size());
-
-//         Map<String, String> firstItem = filteredItems.get(0);
-//         assertEquals("04", firstItem.get("id"));
-//         assertEquals("signals & networks book", firstItem.get("name"));
-
-//         Map<String, String> lastItem = filteredItems.get(1);
-//         assertEquals("05", lastItem.get("id"));
-//         assertEquals("operating systems book", lastItem.get("name"));
-//     }
-// }
-
-
 package com.mcgillmart.McGillMart.service;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
+// import io.cucumber.java.After;
+// import io.cucumber.java.Before;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,10 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -142,6 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.Time;
+import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -210,14 +91,14 @@ public class ItemServiceTests {
         ITEMS.add(item2);
         ITEMS.add(item3);
 
-        when(itemDao.findAll()).thenReturn(ITEMS);
+        when(itemDao.findItemByName(item1.getName())).thenReturn(item1);
 
-        List<Item> items = service.filterItemsByName(item1.getName());
+        Item item = service.findItemsByName(item1.getName());
 
-        assertTrue(items.get(0).getName().equals(item1.getName()));
-        assertTrue(items.get(0).getDescription().equals(item1.getDescription()));
-        assertTrue(items.get(0).getPrice() == item1.getPrice());
-        assertTrue(items.get(0).getCategory().equals(item1.getCategory()));
+        assertTrue(item.getName().equals(item1.getName()));
+        assertTrue(item.getDescription().equals(item1.getDescription()));
+        assertTrue(item.getPrice() == item1.getPrice());
+        assertTrue(item.getCategory().equals(item1.getCategory()));
 
         
     }
@@ -267,8 +148,67 @@ public class ItemServiceTests {
         }
     }
 
+    @Test
+    public void testFindItemById() {
+        Item item = new Item();
+        item.setId(1);
+        item.setName("Test Item");
+        item.setDescription("A test item description");
+        item.setPrice(200);
+        item.setCategory(Category.Clothing);
+        when(itemDao.findById(1)).thenReturn(Optional.of(item));
+        Item foundItem = service.findItemById(1);
+        assertNotNull(foundItem);
+        assertEquals(item.getId(), foundItem.getId());
+        assertEquals(item.getName(), foundItem.getName());
+        assertEquals(item.getDescription(), foundItem.getDescription());
+        assertEquals(item.getPrice(), foundItem.getPrice());
+        assertEquals(item.getCategory(), foundItem.getCategory());
+        verify(itemDao, times(1)).findById(1);
+    }
 
-    
+    @Test
+    public void testFindItemByIdNotFound() {
+        when(itemDao.findById(999)).thenReturn(Optional.empty());
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            service.findItemById(999);
+        });
+        assertEquals("There is no item with ID 999.", exception.getMessage());
+        verify(itemDao, times(1)).findById(999);
+    }
 
+    @Test
+    public void testFindAllItems() {
+        Item item1 = new Item();
+        item1.setId(1);
+        item1.setName("Item1");
+        item1.setDescription("Description1");
+        item1.setPrice(100);
+        item1.setCategory(Category.Clothing);
+        Item item2 = new Item();
+        item2.setId(2);
+        item2.setName("Item2");
+        item2.setDescription("Description2");
+        item2.setPrice(150);
+        item2.setCategory(Category.Textbook);
+        ITEMS.add(item1);
+        ITEMS.add(item2);
+        when(itemDao.findAll()).thenReturn(ITEMS);
+        List<Item> items = service.findAllItems();
+        assertNotNull(items);
+        assertEquals(2, items.size());
+        assertTrue(items.contains(item1));
+        assertTrue(items.contains(item2));
+        verify(itemDao, times(1)).findAll();
+    }
+
+    @Test
+    public void testFindAllItemsEmpty() {
+        when(itemDao.findAll()).thenReturn(new ArrayList<>());
+        List<Item> items = service.findAllItems();
+        assertNotNull(items);
+        assertTrue(items.isEmpty());
+        verify(itemDao, times(1)).findAll();
+    }
 
 }

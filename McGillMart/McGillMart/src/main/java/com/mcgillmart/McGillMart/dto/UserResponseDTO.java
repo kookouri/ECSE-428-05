@@ -1,10 +1,9 @@
 package com.mcgillmart.McGillMart.dto;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+import com.mcgillmart.McGillMart.model.Item;
 import com.mcgillmart.McGillMart.model.McGillMart;
-import com.mcgillmart.McGillMart.model.ShoppingCart;
 import com.mcgillmart.McGillMart.model.Transaction;
 import com.mcgillmart.McGillMart.model.User;
 
@@ -13,9 +12,8 @@ public class UserResponseDTO {
     private String email;
     private String name;
     private String phoneNumber;
-    private ShoppingCart shoppingCart;
+    private List<ItemResponseDTO> shoppingCart;
     private List<Transaction> history;
-    private McGillMart mcGillMart;
     private String errorMessage;
 
     public UserResponseDTO() {
@@ -25,9 +23,8 @@ public class UserResponseDTO {
         this.email = user.getEmail();
         this.name = user.getName();
         this.phoneNumber = user.getPhoneNumber();
-        this.shoppingCart = user.getShoppingCart();
+        this.shoppingCart = ItemResponseDTO.itemListToItemResponseDTOList(user.getShoppingCart());
         this.history = user.getHistory();
-        this.mcGillMart = user.getMcGillMart();
         this.id = user.getId();
     }
 
@@ -35,6 +32,10 @@ public class UserResponseDTO {
         this.errorMessage = errorMessage;
     }
 
+    public String getErrorMessage() {
+    	return this.errorMessage;
+    }
+    
     public int getId()
     {
         return id;
@@ -55,7 +56,7 @@ public class UserResponseDTO {
         return phoneNumber;
     }
 
-    public ShoppingCart getShoppingCart()
+    public List<ItemResponseDTO> getShoppingCart()
     {
         return shoppingCart;
     }
@@ -77,11 +78,10 @@ public class UserResponseDTO {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setShoppingCart(ShoppingCart shoppingCart)
+    public void setShoppingCart(List<ItemResponseDTO> shoppingCart)
     {
         this.shoppingCart = shoppingCart;
     }
 
     public void setHistory( List<Transaction> history) { this.history = history;}
-
 }

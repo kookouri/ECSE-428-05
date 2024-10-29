@@ -1,6 +1,6 @@
 package com.mcgillmart.McGillMart.features;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
@@ -24,11 +24,12 @@ public class CreateNewUserStepDefinitions {
 
     @Autowired
     private UserService userService;
+
     private Exception caughtException;
     private int initialCount = 0;
 
-    @Given("the following user accounts exist in the system")
-    public void the_following_user_accounts_exist_in_the_system(DataTable dataTable) {
+    @Given("the following user accounts exist in the system \\(ID001)")
+    public void the_following_user_accounts_exist_in_the_system_id001(DataTable dataTable) {
         initialCount = userService.findAllUsers().size();
         List<Map<String, String>> userMaps = dataTable.asMaps(String.class, String.class);
         for (Map<String, String> userMap : userMaps) {
@@ -40,8 +41,8 @@ public class CreateNewUserStepDefinitions {
         }
     }
 
-    @When("a new user attempts to register with {string}, {string}, {string}, and {string}")
-    public void a_new_user_attempts_to_register_with(String email, String name, String password, String phone) {
+    @When("a new user attempts to register with {string}, {string}, {string}, and {string} \\(ID001)")
+    public void a_new_user_attempts_to_register_with_id001(String email, String password, String name, String phone) {
         try {
             userService.createUser(email, name, password, phone);
         } catch (Exception e) {
@@ -50,8 +51,8 @@ public class CreateNewUserStepDefinitions {
 
     }
 
-    @Then("a new user account shall exist with {string}, {string}, {string}, and {string}")
-    public void a_new_user_account_shall_exist_with(String email, String name, String password, String phone) {
+    @Then("a new user account shall exist with {string}, {string}, {string}, and {string} \\(ID001)")
+    public void a_new_user_account_shall_exist_with_id001(String email, String password, String name, String phone) {
         User newUser = userService.findUserByEmail(email);
         assertEquals(name, newUser.getName());
         assertEquals(email, newUser.getEmail());
@@ -59,19 +60,19 @@ public class CreateNewUserStepDefinitions {
         assertEquals(password, newUser.getPassword());
     }
 
-    @Then("the error {string} shall be raised")
-    public void the_error_shall_be_raised(String errorMessage) {
+    @Then("the following {string} shall be raised \\(ID001)")
+    public void the_following_shall_be_raised_id001(String errorMessage) {
         assertNotNull(caughtException);
         assertEquals(errorMessage, caughtException.getMessage());
     }
 
-    @Then("the number of users in the system shall be {int}")
-    public void the_number_of_users_in_the_system_shall_be(int users){
+    @Then("the number of users in the system shall be {string} \\(ID001)")
+    public void the_number_of_users_in_the_system_shall_be_id001(String users){
         int count = userService.findAllUsers().size() - initialCount;
-        assertEquals(users, count);
+        assertEquals(Integer.parseInt(users), count);
     }
-    @Then("the following users shall exist in the system")
-    public void the_following_users_shall_exist_in_the_system(DataTable dataTable) {
+    @Then("the following users shall exist in the system \\(ID001)")
+    public void the_following_users_shall_exist_in_the_system_id001(DataTable dataTable) {
         List<Map<String, String>> userMaps = dataTable.asMaps(String.class, String.class);
         for (Map<String, String> userMap : userMaps) {
             String name = userMap.get("name");

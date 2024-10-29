@@ -8,10 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mcgillmart.McGillMart.model.McGillMart;
-import com.mcgillmart.McGillMart.model.ShoppingCart;
 import com.mcgillmart.McGillMart.model.User;
 import com.mcgillmart.McGillMart.repositories.McGillMartRepository;
-import com.mcgillmart.McGillMart.repositories.ShoppingCartRepository;
 import com.mcgillmart.McGillMart.repositories.UserRepository;
 
 /**
@@ -31,19 +29,15 @@ public class UserService {
     @Autowired
     private McGillMartService mcGillMartService;
 
-    @Autowired
-    private ShoppingCartRepository shoppingCartRepository;
 
     //--------------------------// Create User //--------------------------//
 
     @Transactional
-    public User createUser(String email, String name, String password, String phoneNumber, int shoppingCartId) {
+    public User createUser(String email, String name, String password, String phoneNumber) {
         validUserInfo(email, password, name, phoneNumber);
         uniqueEmail(email);
-
-        ShoppingCart shoppingCart = shoppingCartRepository.findById(shoppingCartId);
         
-        User user = new User(email, name, password, phoneNumber, shoppingCart, mcGillMartService.getMcGillMart());
+        User user = new User(email, name, password, phoneNumber, mcGillMartService.getMcGillMart());
         return userRepository.save(user);
     }
 
@@ -126,22 +120,56 @@ public class UserService {
     //--------------------------// Input validations //--------------------------//
 
     private void validUserInfo(String email, String password, String name, String phoneNumber) {
-        if (email.isEmpty() || password.isEmpty() || name.isEmpty() || phoneNumber.isEmpty()) {
-            throw new IllegalArgumentException("Empty fields for email, password, phone number or name are not valid");
+        // Null or empty checks
+        if (email == null || password == null || name == null || phoneNumber == null ||
+            email.isEmpty() || password.isEmpty() || name.isEmpty() || phoneNumber.isEmpty()) {
+            throw new IllegalArgumentException("Empty fields for email, password, phone number, or name are not valid");
         }
-        if (!email.contains("@")) {
+    
+        // Check for spaces in the email
+        if (email.strip().contains(" ")) {
+            throw new IllegalArgumentException("Email must not contain any spaces");
+        }
+    
+        // Check if email contains '@' and prevent unsafe access
+        int atIndex = email.indexOf("@");
+        if (atIndex == -1) {
             throw new IllegalArgumentException("Email has to contain the character @");
         }
+    
+        // Check if the email starts with '@' (now safe since we know '@' exists)
+        if (atIndex == 0) {
+            throw new IllegalArgumentException("Invalid email");
+        }
+    
+        // Validate period placement after the '@'
+        boolean encounteredPeriod = false;
+        for (int i = atIndex + 1; i < email.length(); i++) {
+            if (email.charAt(i) == '.') {
+                // Check if the period is immediately after '@' or at the end of the email
+                if (i == atIndex + 1 || i == email.length() - 1) {
+                    throw new IllegalArgumentException("Invalid email");
+                }
+                encounteredPeriod = true;
+            }
+        }
+        if (!encounteredPeriod) {
+            throw new IllegalArgumentException("Invalid email");
+        }
+    
+        // Password length validation
         if (password.length() < 8) {
             throw new IllegalArgumentException("The password needs to have 8 characters or more");
         }
+    
+        // Validate phone number characters
         for (int i = 0; i < phoneNumber.length(); i++) {
             char c = phoneNumber.charAt(i);
             if (c != '-' && !Character.isDigit(c) && c != ' ') {
                 throw new IllegalArgumentException("The phone number has invalid characters");
             }
         }
-    }
+    }    
 
     private void uniqueEmail(String email) {
         if (userRepository.findUserByEmail(email) != null) {
