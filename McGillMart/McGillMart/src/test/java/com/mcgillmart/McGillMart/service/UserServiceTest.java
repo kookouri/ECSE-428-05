@@ -158,8 +158,7 @@ public class UserServiceTest {
             () -> userService.createUser(email, name, password, phoneNumber));
 
 		assertNotNull(e);
-		assertEquals("Empty fields for email, password, " +
-            "phone number or name are not valid", e.getMessage());
+		assertEquals("Empty fields for email, password, phone number, or name are not valid", e.getMessage());
     }
 
     //--------------------------// Update User Info Test //--------------------------//
@@ -200,7 +199,6 @@ public class UserServiceTest {
         User userx = new User(email, name, password, phoneNumber, 
         toList(mcgillMartRepository.findAll()).get(0));
     
-        
         when(userRepository.save(any(User.class))).thenReturn(userx);
         when(userRepository.findUserById(id)).thenReturn(userx);
 
@@ -274,7 +272,7 @@ public class UserServiceTest {
         String name = "User Eight";
         String password = "password";
         String phoneNumber = "888-888-8888";
-        User user4 = userService.createUser(email, name, password, phoneNumber);
+        userService.createUser(email, name, password, phoneNumber);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
             userService.updateUser(id, "", "User Eight", "password", "098-765-4321");
@@ -282,9 +280,8 @@ public class UserServiceTest {
         });
 
         assertNotNull(e);
-        assertEquals("Empty fields for email, password, phone number or name are not valid", e.getMessage());
+        assertEquals("Empty fields for email, password, phone number, or name are not valid", e.getMessage());
     }
-
     
     @Test 
     public void testUpdateUserWithInvalidEmail() {
