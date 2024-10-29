@@ -25,8 +25,8 @@ public class ViewItemsStepDefinitions {
     }
 
     // Given the following items exist in the system
-    @Given("the following items exist in the system")
-    public void the_following_items_exist_in_the_system(List<Map<String, String>> itemsData) {
+    @Given("the following items exist in the system \\(ID005)")
+    public void the_following_items_exist_in_the_system_id005(List<Map<String, String>> itemsData) {
         for (Map<String, String> itemData : itemsData) {
             String name = itemData.get("name");
             double price = Double.parseDouble(itemData.get("price"));
@@ -41,15 +41,15 @@ public class ViewItemsStepDefinitions {
     }
 
     // When the user attempts to view all items in the system
-    @When("the user attempts to view all items in the system")
-    public void the_user_attempts_to_view_all_items_in_the_system() {
+    @When("the user attempts to view all items in the system \\(ID005)")
+    public void the_user_attempts_to_view_all_items_in_the_system_id005() {
         // View all items from McGillMart
         viewedItems = mcGillMart.getItems();
     }
 
     // Then the following items shall be presented
-    @Then("the following items shall be presented")
-    public void the_following_items_shall_be_presented(List<Map<String, String>> expectedItemsData) {
+    @Then("the following items shall be presented \\(ID005)")
+    public void the_following_items_shall_be_presented_id005(List<Map<String, String>> expectedItemsData) {
         // Check that the size of the viewed items matches the expected size
         assertEquals(expectedItemsData.size(), viewedItems.size());
 
