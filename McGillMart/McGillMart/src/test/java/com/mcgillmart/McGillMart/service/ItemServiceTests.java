@@ -4,8 +4,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
+// import io.cucumber.java.After;
+// import io.cucumber.java.Before;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,11 +91,11 @@ public class ItemServiceTests {
         ITEMS.add(item2);
         ITEMS.add(item3);
 
-        when(itemDao.findAll()).thenReturn(ITEMS);
+        when(itemDao.findItemByName(item1.getName())).thenReturn(item1);
 
-        Item item = service.filterItemsByName(item1.getName());
+        Item item = service.findItemsByName(item1.getName());
 
-        assertTrue(item.equals(item1.getName()));
+        assertTrue(item.getName().equals(item1.getName()));
         assertTrue(item.getDescription().equals(item1.getDescription()));
         assertTrue(item.getPrice() == item1.getPrice());
         assertTrue(item.getCategory().equals(item1.getCategory()));
