@@ -14,12 +14,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class ReviewServiceTests {
@@ -62,7 +63,7 @@ public class ReviewServiceTests {
         testReview = new Review();
         testReview.setRating(5);
         testReview.setComment("Great product!");
-        testReview.setDatePosted(new Date(System.currentTimeMillis()));
+        testReview.setDatePosted(LocalDate.now());
         testReview.setUsername(testUser.getEmail());
         testReview.setItem(testItem); // Associate the review with the item
 

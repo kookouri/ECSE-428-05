@@ -10,7 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 // line 9 "model.ump"
 // line 56 "model.ump"
@@ -272,7 +272,7 @@ public class User
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Transaction addHistory(int aId, double aAmount, Date aDateOfPurchase)
+  public Transaction addHistory(int aId, double aAmount, LocalDate aDateOfPurchase)
   {
     return new Transaction(aId, aAmount, aDateOfPurchase, this);
   }

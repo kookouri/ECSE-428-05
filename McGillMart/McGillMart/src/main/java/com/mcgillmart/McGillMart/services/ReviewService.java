@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -65,7 +64,7 @@ public class ReviewService {
         validateReviewDetails(rating, comment);
 
         // Get the current date
-        Date currentDate = Date.valueOf(LocalDate.now());
+        LocalDate currentDate = LocalDate.now();
 
         // Create and save the review
         Review review = new Review(0, rating, comment, currentDate, user.getName(), item);

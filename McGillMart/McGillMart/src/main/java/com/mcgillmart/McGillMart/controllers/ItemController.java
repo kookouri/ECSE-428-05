@@ -3,8 +3,11 @@ package com.mcgillmart.McGillMart.controllers;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.mcgillmart.McGillMart.dto.ItemDTO;
-import com.mcgillmart.McGillMart.dto.ReviewDTO;
+import com.mcgillmart.McGillMart.dto.ItemRequestDTO;
+import com.mcgillmart.McGillMart.dto.ItemResponseDTO;
+import com.mcgillmart.McGillMart.dto.ReviewRequestDTO;
+import com.mcgillmart.McGillMart.dto.ReviewResponseDTO;
+import com.mcgillmart.McGillMart.dto.UserRequestDTO;
 import com.mcgillmart.McGillMart.model.Item;
 import com.mcgillmart.McGillMart.model.Review;
 import com.mcgillmart.McGillMart.services.ItemService;
@@ -39,23 +42,23 @@ public class ItemController {
 
     //--------------------------// Create Item //--------------------------//
     @PostMapping(value = {"/items", "/items/", "/public/items"})
-    public ResponseEntity<ItemDTO> createItem(@RequestBody ItemDTO item) {
+    public ResponseEntity<ItemResponseDTO> createItem(@RequestBody ItemRequestDTO item) {
         try {
             Item createdItem = itemService.createItem(item.getName(), item.getPrice(), item.getDescription(), item.getCategory());
-            return new ResponseEntity<ItemDTO>(new ItemDTO(createdItem), HttpStatus.CREATED);
+            return new ResponseEntity<ItemResponseDTO>(new ItemResponseDTO(createdItem), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<ItemDTO>(new ItemDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ItemResponseDTO>(new ItemResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
     //--------------------------// Update Item //--------------------------//
     @PutMapping(value = {"/items/{id}", "/items/{id}/"})
-    public ResponseEntity<ItemDTO> updateItem(@PathVariable Integer id, @RequestBody ItemDTO item) {
+    public ResponseEntity<ItemResponseDTO> updateItem(@PathVariable Integer id, @RequestBody ItemRequestDTO item) {
         try {
             Item updatedItem = itemService.updateItem(id, item.getName(), item.getPrice(), item.getDescription(), item.getCategory());
-            return new ResponseEntity<ItemDTO>(new ItemDTO(updatedItem), HttpStatus.ACCEPTED);
+            return new ResponseEntity<ItemResponseDTO>(new ItemResponseDTO(updatedItem), HttpStatus.ACCEPTED);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<ItemDTO>(new ItemDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ItemResponseDTO>(new ItemResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -72,48 +75,48 @@ public class ItemController {
 
     //--------------------------// Getters //--------------------------//
     @GetMapping(value = {"/items/{id}", "/items/{id}/"})
-    public ResponseEntity<ItemDTO> findItemById(@PathVariable Integer id) {
+    public ResponseEntity<ItemResponseDTO> findItemById(@PathVariable Integer id) {
         try {
-            return new ResponseEntity<ItemDTO>(new ItemDTO(itemService.findItemById(id)), HttpStatus.FOUND);
+            return new ResponseEntity<ItemResponseDTO>(new ItemResponseDTO(itemService.findItemById(id)), HttpStatus.FOUND);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<ItemDTO>(new ItemDTO(e.getMessage()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<ItemResponseDTO>(new ItemResponseDTO(e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping(value = {"/items", "/items/"})
-    public ResponseEntity<List<ItemDTO>> findAllItems() {
+    public ResponseEntity<List<ItemResponseDTO>> findAllItems() {
         try {
             List<Item> items = itemService.findAllItems();
-            List<ItemDTO> itemDTOs = ItemDTO.itemListToItemDTOList(items);
-            return new ResponseEntity<List<ItemDTO>>(itemDTOs, HttpStatus.OK);
+            List<ItemResponseDTO> ItemResponseDTOs = ItemResponseDTO.itemListToItemResponseDTOList(items);
+            return new ResponseEntity<List<ItemResponseDTO>>(ItemResponseDTOs, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<List<ItemDTO>>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<List<ItemResponseDTO>>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
         }
     }
 
     //--------------------------// Add Review to Item //--------------------------//
-    @PostMapping(value = {"/items/{itemName}/reviews"})
-    public ResponseEntity<ReviewDTO> addReviewToItem(
-            @PathVariable String itemName,
-            @RequestParam String email,
-            @RequestParam String phone,
-            @RequestParam String password,
-            @RequestParam int rating,
-            @RequestParam String comment) {
+    @PostMapping(value = {"/items/{itemName}/reviews", "/items/{itemName}/reviews/"})
+    public ResponseEntity<ReviewResponseDTO> addReviewToItem(
+            @PathVariable String itemName, 
+            @RequestParam UserRequestDTO user,
+            @RequestParam ReviewRequestDTO review) {
         try {
-            Review newReview = reviewService.addReview(email, phone, password, itemName, rating, comment);
-            return new ResponseEntity<ReviewDTO>(new ReviewDTO(newReview), HttpStatus.ACCEPTED);
+            Review newReview = 
+                reviewService.addReview(
+                    user.getEmail(), user.getPhoneNumber(), user.getPassword(), 
+                    review.getItemName(), review.getRating(), review.getComment());
+            return new ResponseEntity<ReviewResponseDTO>(new ReviewResponseDTO(newReview), HttpStatus.ACCEPTED);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<ReviewDTO>(new ReviewDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ReviewResponseDTO>(new ReviewResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
     //--------------------------// Get Reviews for Item //--------------------------//
     @GetMapping(value = {"/items/{itemName}/reviews"})
-    public ResponseEntity<List<ReviewDTO>> getReviewsForItem(@PathVariable String itemName) {
+    public ResponseEntity<List<ReviewResponseDTO>> getReviewsForItem(@PathVariable String itemName) {
         try {
-            List<ReviewDTO> reviews = reviewService.getReviewsForItem(itemName).stream()
-                    .map(ReviewDTO::new).collect(Collectors.toList());
+            List<ReviewResponseDTO> reviews = reviewService.getReviewsForItem(itemName).stream()
+                    .map(ReviewResponseDTO::new).collect(Collectors.toList());
             return new ResponseEntity<>(reviews, HttpStatus.FOUND);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
