@@ -158,8 +158,7 @@ public class UserServiceTest {
             () -> userService.createUser(email, name, password, phoneNumber));
 
 		assertNotNull(e);
-		assertEquals("Empty fields for email, password, " +
-            "phone number or name are not valid", e.getMessage());
+		assertEquals("Empty fields for email, password, phone number, or name are not valid", e.getMessage());
     }
 
     //--------------------------// Update User Info Test //--------------------------//
@@ -260,16 +259,15 @@ public class UserServiceTest {
         String name = "User Eight";
         String password = "password";
         String phoneNumber = "888-888-8888";
-        User user4 = userService.createUser(email, name, password, phoneNumber);
+        userService.createUser(email, name, password, phoneNumber);
 
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
             userService.updateUser(id, "", "User Eight", "password", "098-765-4321");
         });
 
         assertNotNull(e);
-        assertEquals("Empty fields for email, password, phone number or name are not valid", e.getMessage());
+        assertEquals("Empty fields for email, password, phone number, or name are not valid", e.getMessage());
     }
-
     
     @Test 
     public void testUpdateUserWithInvalidEmail() {

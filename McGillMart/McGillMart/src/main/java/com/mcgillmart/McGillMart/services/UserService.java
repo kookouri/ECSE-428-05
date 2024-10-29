@@ -120,20 +120,34 @@ public class UserService {
     //--------------------------// Input validations //--------------------------//
 
     private void validUserInfo(String email, String password, String name, String phoneNumber) {
-        if (email.isEmpty() || password.isEmpty() || name.isEmpty() || phoneNumber.isEmpty()) {
-            throw new IllegalArgumentException("Empty fields for email, password, phone number or name are not valid");
+        // Null or empty checks
+        if (email == null || password == null || name == null || phoneNumber == null ||
+            email.isEmpty() || password.isEmpty() || name.isEmpty() || phoneNumber.isEmpty()) {
+            throw new IllegalArgumentException("Empty fields for email, password, phone number, or name are not valid");
         }
+    
+        // Check for spaces in the email
         if (email.strip().contains(" ")) {
             throw new IllegalArgumentException("Email must not contain any spaces");
         }
-        
-        if (email.charAt(0) == '@') {
+    
+        // Check if email contains '@' and prevent unsafe access
+        int atIndex = email.indexOf("@");
+        if (atIndex == -1) {
+            throw new IllegalArgumentException("Email has to contain the character @");
+        }
+    
+        // Check if the email starts with '@' (now safe since we know '@' exists)
+        if (atIndex == 0) {
             throw new IllegalArgumentException("Invalid email");
         }
+    
+        // Validate period placement after the '@'
         boolean encounteredPeriod = false;
-        for (int i = email.indexOf("@"); i < email.length(); i++){
-            if (email.charAt(i) == '.'){
-                if (i == email.indexOf("@") + 1 || i == email.length() - 1) {
+        for (int i = atIndex + 1; i < email.length(); i++) {
+            if (email.charAt(i) == '.') {
+                // Check if the period is immediately after '@' or at the end of the email
+                if (i == atIndex + 1 || i == email.length() - 1) {
                     throw new IllegalArgumentException("Invalid email");
                 }
                 encounteredPeriod = true;
@@ -142,20 +156,20 @@ public class UserService {
         if (!encounteredPeriod) {
             throw new IllegalArgumentException("Invalid email");
         }
-
-        if (!email.contains("@")) {
-            throw new IllegalArgumentException("Email has to contain the character @");
-        }
+    
+        // Password length validation
         if (password.length() < 8) {
             throw new IllegalArgumentException("The password needs to have 8 characters or more");
         }
+    
+        // Validate phone number characters
         for (int i = 0; i < phoneNumber.length(); i++) {
             char c = phoneNumber.charAt(i);
             if (c != '-' && !Character.isDigit(c) && c != ' ') {
                 throw new IllegalArgumentException("The phone number has invalid characters");
             }
         }
-    }
+    }    
 
     private void uniqueEmail(String email) {
         if (userRepository.findUserByEmail(email) != null) {
