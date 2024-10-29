@@ -83,7 +83,7 @@ public class ReviewServiceTests {
     @Test
     public void testAddReview() {
         when(userRepository.findUserByEmail(testUser.getEmail())).thenReturn(testUser);
-        when(itemRepository.findByName(testItem.getName())).thenReturn(testItem);
+        when(itemRepository.findItemByName(testItem.getName())).thenReturn(testItem);
         when(reviewRepository.save(any(Review.class))).thenReturn(testReview);
 
         Review savedReview = reviewService.addReview(
@@ -111,7 +111,7 @@ public class ReviewServiceTests {
 
     @Test
     public void testGetReviewsForItem() {
-        when(itemRepository.findByName(testItem.getName())).thenReturn(testItem);
+        when(itemRepository.findItemByName(testItem.getName())).thenReturn(testItem);
 
         List<Review> reviews = reviewService.getReviewsForItem(testItem.getName());
 
@@ -123,7 +123,7 @@ public class ReviewServiceTests {
 
     @Test
     public void testGetReviewsForItemNotFound() {
-        when(itemRepository.findByName("Non-Existent Item")).thenReturn(null);
+        when(itemRepository.findItemByName("Non-Existent Item")).thenReturn(null);
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             reviewService.getReviewsForItem("Non-Existent Item");
