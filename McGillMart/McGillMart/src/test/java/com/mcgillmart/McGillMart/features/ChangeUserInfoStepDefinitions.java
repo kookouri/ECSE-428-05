@@ -14,32 +14,32 @@ public class ChangeUserInfoStepDefinitions {
     private List<Map<String, User>> users = new ArrayList<>();
     private User user;
 
-    @Given("the following users exist in the system")
-    public void the_following_users_exist_in_the_system(List<Map<String, User>> dataTable) {
+    @Given("the following users exist in the system \\(ID004)")
+    public void the_following_users_exist_in_the_system_id004(List<Map<String, User>> dataTable) {
         users.clear();
         users.addAll(dataTable);
     }
 
-    @When("the user updates the name field to {string} and the phone field to {string} for user with id {int}")
-    public void the_user_updates_name_and_phone_for_user(String Newname, String Newphone) {
+    @When("the user updates the name field to {string} and the phone field to {string} for user with id {int} \\(ID004)")
+    public void the_user_updates_name_and_phone_for_user_id004(String Newname, String Newphone) {
         if (user != null) {
             user.setName(Newname);
             user.setPhoneNumber(Newphone);
         }
     }
 
-    @Then("the user profile should show the updated name as {string}")
-    public void the_user_profile_should_show_updated_name(String expectedName) {
+    @Then("the user profile should show the updated name as {string} \\(ID004)")
+    public void the_user_profile_should_show_updated_name_id004(String expectedName) {
         assertEquals(expectedName, user.getName());
     }
 
-    @Then("the phone field should display {string}")
-    public void the_phone_field_should_display(String expectedPhone) {
+    @Then("the phone field should display {string} \\(ID004)")
+    public void the_phone_field_should_display_id004(String expectedPhone) {
         assertEquals(expectedPhone, user.getPhoneNumber());
     }
 
-    @Then("the email field should remain {string}")
-    public void the_email_field_should_remain(String expectedEmail) {
+    @Then("the email field should remain {string} \\(ID004)")
+    public void the_email_field_should_remain_id004(String expectedEmail) {
         assertEquals(expectedEmail, user.getEmail());
     }
 

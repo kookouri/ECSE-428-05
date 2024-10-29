@@ -24,8 +24,8 @@ public class ViewUserProfileStepDefinitions {
     private User viewedProfile;
     private Exception caughtException;
 
-    @Given("the following user accounts exist in the system")
-    public void the_following_user_accounts_exist_in_the_system(DataTable dataTable) {
+    @Given("the following user accounts exist in the system \\(ID003)")
+    public void the_following_user_accounts_exist_in_the_system_id003(DataTable dataTable) {
         List<Map<String, String>> userMaps = dataTable.asMaps(String.class, String.class);
         for (Map<String, String> userMap : userMaps) {
             User user = new User(
@@ -57,8 +57,8 @@ public class ViewUserProfileStepDefinitions {
 //        userService.logoutUser();
 //    }
 
-    @When("the user attempts to view their profile")
-    public void the_user_attempts_to_view_their_profile() {
+    @When("the user attempts to view their profile \\(ID003)")
+    public void the_user_attempts_to_view_their_profile_id003() {
         try {
             viewedProfile = userService.findUserById(currentUser.getId());
         } catch (Exception e) {
@@ -66,16 +66,16 @@ public class ViewUserProfileStepDefinitions {
         }
     }
 
-    @Then("the name {string}, email {string}, and phone {string} shall be displayed")
-    public void the_name_email_and_phone_shall_be_displayed(String name, String email, String phoneNumber) {
+    @Then("the name {string}, email {string}, and phone {string} shall be displayed \\(ID003)")
+    public void the_name_email_and_phone_shall_be_displayed_id003(String name, String email, String phoneNumber) {
         assertNotNull(viewedProfile, "Profile was not retrieved");
         assertEquals(name, viewedProfile.getName());
         assertEquals(email, viewedProfile.getEmail());
         assertEquals(phoneNumber, viewedProfile.getPhoneNumber());
     }
 
-    @Then("the error {string} shall be raised")
-    public void the_error_shall_be_raised(String errorMessage) {
+    @Then("the error {string} shall be raised \\(ID003)")
+    public void the_error_shall_be_raised_id003(String errorMessage) {
         assertNotNull(caughtException, "No exception was thrown");
         assertEquals(errorMessage, caughtException.getMessage());
     }
