@@ -14,6 +14,10 @@ public class LoginService {
     private UserService userService;
     
     public boolean login(String username, String password) {
+
+        if (username.equals("") || password.equals("")) {
+            throw new IllegalArgumentException("Please enter both email and password");
+        }
         
         User user;
         try {

@@ -58,7 +58,7 @@ public class LoginStepDefinitions {
         assertEquals(name, loggedInUser.getName());
     }
 
-    @Then("an error message should be displayed saying {string} (ID002)")
+    @Then("an error message should be displayed saying {string} \\(ID002)")
     public void an_error_message_should_be_displayed(String error) {
         assertEquals(error, errorMessage);
     }
