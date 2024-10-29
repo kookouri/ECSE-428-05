@@ -31,7 +31,7 @@ public class Item
   private Category category;
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Review> reviews;
+  private List<Review> reviews = new ArrayList<>();;
 
   @ManyToOne
   @JoinColumn(name="mcgill_mart_id")
@@ -48,7 +48,7 @@ public class Item
     price = aPrice;
     description = aDescription;
     category = aCategory;
-    reviews = new ArrayList<Review>();
+    reviews = new ArrayList<>();
     boolean didAddMcGillMart = setMcGillMart(aMcGillMart);
     if (!didAddMcGillMart)
     {
