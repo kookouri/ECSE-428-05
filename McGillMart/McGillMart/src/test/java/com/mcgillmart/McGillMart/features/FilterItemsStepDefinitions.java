@@ -38,10 +38,10 @@
 //         });
 //     }
 
-//     @When("the user searches for items with the name containing {string} \\(ID006)")
-//     public void the_user_searches_for_items_with_the_name_containing_id006(String searchTerm) {
+//     // @When("the user searches for items with the name containing {string} \\(ID006)")
+//     // public void the_user_searches_for_items_with_the_name_containing_id006(String searchTerm) {
         
-//     }
+//     // }
 
 //     @When("the user attempts to only view the {string} items in the system \\(ID006)")
 //     public void the_user_attempts_to_only_view_the_category_items_in_the_system_id006(String category) {
