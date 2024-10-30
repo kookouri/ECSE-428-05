@@ -24,9 +24,7 @@ public class UserRequestDTO {
         this.name = user.getName();
         this.password = user.getPassword();
         this.phoneNumber = user.getPhoneNumber();
-        this.shoppingCart = ItemResponseDTO.itemListToItemResponseDTOList(user.getShoppingCart());
-        this.history = user.getHistory();
-        this.id = user.getId();
+
     }
 
     public UserRequestDTO(String errorMessage) {
