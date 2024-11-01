@@ -33,19 +33,40 @@ public class ItemService {
     /**
      * Filters items by name.
      *
-     * @param name the name to filter items by
-     * @return a list of items matching the name
+     * @param name the name to filter items by 
+     * @return the item matching the name
      */
     @Transactional(readOnly = true)
-    public Item filterItemsByName(String name) {
+    public Item findItemsByName(String name) {
         logger.info("Filtering items by name: {}", name);
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty.");
         }
-        Item item = itemRepository.findByName(name);
 
-        logger.info("Filtered items by name: {}", name);
+        Item item = itemRepository.findItemByName(name);
+
+        logger.info("Filtered item by name: {}", name);
         return item;
+    }
+
+
+    /**
+     * Filters items by containing a name.
+     *
+     * @param name the name to filter items containing
+     * @return the item matching the name
+     */
+    @Transactional(readOnly = true)
+    public List<Item> findItemsByNameContaining(String name) {
+        logger.info("Filtering items by name: {}", name);
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be null or empty.");
+        }
+
+        List<Item> items = itemRepository.findByNameContaining(name);
+
+        logger.info("Filtered item by name: {}", name);
+        return items;
     }
 
     /**
@@ -87,10 +108,12 @@ public class ItemService {
     public Item createItem(String name, double price, String description, String category) {
         logger.info("Creating item with name: {}, price: {}, description: {}", name, price, description);
         validateItemDetails(name, price, description,category);
+        if (findItemsByName(name) != null) {
+            throw new IllegalArgumentException("Item with name " + name + " already exists.");
+        }
         Item item = new Item(name, price, description, Item.Category.valueOf(category), mcGillMartService.getMcGillMart());
-        Item savedItem = itemRepository.save(item);
-        logger.info("Created item with ID: {}", savedItem.getId());
-        return savedItem;
+        
+        return itemRepository.save(item);
     }
 
     /**
@@ -109,6 +132,9 @@ public class ItemService {
         logger.info("Updating item with ID: {}", id);
         validateItemDetails(name, price, description, category);
         Item item = findItemById(id);
+        if (findItemsByName(name) != null && !item.getName().equals(name)) {
+            throw new IllegalArgumentException("Item with name " + name + " already exists.");
+        }
         item.setName(name);
         item.setPrice(price);
         item.setDescription(description);

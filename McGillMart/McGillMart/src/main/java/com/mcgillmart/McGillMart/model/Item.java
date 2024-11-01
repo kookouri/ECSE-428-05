@@ -12,7 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 public class Item
@@ -31,7 +31,7 @@ public class Item
   private Category category;
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Review> reviews;
+  private List<Review> reviews = new ArrayList<>();;
 
   @ManyToOne
   @JoinColumn(name="mcgill_mart_id")
@@ -48,7 +48,7 @@ public class Item
     price = aPrice;
     description = aDescription;
     category = aCategory;
-    reviews = new ArrayList<Review>();
+    reviews = new ArrayList<>();
     boolean didAddMcGillMart = setMcGillMart(aMcGillMart);
     if (!didAddMcGillMart)
     {
@@ -161,7 +161,7 @@ public class Item
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Review addReview(int aId, int aRating, String aComment, Date aDatePosted, String aUsername)
+  public Review addReview(int aId, int aRating, String aComment, LocalDate aDatePosted, String aUsername)
   {
     return new Review(aId, aRating, aComment, aDatePosted, aUsername, this);
   }
@@ -265,6 +265,7 @@ public class Item
   }
 
 
+  @SuppressWarnings("unlikely-arg-type")
   public String toString()
   {
     return super.toString() + "["+

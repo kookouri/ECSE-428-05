@@ -1,39 +1,32 @@
 package com.mcgillmart.McGillMart.service;
 
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.sql.Time;
+// import io.cucumber.java.After;
+// import io.cucumber.java.Before;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import com.mcgillmart.McGillMart.model.McGillMart;
 import com.mcgillmart.McGillMart.model.Item;
 import com.mcgillmart.McGillMart.model.Item.Category;
 import com.mcgillmart.McGillMart.repositories.ItemRepository;
 import com.mcgillmart.McGillMart.repositories.McGillMartRepository;
 import com.mcgillmart.McGillMart.services.ItemService;
-import com.mcgillmart.McGillMart.util.ServiceUtils;
 
 @SpringBootTest
 public class ItemServiceTests {
@@ -91,11 +84,11 @@ public class ItemServiceTests {
         ITEMS.add(item2);
         ITEMS.add(item3);
 
-        when(itemDao.findAll()).thenReturn(ITEMS);
+        when(itemDao.findItemByName(item1.getName())).thenReturn(item1);
 
-        Item item = service.filterItemsByName(item1.getName());
+        Item item = service.findItemsByName(item1.getName());
 
-        assertTrue(item.equals(item1.getName()));
+        assertTrue(item.getName().equals(item1.getName()));
         assertTrue(item.getDescription().equals(item1.getDescription()));
         assertTrue(item.getPrice() == item1.getPrice());
         assertTrue(item.getCategory().equals(item1.getCategory()));

@@ -17,6 +17,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     boolean existsByEmail(String email);
 
+    @SuppressWarnings("null")
     List<User> findAll();
 
 }
