@@ -35,7 +35,7 @@ public class ShoppingController {
     @GetMapping(value={"/users/{id}/transactions", "/users/{id}/transactions"})
     public ResponseEntity<TransactionListDTO> getTransactions(@PathVariable Integer id) {
         try {
-            return new ResponseEntity<TransactionListDTO>(new TransactionListDTO(shoppingService.generateTransactionSummaryReport(id)), HttpStatus.FOUND);
+            return new ResponseEntity<TransactionListDTO>(new TransactionListDTO(shoppingService.getTransactions(id)), HttpStatus.FOUND);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<TransactionListDTO>(new TransactionListDTO(e.getMessage()), HttpStatus.NOT_FOUND);
         }
