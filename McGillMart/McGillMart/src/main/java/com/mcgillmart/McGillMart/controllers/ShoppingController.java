@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mcgillmart.McGillMart.dto.ShoppingCartDTO;
 import com.mcgillmart.McGillMart.dto.TransactionListDTO;
-import com.mcgillmart.McGillMart.dto.UserResponseDTO;
 import com.mcgillmart.McGillMart.services.ShoppingService;
 
 /**
@@ -29,6 +28,15 @@ public class ShoppingController {
             return new ResponseEntity<ShoppingCartDTO>(new ShoppingCartDTO(shoppingService.getShoppingCart(id)), HttpStatus.FOUND);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<ShoppingCartDTO>(new ShoppingCartDTO(e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping(value={"/users/{id}/shoppingCartTotal", "/users/{id}/shoppingCartTotal"})
+    public ResponseEntity<Integer> getShoppingCartTotal(@PathVariable Integer id) {
+        try {
+            return new ResponseEntity<Integer>(shoppingService.getShoppingCartTotal(id), HttpStatus.FOUND);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<Integer>(-1, HttpStatus.NOT_FOUND);
         }
     }
     

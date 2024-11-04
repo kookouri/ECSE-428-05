@@ -31,7 +31,26 @@ public class ShoppingService {
         if (user.isPresent()) {
             return user.get().getShoppingCart();
         }
-        return new ArrayList<>();
+        else {
+            throw new IllegalArgumentException("Invalid user ID: no user found.");
+        }
+    }
+
+    @Transactional
+    public Integer getShoppingCartTotal(Integer userID) {
+        Optional<User> user = userRepo.findById(userID);
+        if (user.isPresent()) {
+            int total = 0;
+
+            for (Item item : user.get().getShoppingCart()) {
+                total += item.getPrice();
+            }
+
+            return total;
+        }
+        else {
+            throw new IllegalArgumentException("Invalid user ID: no user found.");
+        }
     }
 
     // TODO: Add shopping cart adding item functionalities - Ana
@@ -46,6 +65,8 @@ public class ShoppingService {
         if (user.isPresent()) {
             return user.get().getHistory();
         }
-        return new ArrayList<>();
+        else {
+            throw new IllegalArgumentException("Invalid user ID: no user found.");
+        }
     }
 }
