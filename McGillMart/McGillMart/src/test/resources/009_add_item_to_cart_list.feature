@@ -4,7 +4,7 @@ Feature: Add Item to Cart List (ID009)
   Background:
     Given the following user exists in the system (ID009)
       | id | name     | email                | phone        | password      |
-      | 0  | Jeff 	  | jeff@mail.mcgill.ca  | 123-456-7890 | validPass@123 |
+      | 0  | Jeff     | jeff@mail.mcgill.ca  | 123-456-7890 | validPass@123 |
 	
     And I am logged in with the email "jeff@mail.mcgill.ca" (ID009)
     And the following items exist in the system (ID009)
@@ -19,7 +19,7 @@ Feature: Add Item to Cart List (ID009)
     Then I should see the item with name "<name>" and description "<description>" in my cart (ID009)
     And the number of items in my cart should be "1" (ID009)
 	
-	Examples:
+    Examples:
       | id | name                    | price   | description                      | category 	    |
       | 0  | ECSE hoodie             | 50.0    | Hoodie for ECSE students         | Clothing 	    | 
       | 1  | Deshautel Pencil Case   | 12.0    | Pencil case with Deshautel brand | School Supply   | 
