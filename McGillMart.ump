@@ -33,6 +33,7 @@ class Transaction {
   Integer id;
   Double amount;
   Date dateOfPurchase;
+  String description;
 }
 
 class Review {

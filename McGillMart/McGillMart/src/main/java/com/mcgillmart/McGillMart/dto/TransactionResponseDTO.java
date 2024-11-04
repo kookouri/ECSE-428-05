@@ -8,6 +8,7 @@ public class TransactionResponseDTO {
     private int id;
     private double amount;
     private LocalDate dateOfPurchase;
+    private String description;
     private UserResponseDTO user;
 
     public TransactionResponseDTO() {}
@@ -42,6 +43,14 @@ public class TransactionResponseDTO {
 
     public void setDateOfPurchase(LocalDate dateOfPurchase) {
         this.dateOfPurchase = dateOfPurchase;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String desc) {
+        this.description = desc;
     }
 
     public UserResponseDTO getUser() {
