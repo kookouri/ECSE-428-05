@@ -16,15 +16,17 @@ public class Transaction
 
   private double amount;
   private LocalDate dateOfPurchase;
+  private String description;
 
   @ManyToOne
   private User user;
 
-  public Transaction(int aId, double aAmount, LocalDate aDateOfPurchase, User aUser)
+  public Transaction(int aId, double aAmount, LocalDate aDateOfPurchase, String aDescription, User aUser)
   {
     id = aId;
     amount = aAmount;
     dateOfPurchase = aDateOfPurchase;
+    description = aDescription;
     boolean didAddUser = setUser(aUser);
     if (!didAddUser)
     {
@@ -61,6 +63,15 @@ public class Transaction
     return wasSet;
   }
 
+  public boolean setDescription(String aDescription)
+  {
+    boolean wasSet = false;
+    description = aDescription;
+    wasSet = true;
+    return wasSet;
+  }
+
+
   public int getId()
   {
     return id;
@@ -74,6 +85,11 @@ public class Transaction
   public LocalDate getDateOfPurchase()
   {
     return dateOfPurchase;
+  }
+
+  public String getDescription()
+  {
+    return description;
   }
   /* Code from template association_GetOne */
   public User getUser()
@@ -116,7 +132,8 @@ public class Transaction
   {
     return super.toString() + "["+
             "id" + ":" + getId()+ "," +
-            "amount" + ":" + getAmount()+ "]" + System.getProperties().getProperty("line.separator") +
+            "amount" + ":" + getAmount()+ "," +
+            "description" + ":" + getDescription()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "dateOfPurchase" + "=" + (getDateOfPurchase() != null ? !getDateOfPurchase().equals(this)  ? getDateOfPurchase().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "user = "+(getUser()!=null?Integer.toHexString(System.identityHashCode(getUser())):"null");
   }
