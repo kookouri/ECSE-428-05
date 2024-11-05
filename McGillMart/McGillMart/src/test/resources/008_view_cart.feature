@@ -9,8 +9,8 @@ Feature: View cart (ID008)
 
     And the following items exist Alice's cart (ID008)
       | id  | name               | price | description                 | category  |
-      | 01  | McGill Hoodie      | 40    | Soft hoodie with McGill logo| Clothing  |
-      | 02  | Calculus Textbook  | 250   | Comprehensive math textbook | Textbook  | 
+      | 01  | McGill Hoodie      | 40.0  | Soft hoodie with McGill logo| Clothing  |
+      | 02  | Calculus Textbook  | 250.0   | Comprehensive math textbook | Textbook  | 
 
     And the following items exist in Bob's cart (ID008)
       | id | name                    | price | description            | category |
@@ -23,8 +23,8 @@ Feature: View cart (ID008)
     Then I should see 2 items in my cart
     And I should see the following items:
       | name               | price | description                 | category |
-      | McGill Hoodie      | 40    | Soft hoodie with McGill logo| Clothing |
-      | Calculus Textbook  | 250   | Comprehensive math textbook | Textbook |
+      | McGill Hoodie      | 40.0    | Soft hoodie with McGill logo| Clothing |
+      | Calculus Textbook  | 250.0   | Comprehensive math textbook | Textbook |
     And the total cart value should be "$290.00"
 
   Scenario Outline: Successfully view items in cart with different user
