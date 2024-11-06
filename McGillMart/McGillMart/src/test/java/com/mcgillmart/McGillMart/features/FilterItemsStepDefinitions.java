@@ -31,7 +31,8 @@ public class FilterItemsStepDefinitions {
             double price = Double.parseDouble(row.get("price"));
             String description = row.get("description");
             String category = row.get("category");
-            itemService.createItem(name, price, description, category);
+            String url = "";
+            itemService.createItem(name, price, description, category, url);
         }
     }
 

@@ -29,9 +29,10 @@ public class ViewItemsStepDefinitions {
             double price = Double.parseDouble(itemData.get("price"));
             String description = itemData.get("description");
             String category = itemData.get("category");
+            String url = "";
 
             // Create a new Item and add it to the McGillMart
-            itemService.createItem(name, price, description, category);
+            itemService.createItem(name, price, description, category, url);
         }
     }
 
