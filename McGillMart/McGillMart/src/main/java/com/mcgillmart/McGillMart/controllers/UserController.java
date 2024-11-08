@@ -29,7 +29,7 @@ import com.mcgillmart.McGillMart.services.ViewProfileService;
  * <p>Create, update, read and delete a user </p>
  * @author Julia
  */
-@CrossOrigin(origins = "http://127.0.0.1:8087")
+@CrossOrigin(origins = "*")
 @RestController
 public class UserController {
     @Autowired

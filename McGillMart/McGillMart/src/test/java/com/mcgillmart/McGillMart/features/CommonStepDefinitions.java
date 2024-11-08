@@ -9,7 +9,6 @@ import com.mcgillmart.McGillMart.repositories.McGillMartRepository;
 import com.mcgillmart.McGillMart.repositories.ReviewRepository;
 import com.mcgillmart.McGillMart.repositories.UserRepository;
 
-import io.cucumber.java.After;
 import io.cucumber.java.Before;
 
 public class CommonStepDefinitions {

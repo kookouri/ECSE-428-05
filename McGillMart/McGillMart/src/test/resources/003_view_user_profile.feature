@@ -11,7 +11,7 @@ Feature: View User Profile (ID003)
 
     The user's email, name, and phone should be displayed.
 
-    Given the user with id "<id>" is logged in (ID003)
+    Given the user with email "<email>" is logged in (ID003)
     When the user attempts to view their profile (ID003)
     Then the name "<name>", email "<email>", and phone "<phone>" shall be displayed (ID003)
 

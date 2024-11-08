@@ -1,7 +1,5 @@
 package com.mcgillmart.McGillMart.dto;
 
-import com.mcgillmart.McGillMart.model.Review;
-
 import java.time.LocalDate;
 
 public class ReviewRequestDTO {

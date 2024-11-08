@@ -233,6 +233,7 @@ public class UserServiceTest {
         assertEquals("444-444-4444", user2.getPhoneNumber());
     }
     
+    @SuppressWarnings("unused")
     @Test
     public void testUpdateUserWithInvalidPassword() {
         int id = 70;
@@ -267,6 +268,7 @@ public class UserServiceTest {
         assertEquals("Empty fields for email, password, phone number, or name are not valid", e.getMessage());
     }
     
+    @SuppressWarnings("unused")
     @Test 
     public void testUpdateUserWithInvalidEmail() {
         int id = 72;
@@ -285,6 +287,7 @@ public class UserServiceTest {
     }
 
     
+    @SuppressWarnings("unused")
     @Test 
     public void testUpdateUserWithInvalidPhoneNumber() {
         int id = 78;
