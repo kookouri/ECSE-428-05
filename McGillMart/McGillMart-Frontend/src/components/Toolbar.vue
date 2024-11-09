@@ -15,10 +15,10 @@
                 size="sm"
                 class="mr-sm-2"
                 placeholder="Search"
-              ></b-form-input>
-              <b-button size="sm" class="my-2 my-sm-0" type="submit"
-                >Search</b-button
-              >
+                v-model="searchQuery"
+                @input="onSearch"
+              />
+              <b-button size="sm" class="my-2 my-sm-0" type="button" @click="onSearch">Search</b-button>
             </b-nav-form>
 
             <b-nav-item-dropdown right>
@@ -46,6 +46,7 @@ export default {
       mounted: false,
       toolbarColor: "#FFD0D5",
       isLoggedIn: false,
+      searchQuery: '',
     };
   },
   methods: {
@@ -66,6 +67,9 @@ export default {
       this.$cookies.remove("id");
       this.$router.push("/");
     },
+    onSearch() {
+    this.$emit('search-items', this.searchQuery);
+    }
   },
 };
 </script>

@@ -187,9 +187,9 @@ public class McGillMart
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Item addItem(String aName, double aPrice, String aDescription, Item.Category aCategory)
+  public Item addItem(String aName, double aPrice, String aDescription, Item.Category aCategory, String aUrL)
   {
-    return new Item(aName, aPrice, aDescription, aCategory, this);
+    return new Item(aName, aPrice, aDescription, aCategory, aUrL, this);
   }
 
   public boolean addItem(Item aItem)

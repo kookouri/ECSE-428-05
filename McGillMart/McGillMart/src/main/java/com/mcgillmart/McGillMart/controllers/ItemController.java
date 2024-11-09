@@ -44,7 +44,7 @@ public class ItemController {
     @PostMapping(value = {"/items", "/items/", "/public/items"})
     public ResponseEntity<ItemResponseDTO> createItem(@RequestBody ItemRequestDTO item) {
         try {
-            Item createdItem = itemService.createItem(item.getName(), item.getPrice(), item.getDescription(), item.getCategory());
+            Item createdItem = itemService.createItem(item.getName(), item.getPrice(), item.getDescription(), item.getCategory(), item.getUrl());
             return new ResponseEntity<ItemResponseDTO>(new ItemResponseDTO(createdItem), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<ItemResponseDTO>(new ItemResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -55,7 +55,7 @@ public class ItemController {
     @PutMapping(value = {"/items/{id}", "/items/{id}/"})
     public ResponseEntity<ItemResponseDTO> updateItem(@PathVariable Integer id, @RequestBody ItemRequestDTO item) {
         try {
-            Item updatedItem = itemService.updateItem(id, item.getName(), item.getPrice(), item.getDescription(), item.getCategory());
+            Item updatedItem = itemService.updateItem(id, item.getName(), item.getPrice(), item.getDescription(), item.getCategory(), item.getUrl());
             return new ResponseEntity<ItemResponseDTO>(new ItemResponseDTO(updatedItem), HttpStatus.ACCEPTED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<ItemResponseDTO>(new ItemResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
