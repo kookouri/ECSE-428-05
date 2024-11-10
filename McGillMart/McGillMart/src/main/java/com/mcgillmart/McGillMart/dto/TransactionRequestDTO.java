@@ -5,6 +5,7 @@ import java.time.LocalDate;
 public class TransactionRequestDTO {
     private double amount;
     private LocalDate dateOfPurchase;
+    private String description;
     private UserResponseDTO user;
 
     public TransactionRequestDTO() {}
@@ -29,6 +30,14 @@ public class TransactionRequestDTO {
 
     public void setDateOfPurchase(LocalDate dateOfPurchase) {
         this.dateOfPurchase = dateOfPurchase;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String desc) {
+        this.description = desc;
     }
 
     public UserResponseDTO getUser() {

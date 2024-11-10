@@ -105,13 +105,13 @@ public class ItemService {
      * @return the created item
      */
     @Transactional
-    public Item createItem(String name, double price, String description, String category) {
+    public Item createItem(String name, double price, String description, String category, String url) {
         logger.info("Creating item with name: {}, price: {}, description: {}", name, price, description);
         validateItemDetails(name, price, description,category);
         if (findItemsByName(name) != null) {
             throw new IllegalArgumentException("Item with name " + name + " already exists.");
         }
-        Item item = new Item(name, price, description, Item.Category.valueOf(category), mcGillMartService.getMcGillMart());
+        Item item = new Item(name, price, description, Item.Category.valueOf(category), url, mcGillMartService.getMcGillMart());
         
         return itemRepository.save(item);
     }
@@ -128,7 +128,7 @@ public class ItemService {
      * @return the updated item
      */
     @Transactional
-    public Item updateItem(Integer id, String name, double price, String description, String category) {
+    public Item updateItem(Integer id, String name, double price, String description, String category, String url) {
         logger.info("Updating item with ID: {}", id);
         validateItemDetails(name, price, description, category);
         Item item = findItemById(id);
@@ -139,6 +139,7 @@ public class ItemService {
         item.setPrice(price);
         item.setDescription(description);
         item.setCategory(Category.valueOf(category));
+        item.setUrl(url);
         item.setMcGillMart(mcGillMartService.getMcGillMart());
         Item updatedItem = itemRepository.save(item);
         logger.info("Updated item with ID: {}", updatedItem.getId());

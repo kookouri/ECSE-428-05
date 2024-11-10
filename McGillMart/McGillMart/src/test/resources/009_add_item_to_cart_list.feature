@@ -8,22 +8,22 @@ Feature: Add Item to Cart List (ID009)
 	
     And I am logged in with the email "jeff@mail.mcgill.ca" (ID009)
     And the following items exist in the system (ID009)
-      | id | name                    | price   | description                      | category 	    |
-      | 0  | ECSE hoodie             | 50.0    | Hoodie for ECSE students         | Clothing 	    | 
-      | 1  | Deshautel Pencil Case   | 12.0    | Pencil case with Deshautel brand | School Supply   | 
-      | 2  | Macroeconomics Textbook | 399.99  | Textbook for Macroeconomics      | Textbook 	    |
+      | id | name                    | price   | description                      | category 	    | url |
+      | 0  | ECSE hoodie             | 50.0    | Hoodie for ECSE students         | Clothing 	    |  nothing.com |
+      | 1  | Desautels Pencil Case   | 12.0    | Pencil case with Desautels brand | School Supply |  nothing.com |
+      | 2  | Macroeconomics Textbook | 399.99  | Textbook for Macroeconomics      | Textbook 	    | nothing.com |
 
-  Scenario Outline: Successfully add an item to the cart.
+  Scenario Outline: Successfully add an item to an empty cart.
     Given I have an empty cart (ID009)
     When I attempt to add an item with name "<name>" to my cart (ID009)
     Then I should see the item with name "<name>" and description "<description>" in my cart (ID009)
     And the number of items in my cart should be "1" (ID009)
 	
     Examples:
-      | id | name                    | price   | description                      | category 	    |
-      | 0  | ECSE hoodie             | 50.0    | Hoodie for ECSE students         | Clothing 	    | 
-      | 1  | Deshautel Pencil Case   | 12.0    | Pencil case with Deshautel brand | School Supply   | 
-      | 2  | Macroeconomics Textbook | 399.99  | Textbook for Macroeconomics      | Textbook 	    |
+      | id | name                    | price   | description                      | category 	    | url |
+      | 0  | ECSE hoodie             | 50.0    | Hoodie for ECSE students         | Clothing 	    |  nothing.com |
+      | 1  | Desautels Pencil Case   | 12.0    | Pencil case with Desautels brand | School Supply |  nothing.com |
+      | 2  | Macroeconomics Textbook | 399.99  | Textbook for Macroeconomics      | Textbook 	    | nothing.com |
 	
 
   Scenario: Unsuccessfully add a non-existent item to the cart.
@@ -32,13 +32,13 @@ Feature: Add Item to Cart List (ID009)
     Then the error "Invalid item: Item does not exist" shall be raised (ID009)
     And the number of items in my cart should be "0" (ID009) 
 
-  Scenario: Successfully increase the amount of an item in the cart.
+  Scenario: Successfully add an item to a non-empty cart.
     Given the following items are in my cart (ID009)
-      | id | name                    | price   | description                 | category |
-      | 0  | ECSE hoodie             | 50.0    | Hoodie for ECSE students    | Clothing |  
-      | 2  | Macroeconomics Textbook | 399.99  | Textbook for Macroeconomics | Textbook |
+      | id | name                    | price   | description                 | category | url |
+      | 0  | ECSE hoodie             | 50.0    | Hoodie for ECSE students    | Clothing | nothing.com |
+      | 2  | Macroeconomics Textbook | 399.99  | Textbook for Macroeconomics | Textbook | nothing.com |
 	
-    When I attempt to add an item with name "Deshautel Pencil Case" to my cart (ID009)
-    Then I should see the item with name "Deshautel Pencil Case" and description "Pencil case with Deshautel brand" in my cart (ID009)
+    When I attempt to add an item with name "Desautels Pencil Case" to my cart (ID009)
+    Then I should see the item with name "Desautels Pencil Case" and description "Pencil case with Desautels brand" in my cart (ID009)
     And the number of items in my cart should be "3" (ID009)
 	
