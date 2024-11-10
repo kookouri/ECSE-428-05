@@ -56,6 +56,27 @@ public class ShoppingService {
     // TODO: Add shopping cart adding item functionalities - Ana
 
     // TODO: Add shopping cart editing items functionalities - Connor
+    @Transactional
+    public String addItemToCart(Integer userID, Item item) {
+        Optional<User> user = userRepo.findById(userID);
+        if (user.isPresent()) {
+            user.get().getShoppingCart().add(item);
+            return ("Item added successfully");
+        } else {
+            throw new IllegalArgumentException("Invalid user ID: no user found.");
+        }
+    }
+
+    @Transactional
+    public String removeItemFromCart(Integer userID, Item item) {
+        Optional<User> user = userRepo.findById(userID);
+        if (user.isPresent()) {
+            user.get().getShoppingCart().remove(item);
+            return ("Item removed successfully");
+        } else {
+            throw new IllegalArgumentException("Invalid user ID: no user found.");
+        }
+    }
 
     // TODO: Add checking out functionalities - Erik
 
