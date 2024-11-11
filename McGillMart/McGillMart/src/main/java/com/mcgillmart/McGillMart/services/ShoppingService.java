@@ -61,6 +61,7 @@ public class ShoppingService {
         Optional<User> user = userRepo.findById(userID);
         if (user.isPresent()) {
             user.get().getShoppingCart().add(item);
+            userRepo.save(user.get());
             return ("Item added successfully");
         } else {
             throw new IllegalArgumentException("Invalid user ID: no user found.");
@@ -72,6 +73,7 @@ public class ShoppingService {
         Optional<User> user = userRepo.findById(userID);
         if (user.isPresent()) {
             user.get().getShoppingCart().remove(item);
+            userRepo.save(user.get());
             return ("Item removed successfully");
         } else {
             throw new IllegalArgumentException("Invalid user ID: no user found.");

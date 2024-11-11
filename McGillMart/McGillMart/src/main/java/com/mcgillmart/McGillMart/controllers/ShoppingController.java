@@ -12,6 +12,7 @@ import com.mcgillmart.McGillMart.dto.ItemRequestDTO;
 import com.mcgillmart.McGillMart.dto.ShoppingCartDTO;
 import com.mcgillmart.McGillMart.dto.TransactionListDTO;
 import com.mcgillmart.McGillMart.model.Item;
+import com.mcgillmart.McGillMart.services.ItemService;
 import com.mcgillmart.McGillMart.services.ShoppingService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,20 +54,32 @@ public class ShoppingController {
         }
     }
 
-    @PostMapping(value={"/users/{id}/shoppingCart/add"})
-    public ResponseEntity<String> addItemToCart(@PathVariable Integer id, @RequestBody Item item) { //should this be ItemRequestDTO?
+    @PostMapping(value={"/users/{id}/shoppingCart/item-adder"})
+    public ResponseEntity<String> addItemToCart(@PathVariable Integer userId, @RequestBody ItemRequestDTO itemRequestDTO) {
         try {
-            shoppingService.addItemToCart(id, item);
+            Item item = new Item();
+            // Only adds basic item information (no reviews)
+            item.setName(itemRequestDTO.getName());
+            item.setPrice(itemRequestDTO.getPrice());
+            item.setDescription(itemRequestDTO.getDescription());
+            item.setCategory(Item.Category.valueOf(itemRequestDTO.getCategory()));
+            shoppingService.addItemToCart(userId, item);
             return new ResponseEntity<String>("Item added successfully", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PostMapping(value={"/users/{id}/shoppingCart/remove"})
-    public ResponseEntity<String> removeItemFromCart(@PathVariable Integer id, @RequestBody Item item) {
+    @PostMapping(value={"/users/{id}/shoppingCart/item-remover"})
+    public ResponseEntity<String> removeItemFromCart(@PathVariable Integer userId, @RequestBody ItemRequestDTO itemRequestDTO) {
         try {
-            shoppingService.removeItemFromCart(id, item);
+            Item item = new Item();
+            // Only adds basic item information (no reviews)
+            item.setName(itemRequestDTO.getName());
+            item.setPrice(itemRequestDTO.getPrice());
+            item.setDescription(itemRequestDTO.getDescription());
+            item.setCategory(Item.Category.valueOf(itemRequestDTO.getCategory()));
+            shoppingService.removeItemFromCart(userId, item);
             return new ResponseEntity<String>("Item removed successfully", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
