@@ -9,6 +9,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Toolbar from './components/Toolbar'
 import Title from './components/Title'
 import ItemCarousel from './components/ItemCarousel'
+import ItemDisplay from './components/ItemDisplay'
 import Footer from './components/Footer'
 import { Hooper, Slide, Navigation} from 'hooper';
 import 'hooper/dist/hooper.css';
@@ -22,6 +23,7 @@ Vue.config.productionTip = false
 Vue.component('Toolbar', Toolbar)
 Vue.component('Title', Title)
 Vue.component('ItemCarousel', ItemCarousel)
+Vue.component('ItemDisplay', ItemDisplay)
 Vue.component('Footer', Footer)
 Vue.component('Hooper', Hooper)
 Vue.component('Slide', Slide)

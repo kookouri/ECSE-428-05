@@ -29,6 +29,7 @@ public class Item
 
   @Enumerated(EnumType.ORDINAL)
   private Category category;
+  private String url;
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Review> reviews = new ArrayList<>();;
@@ -42,12 +43,13 @@ public class Item
 
   }
   
-  public Item(String aName, double aPrice, String aDescription, Category aCategory, McGillMart aMcGillMart)
+  public Item(String aName, double aPrice, String aDescription, Category aCategory, String aUrl, McGillMart aMcGillMart)
   {
     name = aName;
     price = aPrice;
     description = aDescription;
     category = aCategory;
+    url = aUrl;
     reviews = new ArrayList<>();
     boolean didAddMcGillMart = setMcGillMart(aMcGillMart);
     if (!didAddMcGillMart)
@@ -88,6 +90,13 @@ public class Item
     return wasSet;
   }
 
+  public boolean setUrl(String aUrl){
+    boolean wasSet = false;
+    url = aUrl;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setCategory(Category aCategory)
   {
     boolean wasSet = false;
@@ -120,6 +129,12 @@ public class Item
   {
     return category;
   }
+
+  public String getUrl()
+  {
+    return url;
+  }
+
   /* Code from template association_GetMany */
   public Review getReview(int index)
   {

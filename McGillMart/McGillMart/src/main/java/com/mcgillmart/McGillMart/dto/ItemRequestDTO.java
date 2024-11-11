@@ -11,6 +11,7 @@ public class ItemRequestDTO {
     private double price;
     private String description;
     private String category;
+    private String url;
     private int reviewCount;
     private List<ReviewResponseDTO> reviews;
 
@@ -23,6 +24,7 @@ public class ItemRequestDTO {
         this.description = item.getDescription();
         this.category = item.getCategory().toString();
         this.reviewCount = item.getReviews().size();
+        this.url = item.getUrl();
         this.reviews = item.getReviews().stream().map(ReviewResponseDTO::new).collect(Collectors.toList());
     }
 
@@ -52,6 +54,14 @@ public class ItemRequestDTO {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getDescription() {

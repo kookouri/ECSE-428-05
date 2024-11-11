@@ -13,6 +13,7 @@ public class ItemResponseDTO {
     private String description;
     private String category;
     private int reviewCount;
+    private String url;
     private List<ReviewResponseDTO> reviews;
 
     public ItemResponseDTO() {
@@ -24,6 +25,7 @@ public class ItemResponseDTO {
         this.price = item.getPrice();
         this.description = item.getDescription();
         this.category = item.getCategory().toString();
+        this.url = item.getUrl();
         this.reviewCount = item.getReviews().size();
         this.reviews = item.getReviews().stream().map(ReviewResponseDTO::new).collect(Collectors.toList());
     }
@@ -46,6 +48,14 @@ public class ItemResponseDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+    
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public double getPrice() {

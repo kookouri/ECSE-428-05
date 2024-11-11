@@ -8,9 +8,9 @@ Feature: Leave a review on an item (ID007)
     | 02  | Bob   | bob@mail.com     | 555-987-6543 | pass456  |
 
     And the following items exist in the system (ID007)
-    | id  | name              | price | description                 | category  |
-    | 01  | McGill Hoodie      | 40.0    | Soft hoodie with McGill logo| Clothing  |
-    | 02  | Calculus Textbook  | 250.0   | Comprehensive math textbook | Textbook  |
+    | id  | name              | price | description                 | category  | url |
+    | 01  | McGill Hoodie      | 40.0    | Soft hoodie with McGill logo| Clothing  | nothing.com |
+    | 02  | Calculus Textbook  | 250.0   | Comprehensive math textbook | Textbook  | nothing.com |
 
   Scenario: Successfully leave a review for an item
     When the user with email "alice@mail.com" submits a review for "McGill Hoodie" with a rating of 5 and a comment "Loved the hoodie!" (ID007)
