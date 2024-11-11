@@ -272,9 +272,9 @@ public class User
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Transaction addHistory(int aId, double aAmount, LocalDate aDateOfPurchase, String aDescription)
+  public Transaction addHistory(double aAmount, LocalDate aDateOfPurchase, String aDescription)
   {
-    return new Transaction(aId, aAmount, aDateOfPurchase, aDescription, this);
+    return new Transaction(aAmount, aDateOfPurchase, aDescription, this);
   }
 
   public boolean addHistory(Transaction aHistory)

@@ -9,8 +9,6 @@ import com.mcgillmart.McGillMart.model.Transaction;
 import com.mcgillmart.McGillMart.model.User;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.ArrayList;
 
 import jakarta.transaction.Transactional;
 
@@ -27,9 +25,9 @@ public class ShoppingService {
 
     @Transactional
     public List<Item> getShoppingCart(Integer userID) {
-        Optional<User> user = userRepo.findById(userID);
-        if (user.isPresent()) {
-            return user.get().getShoppingCart();
+        User user = userRepo.findUserById(userID);
+        if (user != null) {
+            return user.getShoppingCart();
         }
         else {
             throw new IllegalArgumentException("Invalid user ID: no user found.");
@@ -38,11 +36,11 @@ public class ShoppingService {
 
     @Transactional
     public Integer getShoppingCartTotal(Integer userID) {
-        Optional<User> user = userRepo.findById(userID);
-        if (user.isPresent()) {
+        User user = userRepo.findUserById(userID);
+        if (user != null) {
             int total = 0;
 
-            for (Item item : user.get().getShoppingCart()) {
+            for (Item item : user.getShoppingCart()) {
                 total += item.getPrice();
             }
 
@@ -61,9 +59,9 @@ public class ShoppingService {
 
     @Transactional
     public List<Transaction> getTransactions(Integer userID) {
-        Optional<User> user = userRepo.findById(userID);
-        if (user.isPresent()) {
-            return user.get().getHistory();
+        User user = userRepo.findUserById(userID);
+        if (user != null) {
+            return user.getHistory();
         }
         else {
             throw new IllegalArgumentException("Invalid user ID: no user found.");
