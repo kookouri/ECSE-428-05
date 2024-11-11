@@ -1,6 +1,7 @@
 package com.mcgillmart.McGillMart.features;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.mcgillmart.McGillMart.model.McGillMart;
@@ -33,6 +34,11 @@ public class CommonStepDefinitions {
 
     @AfterEach
     public void tearDown() {
+        clearDatabase();
+    }
+
+    @AfterAll
+    public void tearDownEnd() {
         clearDatabase();
     }
 
