@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,32 +55,20 @@ public class ShoppingController {
         }
     }
 
-    @PostMapping(value={"/users/{id}/shoppingCart/item-adder"})
-    public ResponseEntity<String> addItemToCart(@PathVariable Integer userId, @RequestBody ItemRequestDTO itemRequestDTO) {
+    @PostMapping(value={"/users/{userId}/shoppingCart/items/{itemId}"})
+    public ResponseEntity<String> addItemToCart(@PathVariable Integer userId, @PathVariable Integer itemId) {
         try {
-            Item item = new Item();
-            // Only adds basic item information (no reviews)
-            item.setName(itemRequestDTO.getName());
-            item.setPrice(itemRequestDTO.getPrice());
-            item.setDescription(itemRequestDTO.getDescription());
-            item.setCategory(Item.Category.valueOf(itemRequestDTO.getCategory()));
-            shoppingService.addItemToCart(userId, item);
+            shoppingService.addItemToCart(userId, itemId);
             return new ResponseEntity<String>("Item added successfully", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PostMapping(value={"/users/{id}/shoppingCart/item-remover"})
-    public ResponseEntity<String> removeItemFromCart(@PathVariable Integer userId, @RequestBody ItemRequestDTO itemRequestDTO) {
+    @DeleteMapping(value={"/users/{userId}/shoppingCart/items/{itemId}"})
+    public ResponseEntity<String> removeItemFromCart(@PathVariable Integer userId, @PathVariable Integer itemId) {
         try {
-            Item item = new Item();
-            // Only adds basic item information (no reviews)
-            item.setName(itemRequestDTO.getName());
-            item.setPrice(itemRequestDTO.getPrice());
-            item.setDescription(itemRequestDTO.getDescription());
-            item.setCategory(Item.Category.valueOf(itemRequestDTO.getCategory()));
-            shoppingService.removeItemFromCart(userId, item);
+            shoppingService.removeItemFromCart(userId, itemId);
             return new ResponseEntity<String>("Item removed successfully", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);

@@ -3,6 +3,7 @@ package com.mcgillmart.McGillMart.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mcgillmart.McGillMart.repositories.ItemRepository;
 import com.mcgillmart.McGillMart.repositories.UserRepository;
 import com.mcgillmart.McGillMart.model.Item;
 import com.mcgillmart.McGillMart.model.Transaction;
@@ -24,6 +25,9 @@ public class ShoppingService {
 
     @Autowired
     private UserRepository userRepo;
+
+    @Autowired
+    private ItemRepository itemRepo;
 
     @Transactional
     public List<Item> getShoppingCart(Integer userID) {
@@ -57,26 +61,28 @@ public class ShoppingService {
 
     // TODO: Add shopping cart editing items functionalities - Connor
     @Transactional
-    public String addItemToCart(Integer userID, Item item) {
+    public String addItemToCart(Integer userID, Integer itemId) {
         Optional<User> user = userRepo.findById(userID);
-        if (user.isPresent()) {
-            user.get().getShoppingCart().add(item);
+        Optional<Item> item = itemRepo.findById(itemId);
+        if (user.isPresent() && item.isPresent()) {
+            user.get().getShoppingCart().add(item.get());
             userRepo.save(user.get());
             return ("Item added successfully");
         } else {
-            throw new IllegalArgumentException("Invalid user ID: no user found.");
+            throw new IllegalArgumentException("Invalid user or item id.");
         }
     }
 
     @Transactional
-    public String removeItemFromCart(Integer userID, Item item) {
+    public String removeItemFromCart(Integer userID, Integer itemId) {
         Optional<User> user = userRepo.findById(userID);
-        if (user.isPresent()) {
-            user.get().getShoppingCart().remove(item);
+        Optional<Item> item = itemRepo.findById(itemId);
+        if (user.isPresent() && item.isPresent()) {
+            user.get().getShoppingCart().remove(item.get());
             userRepo.save(user.get());
             return ("Item removed successfully");
         } else {
-            throw new IllegalArgumentException("Invalid user ID: no user found.");
+            throw new IllegalArgumentException("Invalid user or item id.");
         }
     }
 
