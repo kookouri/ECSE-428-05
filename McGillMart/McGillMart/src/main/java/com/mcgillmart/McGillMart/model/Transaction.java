@@ -21,9 +21,8 @@ public class Transaction
   @ManyToOne
   private User user;
 
-  public Transaction(int aId, double aAmount, LocalDate aDateOfPurchase, String aDescription, User aUser)
+  public Transaction(double aAmount, LocalDate aDateOfPurchase, String aDescription, User aUser)
   {
-    id = aId;
     amount = aAmount;
     dateOfPurchase = aDateOfPurchase;
     description = aDescription;
