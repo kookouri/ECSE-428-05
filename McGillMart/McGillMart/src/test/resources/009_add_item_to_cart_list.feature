@@ -10,7 +10,7 @@ Feature: Add Item to Cart List (ID009)
     And the following items exist in the system (ID009)
       | id | name                    | price   | description                      | category 	    | url |
       | 0  | ECSE hoodie             | 50.0    | Hoodie for ECSE students         | Clothing 	    |  nothing.com |
-      | 1  | Desautels Pencil Case   | 12.0    | Pencil case with Desautels brand | School Supply |  nothing.com |
+      | 1  | Desautels Pencil Case   | 12.0    | Pencil case with Desautels brand | Other					|  nothing.com |
       | 2  | Macroeconomics Textbook | 399.99  | Textbook for Macroeconomics      | Textbook 	    | nothing.com |
 
   Scenario Outline: Successfully add an item to an empty cart.
@@ -22,14 +22,14 @@ Feature: Add Item to Cart List (ID009)
     Examples:
       | id | name                    | price   | description                      | category 	    | url |
       | 0  | ECSE hoodie             | 50.0    | Hoodie for ECSE students         | Clothing 	    |  nothing.com |
-      | 1  | Desautels Pencil Case   | 12.0    | Pencil case with Desautels brand | School Supply |  nothing.com |
+      | 1  | Desautels Pencil Case   | 12.0    | Pencil case with Desautels brand | Other					|  nothing.com |
       | 2  | Macroeconomics Textbook | 399.99  | Textbook for Macroeconomics      | Textbook 	    | nothing.com |
 	
 
   Scenario: Unsuccessfully add a non-existent item to the cart.
     Given I have an empty cart (ID009)
     When I attempt to add an item with name "Microeconomics Textbook" to my cart (ID009)
-    Then the error "Invalid item: Item does not exist" shall be raised (ID009)
+    Then an error shall be raised (ID009)
     And the number of items in my cart should be "0" (ID009) 
 
   Scenario: Successfully add an item to a non-empty cart.

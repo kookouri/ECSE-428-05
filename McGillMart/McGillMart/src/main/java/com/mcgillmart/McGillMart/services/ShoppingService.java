@@ -10,6 +10,7 @@ import com.mcgillmart.McGillMart.model.Transaction;
 import com.mcgillmart.McGillMart.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.transaction.Transactional;
 
@@ -63,7 +64,7 @@ public class ShoppingService {
         Optional<User> user = userRepo.findById(userID);
         Optional<Item> item = itemRepo.findById(itemId);
         if (user.isPresent() && item.isPresent()) {
-            user.get().getShoppingCart().add(item.get());
+            user.get().addShoppingCart(item.get());
             userRepo.save(user.get());
             return ("Item added successfully");
         } else {
