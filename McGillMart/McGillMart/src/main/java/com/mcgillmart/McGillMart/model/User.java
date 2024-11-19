@@ -3,6 +3,7 @@ package com.mcgillmart.McGillMart.model;
 import java.util.*;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -42,7 +43,7 @@ public class User
   private String phoneNumber;
 
   //User Associations
-  @OneToMany
+  @OneToMany(fetch = FetchType.EAGER)
   private List<Item> shoppingCart;
   @OneToMany
   private List<Transaction> history;
@@ -153,7 +154,7 @@ public class User
 
   public List<Item> getShoppingCart()
   {
-    List<Item> newShoppingCart = Collections.unmodifiableList(shoppingCart);
+    List<Item> newShoppingCart = shoppingCart;
     return newShoppingCart;
   }
 

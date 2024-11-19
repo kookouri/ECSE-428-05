@@ -4,13 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mcgillmart.McGillMart.repositories.ItemRepository;
-import com.mcgillmart.McGillMart.repositories.UserRepository;
 import com.mcgillmart.McGillMart.model.Item;
 import com.mcgillmart.McGillMart.model.Transaction;
 import com.mcgillmart.McGillMart.model.User;
+import com.mcgillmart.McGillMart.repositories.ItemRepository;
+import com.mcgillmart.McGillMart.repositories.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
