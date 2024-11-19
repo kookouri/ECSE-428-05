@@ -154,7 +154,7 @@ public class User
 
   public List<Item> getShoppingCart()
   {
-    List<Item> newShoppingCart = Collections.unmodifiableList(shoppingCart);
+    List<Item> newShoppingCart = shoppingCart;
     return newShoppingCart;
   }
 

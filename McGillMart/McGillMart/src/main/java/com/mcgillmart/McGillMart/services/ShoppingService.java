@@ -2,17 +2,16 @@ package com.mcgillmart.McGillMart.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.mcgillmart.McGillMart.repositories.ItemRepository;
-import com.mcgillmart.McGillMart.repositories.UserRepository;
 import com.mcgillmart.McGillMart.model.Item;
 import com.mcgillmart.McGillMart.model.Transaction;
 import com.mcgillmart.McGillMart.model.User;
+import com.mcgillmart.McGillMart.repositories.ItemRepository;
+import com.mcgillmart.McGillMart.repositories.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
-
-import jakarta.transaction.Transactional;
 
 /**
 * <p>Service class in charge of managing transactions and the shopping. It implements following use cases: </p>
@@ -28,7 +27,7 @@ public class ShoppingService {
     @Autowired
     private ItemRepository itemRepo;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Item> getShoppingCart(Integer userID) {
         User user = userRepo.findUserById(userID);
         if (user != null) {
@@ -39,7 +38,7 @@ public class ShoppingService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Integer getShoppingCartTotal(Integer userID) {
         User user = userRepo.findUserById(userID);
         if (user != null) {
@@ -77,11 +76,28 @@ public class ShoppingService {
         Optional<User> user = userRepo.findById(userID);
         Optional<Item> item = itemRepo.findById(itemId);
         if (user.isPresent() && item.isPresent()) {
-            user.get().getShoppingCart().remove(item.get());
+            user.get().removeShoppingCart(item.get());
             userRepo.save(user.get());
             return ("Item removed successfully");
         } else {
             throw new IllegalArgumentException("Invalid user or item id.");
+        }
+    }
+
+    @Transactional
+    public String emptyCart(Integer userID) {
+        Optional<User> user = userRepo.findById(userID);
+        if (user.isPresent()) {
+
+            // Clear the shopping cart
+            user.get().getShoppingCart().clear();
+    
+            // Save the user to persist the changes
+            userRepo.save(user.get());
+    
+            return "Shopping cart has been emptied successfully.";
+        } else {
+            throw new IllegalArgumentException("Invalid user ID: no user found.");
         }
     }
 
