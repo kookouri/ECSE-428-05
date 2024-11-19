@@ -1,5 +1,6 @@
 package com.mcgillmart.McGillMart.features;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -15,11 +16,14 @@ import com.mcgillmart.McGillMart.model.McGillMart;
 import com.mcgillmart.McGillMart.model.User;
 import com.mcgillmart.McGillMart.repositories.ItemRepository;
 import com.mcgillmart.McGillMart.repositories.McGillMartRepository;
+import com.mcgillmart.McGillMart.services.ItemService;
+import com.mcgillmart.McGillMart.services.McGillMartService;
 import com.mcgillmart.McGillMart.services.ShoppingService;
 import com.mcgillmart.McGillMart.services.UserService;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -34,10 +38,10 @@ public class CheckoutStepDefinitions {
     private UserService userService;
 
     @Autowired
-    private McGillMartRepository mcGillMartRepository;
+    private McGillMartService mcGillMartService;
 
     @Autowired
-    private ItemRepository itemRepository;
+    private ItemService itemService;
 
     private String checkoutMessage;
     private Exception checkoutException;
@@ -48,12 +52,11 @@ public class CheckoutStepDefinitions {
     @Before
     public void setUp() {
         // Initialize mcGillMart before any scenario runs
-        mcGillMart = new McGillMart();
-        mcGillMartRepository.save(mcGillMart);
+        mcGillMart = mcGillMartService.getMcGillMart();
         assertNotNull(mcGillMart);
     }
 
-    @Given("the following user exists in the system \\(ID0011)")
+    @Given("the following user exists in the system \\(ID011)")
     public void the_following_user_exists_in_the_system(DataTable dataTable) {
         List<Map<String, String>> users = dataTable.asMaps();
         users.forEach(row -> {
@@ -67,14 +70,14 @@ public class CheckoutStepDefinitions {
         });
     }
 
-    @Given("I am logged in with the email {string} \\(ID011)")
+    @And("I am logged in with the email {string} \\(ID011)")
     public void i_am_logged_in_with_the_email(String email) {
         User user = userService.findUserByEmail(email);
         assertNotNull(user);
         loggedInUserId = user.getId();
     }
 
-    @Given("the following items exist in the system \\(ID011)")
+    @And("the following items exist in the system \\(ID011)")
     public void the_following_items_exist_in_the_system(DataTable dataTable) {
         List<Map<String, String>> items = dataTable.asMaps();
         items.forEach(row -> {
@@ -91,8 +94,7 @@ public class CheckoutStepDefinitions {
             }
             String url = row.get("url");
 
-            Item item = new Item(itemName, price, description, category, url, mcGillMart);
-            itemRepository.save(item);
+            Item item = itemService.createItem(itemName, price, description, categoryStr, url);
             assertNotNull(item);
         });
     }
@@ -102,31 +104,20 @@ public class CheckoutStepDefinitions {
         List<Map<String, String>> items = dataTable.asMaps();
         items.forEach(row -> {
             String itemName = row.get("name");
-            double price = Double.parseDouble(row.get("price"));
-            String description = row.get("description");
-            String categoryStr = row.get("category").replace(" ", "_");
-            Item.Category category;
-            try {
-                category = Item.Category.valueOf(categoryStr);
-            } catch (IllegalArgumentException e) {
-                category = Item.Category.Other;
-            }
-            String url = row.get("url");
-
-            Item item = new Item(itemName, price, description, category, url, mcGillMart);
-            itemRepository.save(item);
+            
+            Item item = itemService.findItemByName(itemName);
 
             shoppingService.addItemToCart(loggedInUserId, item.getId());
         });
     }
 
-    @Given("the number of items in my cart is {string} \\(ID011)")
+    @And("the number of items in my cart is {string} \\(ID011)")
     public void the_number_of_items_in_my_cart_is_id011(String expectedItemCount) {
         List<Item> cartItems = shoppingService.getShoppingCart(loggedInUserId);
         assertEquals(Integer.parseInt(expectedItemCount), cartItems.size());
     }
 
-    @When("I attempt to check-out the shopping cart")
+    @When("I attempt to check-out the shopping cart \\(ID011)")
     public void i_attempt_to_check_out_the_shopping_cart() {
         try {
             checkoutMessage = shoppingService.checkoutShoppingCart(loggedInUserId);
@@ -135,19 +126,20 @@ public class CheckoutStepDefinitions {
         }
     }
 
-    @Then("the message {string} will be raised.")
+    @Then("the message {string} will be raised. \\(ID011)")
     public void the_message_will_be_raised(String expectedMessage) {
+        assertNull(checkoutException);
         assertNotNull(checkoutMessage);
         assertEquals(expectedMessage, checkoutMessage);
     }
 
-    @Then("the error {string} shall be raised \\(ID009)")
+    @Then("the error {string} shall be raised \\(ID011)")
     public void the_error_shall_be_raised(String expectedError) {
         assertNotNull(checkoutException);
         assertEquals(expectedError, checkoutException.getMessage());
     }
 
-    @Then("the number of items in my cart should be {string} \\(ID011)")
+    @And("the number of items in my cart should be {string} \\(ID011)")
     public void the_number_of_items_in_my_cart_should_be(String expectedItemCount) {
         List<Item> cartItems = shoppingService.getShoppingCart(loggedInUserId);
         assertEquals(Integer.parseInt(expectedItemCount), cartItems.size());

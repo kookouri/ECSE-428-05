@@ -8,6 +8,7 @@ import com.mcgillmart.McGillMart.model.Item;
 import com.mcgillmart.McGillMart.model.Transaction;
 import com.mcgillmart.McGillMart.model.User;
 import com.mcgillmart.McGillMart.repositories.ItemRepository;
+import com.mcgillmart.McGillMart.repositories.TransactionRepository;
 import com.mcgillmart.McGillMart.repositories.UserRepository;
 
 import java.time.LocalDate;
@@ -22,12 +23,14 @@ import java.util.Optional;
 */
 @Service("shoppingService")
 public class ShoppingService {
-
     @Autowired
     private UserRepository userRepo;
 
     @Autowired
     private ItemRepository itemRepo;
+
+    @Autowired
+    private TransactionRepository transactionRepo;
 
     @Transactional(readOnly = true)
     public List<Item> getShoppingCart(Integer userID) {
@@ -119,18 +122,23 @@ public class ShoppingService {
         }
 
         double totalAmount = cartItems.stream().mapToDouble(Item::getPrice).sum();
-
+        
+        // Create a new transaction
         Transaction transaction = new Transaction();
         transaction.setAmount(totalAmount);
         transaction.setDateOfPurchase(LocalDate.now());
         transaction.setDescription("Purchase of " + cartItems.size() + " items.");
-        transaction.setUser(user);
+        transaction.setUser(user); // Associate the transaction with the user
 
-        user.getHistory().add(transaction);
+        // Save the transaction
+        transactionRepo.save(transaction);
 
-        cartItems.clear();
-
+        // Associate the transaction with the user's history
+        user.addHistory(transaction);
         userRepo.save(user);
+
+        emptyCart(userID);
+
         return "Successfully checked-out the shopping cart";
     }
 
