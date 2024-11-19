@@ -10,6 +10,7 @@ import com.mcgillmart.McGillMart.model.Transaction;
 import com.mcgillmart.McGillMart.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.transaction.Transactional;
 
