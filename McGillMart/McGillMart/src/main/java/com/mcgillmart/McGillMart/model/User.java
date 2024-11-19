@@ -58,7 +58,8 @@ public class User
   // CONSTRUCTOR
   //------------------------
   public User() {
-	  
+    this.shoppingCart = new ArrayList<>();
+    this.history = new ArrayList<>();
   }
   
   public User(String aEmail, String aName, String aPassword, String aPhoneNumber, McGillMart aMcGillMart)
