@@ -9,7 +9,9 @@ import com.mcgillmart.McGillMart.model.Item;
 import com.mcgillmart.McGillMart.model.Transaction;
 import com.mcgillmart.McGillMart.model.User;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.transaction.Transactional;
 
@@ -84,7 +86,35 @@ public class ShoppingService {
         }
     }
 
-    // TODO: Add checking out functionalities - Erik
+    @Transactional
+    public String checkoutShoppingCart(Integer userID) {
+        User user = userRepo.findUserById(userID);
+
+        if (user == null) {
+            throw new IllegalArgumentException("Invalid user ID: no user found.");
+        }
+
+        List<Item> cartItems = user.getShoppingCart();
+
+        if (cartItems.isEmpty()) {
+            throw new IllegalStateException("Empty shopping cart: Item amount must be larger than 0.");
+        }
+
+        double totalAmount = cartItems.stream().mapToDouble(Item::getPrice).sum();
+
+        Transaction transaction = new Transaction();
+        transaction.setAmount(totalAmount);
+        transaction.setDateOfPurchase(LocalDate.now());
+        transaction.setDescription("Purchase of " + cartItems.size() + " items.");
+        transaction.setUser(user);
+
+        user.getHistory().add(transaction);
+
+        cartItems.clear();
+
+        userRepo.save(user);
+        return "Successfully checked-out the shopping cart";
+    }
 
     @Transactional
     public List<Transaction> getTransactions(Integer userID) {
