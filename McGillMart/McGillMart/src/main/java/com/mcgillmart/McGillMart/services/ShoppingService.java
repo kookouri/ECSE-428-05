@@ -8,10 +8,13 @@ import com.mcgillmart.McGillMart.model.Item;
 import com.mcgillmart.McGillMart.model.Transaction;
 import com.mcgillmart.McGillMart.model.User;
 import com.mcgillmart.McGillMart.repositories.ItemRepository;
+import com.mcgillmart.McGillMart.repositories.TransactionRepository;
 import com.mcgillmart.McGillMart.repositories.UserRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
 
 /**
 * <p>Service class in charge of managing transactions and the shopping. It implements following use cases: </p>
@@ -20,12 +23,14 @@ import java.util.Optional;
 */
 @Service("shoppingService")
 public class ShoppingService {
-
     @Autowired
     private UserRepository userRepo;
 
     @Autowired
     private ItemRepository itemRepo;
+
+    @Autowired
+    private TransactionRepository transactionRepo;
 
     @Transactional(readOnly = true)
     public List<Item> getShoppingCart(Integer userID) {
@@ -101,7 +106,41 @@ public class ShoppingService {
         }
     }
 
-    // TODO: Add checking out functionalities - Erik
+
+    @Transactional
+    public String checkoutShoppingCart(Integer userID) {
+        User user = userRepo.findUserById(userID);
+
+        if (user == null) {
+            throw new IllegalArgumentException("Invalid user ID: no user found.");
+        }
+
+        List<Item> cartItems = user.getShoppingCart();
+
+        if (cartItems.isEmpty()) {
+            throw new IllegalStateException("Empty shopping cart: Item amount must be larger than 0.");
+        }
+
+        double totalAmount = cartItems.stream().mapToDouble(Item::getPrice).sum();
+        
+        // Create a new transaction
+        Transaction transaction = new Transaction();
+        transaction.setAmount(totalAmount);
+        transaction.setDateOfPurchase(LocalDate.now());
+        transaction.setDescription("Purchase of " + cartItems.size() + " items.");
+        transaction.setUser(user); // Associate the transaction with the user
+
+        // Save the transaction
+        transactionRepo.save(transaction);
+
+        // Associate the transaction with the user's history
+        user.addHistory(transaction);
+        userRepo.save(user);
+
+        emptyCart(userID);
+
+        return "Successfully checked-out the shopping cart";
+    }
 
     @Transactional
     public List<Transaction> getTransactions(Integer userID) {
