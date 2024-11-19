@@ -77,7 +77,7 @@ public class AddItemToCartStepDefinitions {
 		List<Map<String, String>> dataMap = data.asMaps(String.class, String.class);
 		for (Map<String, String> map : dataMap) {
 			String name = map.get("name");
-			Item item = itemService.findItemsByName(name);
+			Item item = itemService.findItemByName(name);
             shoppingService.addItemToCart(loggedInUser.getId(), item.getId());
 		}
 	}
@@ -85,7 +85,7 @@ public class AddItemToCartStepDefinitions {
 	@When("I attempt to add an item with name {string} to my cart \\(ID009)")
 	public void i_attempt_to_add_an_item_with_name_to_my_cart_id009(String name) {
 		try {
-			Item item = itemService.findItemsByName(name);
+			Item item = itemService.findItemByName(name);
 			shoppingService.addItemToCart(loggedInUser.getId(), item.getId());
 		} catch (RuntimeException e) {
 			error = e.getMessage();
