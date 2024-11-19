@@ -60,12 +60,12 @@ public class ShoppingService {
         }
     }
 
-    // TODO: Add shopping cart adding item functionalities - Ana
-
-    // TODO: Add shopping cart editing items functionalities - Connor
     @Transactional
     public String addItemToCart(Integer userID, Integer itemId) {
         Optional<User> user = userRepo.findById(userID);
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("Invalid user or item id.");
+        }
         Optional<Item> item = itemRepo.findById(itemId);
         if (user.isPresent() && item.isPresent()) {
             user.get().addShoppingCart(item.get());
@@ -96,10 +96,10 @@ public class ShoppingService {
 
             // Clear the shopping cart
             user.get().getShoppingCart().clear();
-    
+
             // Save the user to persist the changes
             userRepo.save(user.get());
-    
+
             return "Shopping cart has been emptied successfully.";
         } else {
             throw new IllegalArgumentException("Invalid user ID: no user found.");
@@ -122,7 +122,7 @@ public class ShoppingService {
         }
 
         double totalAmount = cartItems.stream().mapToDouble(Item::getPrice).sum();
-        
+
         // Create a new transaction
         Transaction transaction = new Transaction();
         transaction.setAmount(totalAmount);
