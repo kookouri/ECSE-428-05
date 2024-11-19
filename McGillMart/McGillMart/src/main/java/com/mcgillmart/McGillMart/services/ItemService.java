@@ -175,7 +175,7 @@ public class ItemService {
         }
         Item item = itemRepository.findById(id).orElse(null);
         if (item == null) {
-            throw new IllegalArgumentException("There is no item with ID " + id + ".");
+            throw new IllegalArgumentException("Item not found");
         }
         logger.info("Found item with ID: {}", id);
         return item;

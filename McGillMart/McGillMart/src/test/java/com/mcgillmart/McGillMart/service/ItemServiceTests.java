@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -170,7 +171,7 @@ public class ItemServiceTests {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             service.findItemById(999);
         });
-        assertEquals("There is no item with ID 999.", exception.getMessage());
+        assertEquals("Item not found", exception.getMessage());
         verify(itemDao, times(1)).findById(999);
     }
 
