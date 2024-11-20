@@ -170,6 +170,33 @@ public class ShoppingServiceTests {
         assertEquals(transactionDesc, historyReceive.get(0).getDescription());
     }
 
+    @Test
+    public void testAddItemToCart() {
+        // Set up test
+        int id = 64;
+        String email = "julia@mail.com";
+        String password = "secretPassword";
+        String name = "Julia";
+        String phoneNumber = "333-333-3333";
+
+        User julia = new User(email, name, password, phoneNumber, 
+            toList(mcgillMartRepository.findAll()).get(0));
+
+        Item item1 = new Item("Socks", 6.00, "Soft white cotton socks", Category.Clothing, "", toList(mcgillMartRepository.findAll()).get(0));
+
+        when(userRepository.save(any(User.class))).thenReturn(julia);
+        when(userRepository.findUserById(id)).thenReturn(julia);
+        when(itemRepository.findById(item1.getId())).thenReturn(java.util.Optional.of(item1));
+
+        // Act
+        shoppingService.addItemToCart(id, item1.getId());
+
+        // Assert
+        List<Item> shoppingCartReceived = shoppingService.getShoppingCart(id);
+        assertEquals(1, shoppingCartReceived.size());
+        assertEquals(item1, shoppingCartReceived.get(0));
+    }
+
     //--------------------------// Helper functions //--------------------------//
 
     private <T> List<T> toList(Iterable<T> iterable){
