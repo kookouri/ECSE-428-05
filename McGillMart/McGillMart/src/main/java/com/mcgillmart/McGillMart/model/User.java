@@ -2,6 +2,7 @@ package com.mcgillmart.McGillMart.model;
 
 import java.util.*;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -45,7 +46,8 @@ public class User
   //User Associations
   @OneToMany(fetch = FetchType.EAGER)
   private List<Item> shoppingCart;
-  @OneToMany
+  
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Transaction> history;
 
   @ManyToOne
@@ -56,7 +58,8 @@ public class User
   // CONSTRUCTOR
   //------------------------
   public User() {
-	  
+    this.shoppingCart = new ArrayList<>();
+    this.history = new ArrayList<>();
   }
   
   public User(String aEmail, String aName, String aPassword, String aPhoneNumber, McGillMart aMcGillMart)

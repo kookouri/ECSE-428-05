@@ -8,6 +8,7 @@ import com.mcgillmart.McGillMart.model.McGillMart;
 import com.mcgillmart.McGillMart.repositories.ItemRepository;
 import com.mcgillmart.McGillMart.repositories.McGillMartRepository;
 import com.mcgillmart.McGillMart.repositories.ReviewRepository;
+import com.mcgillmart.McGillMart.repositories.TransactionRepository;
 import com.mcgillmart.McGillMart.repositories.UserRepository;
 
 import io.cucumber.java.Before;
@@ -22,6 +23,9 @@ public class CommonStepDefinitions {
 
     @Autowired
     ReviewRepository reviewRepo;
+
+    @Autowired
+    TransactionRepository transactionRepo;
     
     @Autowired
     UserRepository userRepo;

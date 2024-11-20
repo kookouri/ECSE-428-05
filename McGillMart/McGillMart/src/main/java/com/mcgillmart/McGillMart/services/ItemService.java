@@ -57,7 +57,7 @@ public class ItemService {
      * @return the item matching the name
      */
     @Transactional(readOnly = true)
-    public List<Item> findItemsByNameContaining(String name) {
+    public List<Item> findItemByNameContaining(String name) {
         logger.info("Filtering items by name: {}", name);
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty.");
@@ -175,7 +175,7 @@ public class ItemService {
         }
         Item item = itemRepository.findById(id).orElse(null);
         if (item == null) {
-            throw new IllegalArgumentException("There is no item with ID " + id + ".");
+            throw new IllegalArgumentException("Item not found");
         }
         logger.info("Found item with ID: {}", id);
         return item;
