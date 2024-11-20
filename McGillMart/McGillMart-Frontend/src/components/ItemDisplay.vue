@@ -1,19 +1,25 @@
 <template>
   <div class="items">
-    <h1>Item List</h1>
+    <hr>
+    <h1 class="item-list-title">Item List</h1>
     <div v-if="error" class="error">{{ error }}</div>
-    <ul v-if="filteredItems.length">
-      <li v-for="item in filteredItems" :key="item.id" class="item-card">
-        <h3>{{ item.name }}</h3>
+    <div v-else-if="filteredItems.length" style="display: flex; justify-content: center; flex-wrap: wrap;">
+      <div v-for="item in filteredItems" :key="item.id" class="item-card" style=" position:relative">
+      <h3>{{ item.name }}</h3>
+        <img :src=item.url alt="Item Image" style="max-width: 100%; height: 65%; min-height: 65%;">
+      <div>
         <p><strong>Price:</strong> ${{ item.price.toFixed(2) }}</p>
         <p><strong>Description:</strong> {{ item.description }}</p>
         <p><strong>Category:</strong> {{ item.category }}</p>
         <p><strong>Reviews:</strong> {{ item.reviewCount }}</p>
-        <ul v-if="item.reviews.length">
-          <li v-for="review in item.reviews" :key="review.id">{{ review.comment }}</li>
-        </ul>
-      </li>
-    </ul>
+        
+        <div v-if="item.reviews.length">
+          <div v-for="review in item.reviews" :key="review.id">{{ review.comment }}</div>
+        </div>
+      </div>
+
+      </div>
+    </div>
     <p v-else>No items found.</p>
   </div>
 </template>
@@ -72,6 +78,8 @@ export default {
   padding: 10px;
   margin-bottom: 15px;
   border-radius: 5px;
+  width: 30%;
+  height: 600px;
 }
 .error {
   color: red;

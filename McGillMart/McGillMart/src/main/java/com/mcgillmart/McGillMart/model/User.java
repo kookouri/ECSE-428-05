@@ -2,7 +2,9 @@ package com.mcgillmart.McGillMart.model;
 
 import java.util.*;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -42,9 +44,10 @@ public class User
   private String phoneNumber;
 
   //User Associations
-  @OneToMany
+  @OneToMany(fetch = FetchType.EAGER)
   private List<Item> shoppingCart;
-  @OneToMany
+  
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   private List<Transaction> history;
 
   @ManyToOne
@@ -55,7 +58,8 @@ public class User
   // CONSTRUCTOR
   //------------------------
   public User() {
-	  
+    this.shoppingCart = new ArrayList<>();
+    this.history = new ArrayList<>();
   }
   
   public User(String aEmail, String aName, String aPassword, String aPhoneNumber, McGillMart aMcGillMart)
@@ -153,7 +157,7 @@ public class User
 
   public List<Item> getShoppingCart()
   {
-    List<Item> newShoppingCart = Collections.unmodifiableList(shoppingCart);
+    List<Item> newShoppingCart = shoppingCart;
     return newShoppingCart;
   }
 

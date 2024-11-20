@@ -37,7 +37,7 @@ public class ItemService {
      * @return the item matching the name
      */
     @Transactional(readOnly = true)
-    public Item findItemsByName(String name) {
+    public Item findItemByName(String name) {
         logger.info("Filtering items by name: {}", name);
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty.");
@@ -57,7 +57,7 @@ public class ItemService {
      * @return the item matching the name
      */
     @Transactional(readOnly = true)
-    public List<Item> findItemsByNameContaining(String name) {
+    public List<Item> findItemByNameContaining(String name) {
         logger.info("Filtering items by name: {}", name);
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty.");
@@ -108,7 +108,7 @@ public class ItemService {
     public Item createItem(String name, double price, String description, String category, String url) {
         logger.info("Creating item with name: {}, price: {}, description: {}", name, price, description);
         validateItemDetails(name, price, description,category);
-        if (findItemsByName(name) != null) {
+        if (findItemByName(name) != null) {
             throw new IllegalArgumentException("Item with name " + name + " already exists.");
         }
         Item item = new Item(name, price, description, Item.Category.valueOf(category), url, mcGillMartService.getMcGillMart());
@@ -132,7 +132,7 @@ public class ItemService {
         logger.info("Updating item with ID: {}", id);
         validateItemDetails(name, price, description, category);
         Item item = findItemById(id);
-        if (findItemsByName(name) != null && !item.getName().equals(name)) {
+        if (findItemByName(name) != null && !item.getName().equals(name)) {
             throw new IllegalArgumentException("Item with name " + name + " already exists.");
         }
         item.setName(name);
@@ -175,7 +175,7 @@ public class ItemService {
         }
         Item item = itemRepository.findById(id).orElse(null);
         if (item == null) {
-            throw new IllegalArgumentException("There is no item with ID " + id + ".");
+            throw new IllegalArgumentException("Item not found");
         }
         logger.info("Found item with ID: {}", id);
         return item;
