@@ -4,17 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-// import io.cucumber.java.After;
-// import io.cucumber.java.Before;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.mcgillmart.McGillMart.model.User;
+import com.mcgillmart.McGillMart.repositories.UserRepository;
+import com.mcgillmart.McGillMart.services.ShoppingService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +31,9 @@ import com.mcgillmart.McGillMart.services.ItemService;
 public class ItemServiceTests {
 
     @Mock
+    private UserRepository userDao;
+
+    @Mock
     private ItemRepository itemDao;
 
     @Mock
@@ -39,6 +41,9 @@ public class ItemServiceTests {
 
     @InjectMocks
     private ItemService service;
+
+    @InjectMocks
+    private ShoppingService shoppingService;
 
     @BeforeEach
     @AfterEach
@@ -166,7 +171,7 @@ public class ItemServiceTests {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             service.findItemById(999);
         });
-        assertEquals("There is no item with ID 999.", exception.getMessage());
+        assertEquals("Item not found", exception.getMessage());
         verify(itemDao, times(1)).findById(999);
     }
 
@@ -204,4 +209,76 @@ public class ItemServiceTests {
         verify(itemDao, times(1)).findAll();
     }
 
+    @Test
+    public void testAddItemToCartSuccess() {
+        Integer userId = 1;
+        Integer itemId = 101;
+        User mockUser = new User();
+        mockUser.setId(userId);
+        Item mockItem = new Item();
+        mockItem.setId(itemId);
+
+        when(userDao.findById(userId)).thenReturn(Optional.of(mockUser));
+        when(itemDao.findById(itemId)).thenReturn(Optional.of(mockItem));
+
+        String result = shoppingService.addItemToCart(userId, itemId);
+
+        assertEquals("Item added successfully", result);
+        verify(userDao, times(1)).findById(userId);
+        verify(itemDao, times(1)).findById(itemId);
+        verify(userDao, times(1)).save(mockUser);
+    }
+
+    @Test
+    public void testAddItemToCartUserNotFound() {
+
+        Integer userId = 1;
+        Integer itemId = 101;
+
+        when(userDao.findById(userId)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            shoppingService.addItemToCart(userId, itemId);
+        });
+
+        assertEquals("Invalid user or item id.", exception.getMessage());
+        verify(userDao, times(1)).findById(userId);
+        verify(itemDao, never()).findById(itemId);
+    }
+
+    @Test
+    public void testAddItemToCartItemNotFound() {
+        Integer userId = 1;
+        Integer itemId = 101;
+        User mockUser = new User();
+        mockUser.setId(userId);
+
+        when(userDao.findById(userId)).thenReturn(Optional.of(mockUser));
+        when(itemDao.findById(itemId)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            shoppingService.addItemToCart(userId, itemId);
+        });
+
+        assertEquals("Invalid user or item id.", exception.getMessage());
+        verify(userDao, times(1)).findById(userId);
+        verify(itemDao, times(1)).findById(itemId);
+    }
+
+    @Test
+    public void testAddItemToCartUserAndItemNotFound() {
+        Integer userId = 1;
+        Integer itemId = 101;
+
+        when(userDao.findById(userId)).thenReturn(Optional.empty());
+        when(itemDao.findById(itemId)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            shoppingService.addItemToCart(userId, itemId);
+        });
+
+        assertEquals("Invalid user or item id.", exception.getMessage());
+        verify(userDao, times(1)).findById(userId);
+        verify(itemDao, never()).findById(itemId);
+    }
 }
