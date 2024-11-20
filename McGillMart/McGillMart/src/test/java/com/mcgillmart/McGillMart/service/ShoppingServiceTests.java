@@ -26,6 +26,7 @@ import com.mcgillmart.McGillMart.repositories.UserRepository;
 import com.mcgillmart.McGillMart.services.McGillMartService;
 import com.mcgillmart.McGillMart.services.ShoppingService;
 import com.mcgillmart.McGillMart.services.UserService;
+import java.util.Optional;
 
 @SpringBootTest
 public class ShoppingServiceTests {
@@ -173,7 +174,6 @@ public class ShoppingServiceTests {
     @Test
     public void testAddItemToCart() {
         // Set up test
-        int id = 64;
         String email = "julia@mail.com";
         String password = "secretPassword";
         String name = "Julia";
@@ -185,14 +185,15 @@ public class ShoppingServiceTests {
         Item item1 = new Item("Socks", 6.00, "Soft white cotton socks", Category.Clothing, "", toList(mcgillMartRepository.findAll()).get(0));
 
         when(userRepository.save(any(User.class))).thenReturn(julia);
-        when(userRepository.findUserById(id)).thenReturn(julia);
-        when(itemRepository.findById(item1.getId())).thenReturn(java.util.Optional.of(item1));
+        when(userRepository.findById(julia.getId())).thenReturn(Optional.of(julia));
+        when(itemRepository.findById(item1.getId())).thenReturn(Optional.of(item1));
 
         // Act
-        shoppingService.addItemToCart(id, item1.getId());
+        shoppingService.addItemToCart(julia.getId(), item1.getId());
 
+        when(userRepository.findUserById(julia.getId())).thenReturn(julia);
         // Assert
-        List<Item> shoppingCartReceived = shoppingService.getShoppingCart(id);
+        List<Item> shoppingCartReceived = shoppingService.getShoppingCart(julia.getId());
         assertEquals(1, shoppingCartReceived.size());
         assertEquals(item1, shoppingCartReceived.get(0));
     }
