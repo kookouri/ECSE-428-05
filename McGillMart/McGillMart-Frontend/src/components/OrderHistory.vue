@@ -11,17 +11,73 @@
                     <li class="active"><a  class="active" href="#/profile/orderHistory">Order History</a></li>
                 </ul>
             </div>
-            <div id="transactions">
-                <div class="transaction">
-                    <h3>Transaction ID</h3>
-                    <p>Total amount: 30.54$</p>
-                    <p>Date of purchase: 11/20/2024</p>
-                    <p>Items bought: Socks...</p>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 mb-4" 
+                        v-for="(transaction, index) in transactions.slice().reverse()" 
+                        :key="index"
+                    >
+                        <div class="card text-left p-4 rounded bg-light">
+                            <h3>Transaction #{{ transactions.length - index }}</h3>
+                            <p>Total amount: ${{ transaction.amount }}</p>
+                            <p>Date of purchase: {{ transaction.dateOfPurchase }}</p>
+                            <p>{{ transaction.description }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
+
+<script>
+const backendUrl = "http://127.0.0.1:8080";
+
+export default {
+    data() {
+        return {
+            user: {
+                // For testing purpose, to be replaced with the cookie
+                id: "181"
+            },
+            transactions: [] // To store fetched transactions
+        };
+    },
+    mounted() {
+        // Fetch accounts data when the component is created
+        this.fetchTransactions();
+    },
+    methods: {
+        fetchTransactions() {
+            fetch(backendUrl + `/users/${this.user.id}/transactions`, {
+                method: 'GET',
+                redirect: 'manual' // Prevents automatic following of redirects
+            })
+            .then(response => {
+                if (response.status === 302) {
+                    const redirectUrl = response.headers.get('Location');
+                    if (redirectUrl) {
+                        console.log("Redirecting to:", redirectUrl);
+                        return fetch(redirectUrl); // Follow the redirect
+                    } else {
+                        console.error("Redirection location is missing.");
+                    }
+                } else {
+                    
+                    return response.json(); // Handle regular response
+                }
+            })
+            .then(data => {
+                if (data) console.log("Data fetched:", data);
+                this.transactions = data.transactions; // Assuming the API returns an array of transactions
+            })
+            .catch(error => {
+                console.error('Error fetching transactions:', error);
+            });
+        },
+    }
+};
+</script>
 
 
 <style scoped>
@@ -85,23 +141,6 @@ p {
     justify-content: center;
     flex-direction: column;
     width: 100%;
-}
-
-#transactions {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    width: 70%;
-    text-align: left;
-}
-
-.transaction {
-    width: 300px;
-    border-width: 2px;
-    border-color: lightpink;
-    background-color: #ccc;
-    border-radius: 15px;
-    padding: 20px;
 }
 
 hr {
