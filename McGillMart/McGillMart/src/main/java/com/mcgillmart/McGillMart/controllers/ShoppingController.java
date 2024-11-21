@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * <p>Controller class in charge of managing shopping actions.</p>
  * @author Julia
  */
-@CrossOrigin(origins = "http://127.0.0.1:8087")
+@CrossOrigin(origins = "*")
 @RestController
 public class ShoppingController {
     @Autowired
