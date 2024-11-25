@@ -47,7 +47,7 @@ public class User
   @OneToMany(fetch = FetchType.EAGER)
   private List<Item> shoppingCart;
   
-  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   private List<Transaction> history;
 
   @ManyToOne

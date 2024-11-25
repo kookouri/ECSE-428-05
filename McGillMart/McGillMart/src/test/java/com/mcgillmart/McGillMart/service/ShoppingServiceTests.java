@@ -1,6 +1,7 @@
 package com.mcgillmart.McGillMart.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -22,6 +23,7 @@ import com.mcgillmart.McGillMart.model.User;
 import com.mcgillmart.McGillMart.model.Item.Category;
 import com.mcgillmart.McGillMart.repositories.ItemRepository;
 import com.mcgillmart.McGillMart.repositories.McGillMartRepository;
+import com.mcgillmart.McGillMart.repositories.TransactionRepository;
 import com.mcgillmart.McGillMart.repositories.UserRepository;
 import com.mcgillmart.McGillMart.services.McGillMartService;
 import com.mcgillmart.McGillMart.services.ShoppingService;
@@ -38,6 +40,9 @@ public class ShoppingServiceTests {
 
     @Mock
     private McGillMartRepository mcgillMartRepository;
+
+    @Mock
+    private TransactionRepository transactionRepository;
     
     @InjectMocks
     private UserService userService;
