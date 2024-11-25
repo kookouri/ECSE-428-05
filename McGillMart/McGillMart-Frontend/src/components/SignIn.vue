@@ -47,8 +47,9 @@
   
           if (response.status === 202) {
             this.message = `Account logged in successfully: ${response.data.name}`;
-            this.$cookies.set('username', this.email);
-            this.$cookies.set('password', this.password);
+            // Save cookies and change page
+            this.$cookies.set('username', this.user.username);
+            this.$cookies.set('password', this.user.password);
 
             console.log('Created new cookies:');
             console.log('username: ', decodeURIComponent(this.$cookies.get('username')));

@@ -56,7 +56,14 @@ export default {
         const response = await client.post('/users', this.user);
 
         if (response.status === 201) {
-          this.message = `Account created successfully: ${response.data.name}`;
+          this.$cookies.set('username', this.user.email);
+          this.$cookies.set('password',  this.user.password);
+    
+          console.log('Created new cookies:');
+          console.log('username: ', decodeURIComponent(this.$cookies.get('username')));
+          console.log('password: ', this.$cookies.get('password'));
+                    
+          this.$router.push('/');
         } else {
           this.message = `Error: ${response.data.message}`;
         }

@@ -39,19 +39,19 @@
                     zIndex: 1,
                   }"
                 >
-                  <router-link class="dropdown-item" to="/settings"
-                    >Settings <b-icon icon="gear"></b-icon
-                  ></router-link>
+                  <router-link class="dropdown-item" to="/my-profile"
+                    ><b-icon icon="person"></b-icon>My Profile</router-link>
+                  <router-link class="dropdown-item" to="/my-profile"
+                    ><b-icon icon="cart"></b-icon>View Cart</router-link>
                   <a
                     class="dropdown-item"
                     @click.prevent="signOut"
                     style="color: var(--color-red)"
-                    >Sign Out
-                    <b-icon
+                    ><b-icon
                       icon="box-arrow-right"
                       style="color: var(--color-red)"
-                    ></b-icon
-                  ></a>
+                    ></b-icon>Sign Out
+                  </a>
                 </div>
               </div>
             </li>
@@ -64,7 +64,6 @@
 </template>
 
 <script>
-import router from "@/router/index";
 
 export default {
   data() {
@@ -91,8 +90,6 @@ export default {
       this.isLoggedIn = false;
       this.$cookies.remove("username");
       this.$cookies.remove("password");
-      this.$cookies.remove("role");
-      this.$cookies.remove("id");
       this.$router.push("/");
     },
     onSearch() {
