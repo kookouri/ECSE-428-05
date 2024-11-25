@@ -179,6 +179,57 @@ public class ShoppingServiceTests {
     @Test
     public void testAddItemToCart() {
         // Set up test
+        int userId = 0;
+        String email = "jeff@mail.mcgill.ca";
+        String password = "validPass@123";
+        String name = "Jeff";
+        String phoneNumber = "123-456-7890";
+
+        McGillMart mcgillMart = toList(mcgillMartRepository.findAll()).get(0);
+        User jeff = new User(email, name, password, phoneNumber, mcgillMart);
+        jeff.setId(userId);
+
+        // Create items
+        Item item1 = new Item("ECSE hoodie", 50.0, "Hoodie for ECSE students", Category.Clothing, "nothing.com", mcgillMart);
+        item1.setId(0);
+        Item item2 = new Item("Desautels Pencil Case", 12.0, "Pencil case with Desautels brand", Category.Stationary, "nothing.com", mcgillMart);
+        item2.setId(1);
+
+        // Add items to user's shopping cart
+        jeff.addShoppingCart(item1);
+        jeff.addShoppingCart(item2);
+
+        // Mock userRepository.save(any(User.class)) to return the user
+        when(userRepository.save(any(User.class))).thenReturn(jeff);
+
+        // Mock userRepository.findUserById(userId)
+        when(userRepository.findUserById(userId)).thenReturn(jeff);
+
+        // Mock userRepository.findById(userId)
+        when(userRepository.findById(userId)).thenReturn(java.util.Optional.of(jeff));
+    
+        // Mock transactionRepository.save(any(Transaction.class)) to return the transaction
+        when(transactionRepository.save(any(Transaction.class))).thenAnswer(invocation -> {
+            Transaction transaction = invocation.getArgument(0);
+            transaction.setId(1); // Set an ID
+            return transaction;
+        });
+
+        // Call the method under test
+        String message = shoppingService.checkoutShoppingCart(userId);
+
+        // Verify the message
+        assertEquals("Successfully checked-out the shopping cart", message);
+
+        // Verify that the shopping cart is empty
+        assertEquals(0, jeff.getShoppingCart().size());
+
+        // Verify that a transaction was created and added to user's history
+        assertEquals(1, jeff.getHistory().size());
+        Transaction transaction = jeff.getHistory().get(0);
+        assertEquals(62.0, transaction.getAmount(), 0.001); // Total amount of items
+        assertEquals("Items purchased: ECSE hoodie, Desautels Pencil Case", transaction.getDescription());    
+    }
         String email = "julia@mail.com";
         String password = "secretPassword";
         String name = "Julia";

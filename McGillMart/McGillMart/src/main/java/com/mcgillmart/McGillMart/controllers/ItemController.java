@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
  * <p>Create, update, read and delete an item </p>
  * @author Anastasiia
  */
-@CrossOrigin(origins = "http://127.0.0.1:8087")
+@CrossOrigin(origins = "*")
 @RestController
 public class ItemController {
     @Autowired

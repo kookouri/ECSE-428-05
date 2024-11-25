@@ -14,11 +14,11 @@ import com.mcgillmart.McGillMart.services.UserService;
 
 
 /**
- * <p>Controller class in charge of loggin in users. It implements following use cases: </p>
+ * <p>Controller class in charge of logging in users. It implements following use cases: </p>
  * <p>Validate login for a user</p>
  * @author Connor
  */
-@CrossOrigin(origins = "http://127.0.0.1:8087")
+@CrossOrigin(origins = "*")
 @RestController
 public class LoginController {
 

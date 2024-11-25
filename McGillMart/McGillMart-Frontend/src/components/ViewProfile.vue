@@ -8,7 +8,7 @@
                 <ul class="profile-toolbar-list">
                     <li class="active"><a class="active">View</a></li>
                     <li><a href="">Edit</a></li>
-                    <li><a href="">Order History</a></li>
+                    <li><a href="#/profile/orderHistory">Order History</a></li>
                 </ul>
             </div>
             <div id="profile-values">
@@ -22,44 +22,40 @@
 </template>
 
 <script>
-import axios from "axios";
 import config from "../../config";
 
-const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
-const backendUrl = 'http://' + config.dev.backendHost + ':' + config.dev.backendPort
-
-const client = axios.create({
-    baseURL: backendUrl,
-    headers: { 'Access-Control-Allow-Origin': frontendUrl }
-})
+const backendUrl = "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
 
 export default {
     data() {
         return {
             user: {
-                // Sample Data -- For Testing
-                // name: "JOE",
-                // phoneNumber: "123-456-7890",
-                // email: "Joe@gmail.com"
                 name: "",
                 phoneNumber: "",
                 email: ""
             }
         }
     },
-    async created() {
-        try {
-            // Assuming username is the user's email
-            const response = await client.get('/users/account?email=' + this.$cookies.get('username'));
-            if (response.data.accounts[0].errorMessage !== null) {
-                alert(response.data.errorMessage);
-            } else {
-                this.user.name = response.data.accounts[0].name.toUpperCase();
-                this.user.phoneNumber = response.data.accounts[0].phoneNumber;
-                this.user.email = response.data.accounts[0].email;
-            }
-        } catch (e) {
-            alert(e);
+    mounted() {
+        this.fetchUser();
+    },
+    methods: {
+        fetchUser() {
+            fetch(backendUrl + `/users?email=${this.$cookies.get('username')}`, { 
+                method: 'GET',
+                redirect: 'manual' // Prevents automatic following of redirects
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data) console.log("Data fetched:", data);
+                data = JSON.parse(data);
+                this.user.name = data.accounts[0].name;
+                this.user.phoneNumber = data.accounts[0].phoneNumber;
+                this.user.email = data.accounts[0].email;
+            })
+            .catch(error => {
+                console.error('Error fetching user:', error);
+            });
         }
     }
 }

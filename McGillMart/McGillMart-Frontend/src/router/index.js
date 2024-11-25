@@ -5,7 +5,8 @@ import VueCookies from 'vue-cookies'
 import Home from '@/components/Home'
 import SignIn from '@/components/SignIn'
 import Registration from '@/components/Registration'
-import Settings from '@/components/Settings'
+import ViewCart from '@/components/ViewCart'
+import OrderHistory from '@/components/OrderHistory.vue'
 
 Vue.use(Router);
 Vue.use(VueCookies);
@@ -28,14 +29,19 @@ export default new Router({
       component: Registration,
     },
     {
-      path: "/settings",
-      name: "Settings",
-      component: Settings,
-    },
-    {
-      path: '/profile/view',
+      path: '/my-profile',
       name: 'View Profile',
       component: ViewProfile,
+    },
+    {
+      path: '/my-cart',
+      name: 'View Cart',
+      component: ViewCart
+    },
+    {
+      path: '/profile/orderHistory',
+      name: 'Order History',
+      component: OrderHistory,
     }
   ]
 })

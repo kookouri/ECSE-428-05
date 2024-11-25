@@ -1,7 +1,5 @@
 <template>
   <div class="new-user">
-
-  <Toolbar />
     <h2>Create New Account</h2>
     <form @submit.prevent="createUser">
       <div>
@@ -14,7 +12,7 @@
       </div>
       <div>
         <label for="password">Password:</label>
-        <input type="text" v-model="user.password" required />
+        <input type="password" v-model="user.password" required />
       </div>
       <div>
         <label for="phoneNumber">Phone Number:</label>
@@ -40,7 +38,6 @@ const client = axios.create({
   headers: { 'Access-Control-Allow-Origin': frontendUrl }
 })
 
-
 export default {
   data() {
     return {
@@ -58,8 +55,17 @@ export default {
       try {
         const response = await client.post('/users', this.user);
 
-        if (response.status === 200) {
-          this.message = `Account created successfully: ${response.data.name}`;
+        if (response.status === 201) {
+          this.$cookies.set('id', response.data.id);
+          this.$cookies.set('name', this.user.name);
+          this.$cookies.set('username', this.user.email);
+          this.$cookies.set('password',  this.user.password);
+    
+          console.log('Created new cookies:');
+          console.log('username: ', decodeURIComponent(this.$cookies.get('username')));
+          console.log('password: ', this.$cookies.get('password'));
+                    
+          this.$router.push('/');
         } else {
           this.message = `Error: ${response.data.message}`;
         }
