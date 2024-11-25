@@ -9,14 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mcgillmart.McGillMart.dto.ItemRequestDTO;
 import com.mcgillmart.McGillMart.dto.ShoppingCartDTO;
 import com.mcgillmart.McGillMart.dto.TransactionListDTO;
-import com.mcgillmart.McGillMart.model.Item;
-import com.mcgillmart.McGillMart.services.ItemService;
 import com.mcgillmart.McGillMart.services.ShoppingService;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * <p>Controller class in charge of managing shopping actions.</p>

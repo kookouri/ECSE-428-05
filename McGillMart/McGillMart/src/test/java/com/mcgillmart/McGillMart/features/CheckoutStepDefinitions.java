@@ -8,14 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.mcgillmart.McGillMart.model.Item;
 import com.mcgillmart.McGillMart.model.McGillMart;
 import com.mcgillmart.McGillMart.model.User;
-import com.mcgillmart.McGillMart.repositories.ItemRepository;
-import com.mcgillmart.McGillMart.repositories.McGillMartRepository;
 import com.mcgillmart.McGillMart.services.ItemService;
 import com.mcgillmart.McGillMart.services.McGillMartService;
 import com.mcgillmart.McGillMart.services.ShoppingService;
