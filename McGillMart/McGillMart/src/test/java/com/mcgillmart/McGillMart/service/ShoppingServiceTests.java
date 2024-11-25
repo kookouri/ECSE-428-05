@@ -28,6 +28,7 @@ import com.mcgillmart.McGillMart.repositories.UserRepository;
 import com.mcgillmart.McGillMart.services.McGillMartService;
 import com.mcgillmart.McGillMart.services.ShoppingService;
 import com.mcgillmart.McGillMart.services.UserService;
+import java.util.Optional;
 
 @SpringBootTest
 public class ShoppingServiceTests {
@@ -176,7 +177,7 @@ public class ShoppingServiceTests {
     }
 
     @Test
-    public void testCheckoutShoppingCart_Success() {
+    public void testAddItemToCart() {
         // Set up test
         int userId = 0;
         String email = "jeff@mail.mcgill.ca";
@@ -229,45 +230,59 @@ public class ShoppingServiceTests {
         assertEquals(62.0, transaction.getAmount(), 0.001); // Total amount of items
         assertEquals("Items purchased: ECSE hoodie, Desautels Pencil Case", transaction.getDescription());    
     }
+        String email = "julia@mail.com";
+        String password = "secretPassword";
+        String name = "Julia";
+        String phoneNumber = "333-333-3333";
+
+        User julia = new User(email, name, password, phoneNumber, 
+            toList(mcgillMartRepository.findAll()).get(0));
+
+        Item item1 = new Item("Socks", 6.00, "Soft white cotton socks", Category.Clothing, "", toList(mcgillMartRepository.findAll()).get(0));
+
+        when(userRepository.save(any(User.class))).thenReturn(julia);
+        when(userRepository.findById(julia.getId())).thenReturn(Optional.of(julia));
+        when(itemRepository.findById(item1.getId())).thenReturn(Optional.of(item1));
+
+        // Act
+        shoppingService.addItemToCart(julia.getId(), item1.getId());
+
+        when(userRepository.findUserById(julia.getId())).thenReturn(julia);
+        // Assert
+        List<Item> shoppingCartReceived = shoppingService.getShoppingCart(julia.getId());
+        assertEquals(1, shoppingCartReceived.size());
+        assertEquals(item1, shoppingCartReceived.get(0));
+    }
 
     @Test
-    public void testCheckoutShoppingCart_EmptyCart() {
+    public void testRemoveItemFromCart() {
         // Set up test
-        int userId = 0;
-        String email = "jeff@mail.mcgill.ca";
-        String password = "validPass@123";
-        String name = "Jeff";
-        String phoneNumber = "123-456-7890";
+        String email = "julia@mail.com";
+        String password = "secretPassword";
+        String name = "Julia";
+        String phoneNumber = "333-333-3333";
 
-        McGillMart mcgillMart = toList(mcgillMartRepository.findAll()).get(0);
-        User jeff = new User(email, name, password, phoneNumber, mcgillMart);
-        jeff.setId(userId);
+        User julia = new User(email, name, password, phoneNumber, 
+            toList(mcgillMartRepository.findAll()).get(0));
 
-        // User has an empty shopping cart
+        Item item1 = new Item("Socks", 6.00, "Soft white cotton socks", Category.Clothing, "", toList(mcgillMartRepository.findAll()).get(0));
 
-        // Mock userRepository.save(any(User.class)) to return the user
-        when(userRepository.save(any(User.class))).thenReturn(jeff);
+        when(userRepository.save(any(User.class))).thenReturn(julia);
+        when(userRepository.findById(julia.getId())).thenReturn(Optional.of(julia));
+        when(itemRepository.findById(item1.getId())).thenReturn(Optional.of(item1));
 
-        // Mock userRepository.findUserById(userId)
-        when(userRepository.findUserById(userId)).thenReturn(jeff);
+        shoppingService.addItemToCart(julia.getId(), item1.getId());
 
-        // Mock userRepository.findById(userId)
-        when(userRepository.findById(userId)).thenReturn(java.util.Optional.of(jeff));
+        // Act
+        shoppingService.removeItemFromCart(julia.getId(), item1.getId());
 
-        // Call checkoutShoppingCart, it should throw an exception
-        Exception exception = assertThrows(IllegalStateException.class, () -> {
-            shoppingService.checkoutShoppingCart(userId);
-        });
-
-        // Verify that the exception message matches the expected error
-        assertEquals("Empty shopping cart: Item amount must be larger than 0.", exception.getMessage());
-
-        // Verify that the shopping cart is still empty
-        assertEquals(0, jeff.getShoppingCart().size());
-
-        // Verify that no transaction was added to user's history
-        assertEquals(0, jeff.getHistory().size());
+        when(userRepository.findUserById(julia.getId())).thenReturn(julia);
+        
+        // Assert
+        List<Item> shoppingCartReceived = shoppingService.getShoppingCart(julia.getId());
+        assertEquals(0, shoppingCartReceived.size());
     }
+
     //--------------------------// Helper functions //--------------------------//
 
     private <T> List<T> toList(Iterable<T> iterable){

@@ -63,9 +63,6 @@ public class ShoppingService {
     @Transactional
     public String addItemToCart(Integer userID, Integer itemId) {
         Optional<User> user = userRepo.findById(userID);
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException("Invalid user or item id.");
-        }
         Optional<Item> item = itemRepo.findById(itemId);
         if (user.isPresent() && item.isPresent()) {
             user.get().addShoppingCart(item.get());
