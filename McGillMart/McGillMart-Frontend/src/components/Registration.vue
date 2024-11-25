@@ -56,6 +56,8 @@ export default {
         const response = await client.post('/users', this.user);
 
         if (response.status === 201) {
+          this.$cookies.set('id', response.data.id);
+          this.$cookies.set('name', this.user.name);
           this.$cookies.set('username', this.user.email);
           this.$cookies.set('password',  this.user.password);
     

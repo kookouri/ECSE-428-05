@@ -2,7 +2,7 @@
     <div>
         <toolbar/>
         <div id="order-history-component">
-            <h2 style="margin-top: 10%; color: #fc0339">NAME: XXXXXXXXXXXXXXXXXXXXX</h2>
+            <h2 style="margin-top: 10%; color: #fc0339">NAME: {{ this.$cookies.get('name') }}</h2>
             <hr/>
             <div id="profile-toolbar">
                 <ul class="profile-toolbar-list">
@@ -37,8 +37,7 @@ export default {
     data() {
         return {
             user: {
-                // For testing purpose, to be replaced with the cookie
-                id: "181"
+                id: -1,
             },
             transactions: [] // To store fetched transactions
         };
@@ -49,7 +48,7 @@ export default {
     },
     methods: {
         fetchTransactions() {
-            fetch(backendUrl + `/users/${this.user.id}/transactions`, {
+            fetch(backendUrl + `/users/${this.$cookies.get('id')}/transactions`, {
                 method: 'GET',
                 redirect: 'manual' // Prevents automatic following of redirects
             })
@@ -68,7 +67,6 @@ export default {
                 }
             })
             .then(data => {
-                if (data) console.log("Data fetched:", data);
                 this.transactions = data.transactions; // Assuming the API returns an array of transactions
             })
             .catch(error => {

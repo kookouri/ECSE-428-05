@@ -41,7 +41,7 @@ export default {
     },
     methods: {
         fetchUser() {
-            fetch(backendUrl + `/users?email=${this.$cookies.get('username')}`, {
+            fetch(backendUrl + `/users?email=${this.$cookies.get('username')}`, { 
                 method: 'GET',
                 redirect: 'manual' // Prevents automatic following of redirects
             })

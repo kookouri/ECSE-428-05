@@ -51,6 +51,8 @@
             this.$cookies.set('username', this.user.username);
             this.$cookies.set('password', this.user.password);
 
+            this.fetchUser();
+
             console.log('Created new cookies:');
             console.log('username: ', decodeURIComponent(this.$cookies.get('username')));
             console.log('password: ', this.$cookies.get('password'));
@@ -62,7 +64,22 @@
         } catch (error) {
           this.message = `Error: ${error.message} `;
         }
-      }
+      },
+      fetchUser() {
+        fetch(backendUrl + `/users?email=${this.$cookies.get('username')}`, { 
+            method: 'GET',
+            redirect: 'manual'
+        })
+        .then(response => response.text())
+        .then(data => {
+          data = JSON.parse(data);
+          this.$cookies.set('id', data.accounts[0].id);
+          this.$cookies.set('name', data.accounts[0].name);
+        })
+        .catch(error => {
+          console.error('Error fetching user:', error);
+        });
+      },
     }
   };
   </script>
