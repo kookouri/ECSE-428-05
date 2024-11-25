@@ -2,34 +2,60 @@
   <div id="app">
     <div>
       <b-navbar toggleable="lg" type="dark" variant="danger">
-        <b-navbar-brand href="#">McGillMart</b-navbar-brand>
+        <b-navbar-brand>
+          <router-link to="/" class="text-light">McGillMart</router-link>
+        </b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
         <b-collapse id="nav-collapse" is-nav>
-
-          <!-- Right aligned nav items -->
-          <b-navbar-nav class="ml-auto">
-            <b-nav-form>
-              <b-form-input
-                size="sm"
-                class="mr-sm-2"
-                placeholder="Search"
-                v-model="searchQuery"
-                @input="onSearch"
-              />
-              <b-button size="sm" class="my-2 my-sm-0" type="button" @click="onSearch">Search</b-button>
-            </b-nav-form>
-
-            <b-nav-item-dropdown right>
-              <!-- Using 'button-content' slot -->
-              <template #button-content>
-                <em>User</em>
-              </template>
-              <b-dropdown-item href="#/profile/view">Profile</b-dropdown-item>
-              <b-dropdown-item href="#">Sign Out</b-dropdown-item>
-            </b-nav-item-dropdown>
-          </b-navbar-nav>
+          <ul class="navbar-nav ml-auto">
+            <li v-if="!isLoggedIn" class="nav-item">
+              <router-link to="/login" class="nav-link">Log In</router-link>
+            </li>
+            <li v-if="!isLoggedIn" class="nav-item">
+              <router-link to="/registration" class="nav-link"
+                >Sign Up</router-link
+              >
+            </li>
+            <li v-if="isLoggedIn" class="nav-item">
+              <div v-if="isLoggedIn" class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="navbarDropdown"
+                  role="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  My Account
+                </a>
+                <div
+                  class="dropdown-menu"
+                  aria-labelledby="navbarDropdown"
+                  :style="{
+                    transition: 'background-color 1.5s',
+                    zIndex: 1,
+                  }"
+                >
+                  <router-link class="dropdown-item" to="/settings"
+                    >Settings <b-icon icon="gear"></b-icon
+                  ></router-link>
+                  <a
+                    class="dropdown-item"
+                    @click.prevent="signOut"
+                    style="color: var(--color-red)"
+                    >Sign Out
+                    <b-icon
+                      icon="box-arrow-right"
+                      style="color: var(--color-red)"
+                    ></b-icon
+                  ></a>
+                </div>
+              </div>
+            </li>
+          </ul>
         </b-collapse>
       </b-navbar>
     </div>
@@ -44,10 +70,12 @@ export default {
   data() {
     return {
       mounted: false,
-      toolbarColor: "#FFD0D5",
       isLoggedIn: false,
-      searchQuery: '',
+      searchQuery: "",
     };
+  },
+  mounted() {
+    this.isLoggedIn = this.checkAuthenticationStatus();
   },
   methods: {
     checkAuthenticationStatus() {
@@ -68,8 +96,8 @@ export default {
       this.$router.push("/");
     },
     onSearch() {
-    this.$emit('search-items', this.searchQuery);
-    }
+      this.$emit("search-items", this.searchQuery);
+    },
   },
 };
 </script>

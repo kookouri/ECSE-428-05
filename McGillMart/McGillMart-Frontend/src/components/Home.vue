@@ -2,7 +2,6 @@
   <div id="home"> 
     <Toolbar @search-items="searchItems" />
     <Title />
-    <ItemsCarousel />
     <ItemDisplay :searchQuery="searchQuery" />
     <Footer />
   </div>

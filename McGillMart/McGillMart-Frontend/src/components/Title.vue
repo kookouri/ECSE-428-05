@@ -2,8 +2,7 @@
     <div>
         <div class="p-5">
             <div class="col-lg-12 col-sm-12">
-                <hooper :infiniteScroll="true" style="height: 50vh" :autoPlay="true" :playSpeed="5000"
-                    @beforeSlide="handleBeforeSlide">
+                <hooper :infiniteScroll="true" style="height: 50vh" :autoPlay="true" :playSpeed="5000">
                     <slide>
                         <img class="w-100 h-100"
                             src="../assets/champions.png" />
