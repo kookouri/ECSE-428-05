@@ -6,6 +6,7 @@ import Home from '@/components/Home'
 import SignIn from '@/components/SignIn'
 import Registration from '@/components/Registration'
 import ViewCart from '@/components/ViewCart'
+import OrderHistory from '@/components/OrderHistory.vue'
 
 Vue.use(Router);
 Vue.use(VueCookies);
@@ -36,6 +37,11 @@ export default new Router({
       path: '/my-cart',
       name: 'View Cart',
       component: ViewCart
+    },
+    {
+      path: '/profile/orderHistory',
+      name: 'Order History',
+      component: OrderHistory,
     }
   ]
 })

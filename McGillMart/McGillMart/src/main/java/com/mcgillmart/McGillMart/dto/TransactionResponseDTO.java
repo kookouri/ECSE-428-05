@@ -9,7 +9,6 @@ public class TransactionResponseDTO {
     private double amount;
     private LocalDate dateOfPurchase;
     private String description;
-    private UserResponseDTO user;
 
     public TransactionResponseDTO() {}
 
@@ -17,7 +16,7 @@ public class TransactionResponseDTO {
         id = t.getId();
         amount = t.getAmount();
         dateOfPurchase = t.getDateOfPurchase();
-        user = new UserResponseDTO(t.getUser());
+        description = t.getDescription();
     }
 
     // Getters and Setters
@@ -51,13 +50,5 @@ public class TransactionResponseDTO {
 
     public void setDescription(String desc) {
         this.description = desc;
-    }
-
-    public UserResponseDTO getUser() {
-        return user;
-    }
-
-    public void setUser(UserResponseDTO user) {
-        this.user = user;
     }
 }

@@ -2,7 +2,6 @@ package com.mcgillmart.McGillMart.dto;
 
 import java.util.List;
 
-import com.mcgillmart.McGillMart.model.Transaction;
 import com.mcgillmart.McGillMart.model.User;
 
 public class UserResponseDTO {
@@ -11,7 +10,7 @@ public class UserResponseDTO {
     private String name;
     private String phoneNumber;
     private List<ItemResponseDTO> shoppingCart;
-    private List<Transaction> history;
+    private TransactionListDTO history;
     private String errorMessage;
 
     public UserResponseDTO() {
@@ -22,7 +21,7 @@ public class UserResponseDTO {
         this.name = user.getName();
         this.phoneNumber = user.getPhoneNumber();
         this.shoppingCart = ItemResponseDTO.itemListToItemResponseDTOList(user.getShoppingCart());
-        this.history = user.getHistory();
+        this.history = new TransactionListDTO(user.getHistory());
         this.id = user.getId();
     }
 
@@ -59,7 +58,7 @@ public class UserResponseDTO {
         return shoppingCart;
     }
 
-    public List<Transaction> getHistory() { return history;}
+    public TransactionListDTO getHistory() { return history;}
 
     public void setEmail(String email)
     {
@@ -81,5 +80,5 @@ public class UserResponseDTO {
         this.shoppingCart = shoppingCart;
     }
 
-    public void setHistory( List<Transaction> history) { this.history = history;}
+    public void setHistory(TransactionListDTO history) { this.history = history;}
 }

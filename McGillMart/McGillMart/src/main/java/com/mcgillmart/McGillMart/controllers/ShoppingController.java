@@ -9,20 +9,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mcgillmart.McGillMart.dto.ItemRequestDTO;
 import com.mcgillmart.McGillMart.dto.ShoppingCartDTO;
 import com.mcgillmart.McGillMart.dto.TransactionListDTO;
-import com.mcgillmart.McGillMart.model.Item;
-import com.mcgillmart.McGillMart.services.ItemService;
 import com.mcgillmart.McGillMart.services.ShoppingService;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * <p>Controller class in charge of managing shopping actions.</p>
  * @author Julia
  */
-@CrossOrigin(origins = "http://127.0.0.1:8087")
+@CrossOrigin(origins = "*")
 @RestController
 public class ShoppingController {
     @Autowired
@@ -49,9 +45,24 @@ public class ShoppingController {
     @GetMapping(value={"/users/{id}/transactions", "/users/{id}/transactions"})
     public ResponseEntity<TransactionListDTO> getTransactions(@PathVariable Integer id) {
         try {
-            return new ResponseEntity<TransactionListDTO>(new TransactionListDTO(shoppingService.getTransactions(id)), HttpStatus.FOUND);
+            return new ResponseEntity<TransactionListDTO>(
+                new TransactionListDTO(shoppingService.getTransactions(id)), 
+                HttpStatus.OK // Change from FOUND to OK
+            );
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<TransactionListDTO>(new TransactionListDTO(e.getMessage()), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<TransactionListDTO>(
+                new TransactionListDTO(e.getMessage()), 
+                HttpStatus.NOT_FOUND
+            );
+        }
+    }
+    @PostMapping(value={"/users/{id}/checkout", "/users/{id}/checkout/"})
+    public ResponseEntity<String> checkoutShoppingCart(@PathVariable Integer id) {
+        try {
+            String output = shoppingService.checkoutShoppingCart(id);
+            return new ResponseEntity<String>(output, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

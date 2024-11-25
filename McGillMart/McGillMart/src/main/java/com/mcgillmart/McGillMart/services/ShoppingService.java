@@ -127,14 +127,20 @@ public class ShoppingService {
         Transaction transaction = new Transaction();
         transaction.setAmount(totalAmount);
         transaction.setDateOfPurchase(LocalDate.now());
-        transaction.setDescription("Purchase of " + cartItems.size() + " items.");
-        transaction.setUser(user); // Associate the transaction with the user
-
-        // Save the transaction
-        transactionRepo.save(transaction);
-
+        String description = "Items purchased: ";
+        for (Item item : cartItems) {
+            description += item.getName();
+            description += ", ";
+        }
+        // Remove the last ','
+        description = description.substring(0, description.length() - 2);
+        transaction.setDescription(description);
+        transaction.setUser(user);
+        
         // Associate the transaction with the user's history
         user.addHistory(transaction);
+        
+        transactionRepo.save(transaction);
         userRepo.save(user);
 
         emptyCart(userID);

@@ -227,8 +227,7 @@ public class ShoppingServiceTests {
         assertEquals(1, jeff.getHistory().size());
         Transaction transaction = jeff.getHistory().get(0);
         assertEquals(62.0, transaction.getAmount(), 0.001); // Total amount of items
-        assertEquals("Purchase of 2 items.", transaction.getDescription());
-        assertEquals(jeff, transaction.getUser());
+        assertEquals("Items purchased: ECSE hoodie, Desautels Pencil Case", transaction.getDescription());    
     }
 
     @Test

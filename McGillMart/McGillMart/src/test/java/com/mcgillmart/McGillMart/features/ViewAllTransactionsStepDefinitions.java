@@ -1,9 +1,9 @@
 package com.mcgillmart.McGillMart.features;
 
-import com.mcgillmart.McGillMart.model.Item;
 import com.mcgillmart.McGillMart.model.Transaction;
 import com.mcgillmart.McGillMart.model.User;
-import com.mcgillmart.McGillMart.services.ItemService;
+import com.mcgillmart.McGillMart.repositories.TransactionRepository;
+import com.mcgillmart.McGillMart.repositories.UserRepository;
 import com.mcgillmart.McGillMart.services.LoginService;
 import com.mcgillmart.McGillMart.services.ShoppingService;
 import com.mcgillmart.McGillMart.services.UserService;
@@ -15,8 +15,7 @@ import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,13 +29,15 @@ public class ViewAllTransactionsStepDefinitions {
     private UserService userService;
 
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+    @Autowired
     private LoginService loginService;
 
     @Autowired
     private ShoppingService shoppingService;
-
-    @Autowired
-    private ItemService itemService;
 
     private Map<Integer, User> users = new HashMap<>();
     private User loggedInUser = null;
@@ -54,26 +55,23 @@ public class ViewAllTransactionsStepDefinitions {
             User user = userService.createUser(email, name, password, phone);
             users.put(id, user);
         });
-
     }
-
+    
     @And("the following transactions exist in the system \\(ID012)")
-    public void the_following_transactions_exist_in_the_system(DataTable dataTable) {
+    public void the_following_items_exist_in_the_system(DataTable dataTable) {
         dataTable.asMaps().forEach(row -> {
-            int id = Integer.parseInt(row.get("id"));
-            String a = String.valueOf(id);
             int userId = Integer.parseInt(row.get("userId"));
             User user = users.get(userId);
             float amount = Float.parseFloat(row.get("amount"));
+            LocalDate dateOfPurchase = LocalDate.parse(row.get("dateOfPurchase"));
             String description = row.get("description");
+            
+            Transaction transaction = new Transaction(amount, dateOfPurchase, description, user);
+            user.addHistory(transaction);
 
-            Item item1 = itemService.createItem(description + a, amount/2, description, "Clothing", "a.com");
-            Item item2 = itemService.createItem(description + a +"2", amount/2, description, "Clothing", "b.com");
-
-            shoppingService.addItemToCart(user.getId(), item1.getId());
-            shoppingService.addItemToCart(user.getId(), item2.getId());
-            shoppingService.checkoutShoppingCart(user.getId());
-
+            transactionRepository.save(transaction);
+            userRepository.save(user);
+            transactions.add(transaction);
         });
     }
 
