@@ -41,7 +41,7 @@
                 >
                   <router-link class="dropdown-item" to="/my-profile"
                     ><b-icon icon="person"></b-icon>My Profile</router-link>
-                  <router-link class="dropdown-item" to="/my-profile"
+                  <router-link class="dropdown-item" to="/my-cart"
                     ><b-icon icon="cart"></b-icon>View Cart</router-link>
                   <a
                     class="dropdown-item"
