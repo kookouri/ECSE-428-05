@@ -28,7 +28,10 @@ public class DatabaseInitializer implements CommandLineRunner {
         if (mcgillMartService.getAllMcGillMarts().isEmpty()) {
             System.err.println("McGillMart created");
             mcgillMartService.createMcGillMart();
-            itemService.createItem("Test Item", 0.0, "test description", "Clothing", "https://test.lejames.ca/sites/default/files/catalogue/images/12965847_14485.jpg");
+            itemService.createItem("Test Item 1", 0.0, "test description", "Clothing", "https://test.lejames.ca/sites/default/files/catalogue/images/12965847_14485.jpg");
+            itemService.createItem("Test Item 2", 0.0, "test description", "Clothing", "https://test.lejames.ca/sites/default/files/catalogue/images/12965847_14485.jpg");
+            itemService.createItem("Test Item 3", 0.0, "test description", "Clothing", "https://test.lejames.ca/sites/default/files/catalogue/images/12965847_14485.jpg");
+            itemService.createItem("Test Item 4", 0.0, "test description", "Clothing", "https://test.lejames.ca/sites/default/files/catalogue/images/12965847_14485.jpg");
         }
         else {
             System.err.println("McGillMart already created");
