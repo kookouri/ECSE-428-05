@@ -6,12 +6,15 @@
     <div v-else-if="filteredItems.length" style="display: flex; justify-content: center; flex-wrap: wrap;">
       <div v-for="item in filteredItems" :key="item.id" class="item-card" style=" position:relative">
       <h3>{{ item.name }}</h3>
-        <img :src=item.url alt="Item Image" style="max-width: 100%; height: 65%; min-height: 65%;">
+        <img :src=item.url alt="Item Image" style="max-width: 100%; height: 55%; min-height: 55%;">
       <div>
         <p><strong>Price:</strong> ${{ item.price.toFixed(2) }}</p>
         <p><strong>Description:</strong> {{ item.description }}</p>
         <p><strong>Category:</strong> {{ item.category }}</p>
         <p><strong>Reviews:</strong> {{ item.reviewCount }}</p>
+        <p>
+          <button @click="addItemToCart(item)">Add to cart</button>
+        </p>
         
         <div v-if="item.reviews.length">
           <div v-for="review in item.reviews" :key="review.id">{{ review.comment }}</div>
@@ -26,6 +29,8 @@
 
 <script>
 import axios from 'axios';
+import { store, mutations } from './CartStore.js';
+
 
 export default {
   name: 'ItemList',
@@ -39,6 +44,7 @@ export default {
     return {
       items: [],
       error: null,
+      cart_items: [],
     };
   },
   computed: {
@@ -64,6 +70,15 @@ export default {
         this.error = 'Failed to load items';
         console.error(error);
       }
+    },
+
+    addItemToCart(item) {
+      this.cart_items.push(item);
+      mutations.addValue(item);
+    },
+
+    checkStore(item) {
+      console.log('Checking store:', store.value);
     },
   },
 };
