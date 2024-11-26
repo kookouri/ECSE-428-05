@@ -62,11 +62,11 @@ export default {
                         console.error("Redirection location is missing.");
                     }
                 } else {
-                    
                     return response.json(); // Handle regular response
                 }
             })
             .then(data => {
+                console.log("WHAT IS TRANSACTIONS:", data.transactions);
                 this.transactions = data.transactions; // Assuming the API returns an array of transactions
             })
             .catch(error => {

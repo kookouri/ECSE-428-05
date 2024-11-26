@@ -27,8 +27,15 @@
 
 <script>
 import config from "../../config";
+import axios from "axios";
 
+const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
 const backendUrl = "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
+
+const client = axios.create({
+  baseURL: backendUrl,
+  headers: { 'Access-Control-Allow-Origin': frontendUrl }
+})
 
 export default {
     data() {
@@ -68,13 +75,16 @@ export default {
                     console.error("Error fetching user or cart:", error);
                 });
         },
-        checkout() {
+        async checkout() {
             const userId = this.user.id; // Use dynamic userId from the fetched user data
             if (!userId) {
                 console.error("User ID is missing, cannot proceed with checkout.");
                 alert("Error: User ID is missing.");
                 return;
             }
+
+            // Perform the checkout
+            const response = await client.post(`/users/${this.$cookies.get('id')}/checkout`);
 
             const deletePromises = this.cartItems.map((item) =>
                 fetch(`${backendUrl}/users/${userId}/shoppingCart/items/${item.id}`, {
