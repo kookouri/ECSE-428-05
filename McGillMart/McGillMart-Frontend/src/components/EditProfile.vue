@@ -112,7 +112,7 @@ export default {
                 if (response.ok) {
                     alert("Profile updated successfully!");
                 } else {
-                    const error = await response.json(); // This might be where "undefined" comes from
+                    const error = await response.json(); 
                     console.log("Error response:", error);
                     alert(error.message || "An error occurred");
                 }
@@ -219,7 +219,7 @@ input {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-bottom: 2em; /* Add white space below the button */
+    margin-bottom: 2em; 
 }
 
 .save-button:hover {
