@@ -12,12 +12,12 @@
         <p><strong>Description:</strong> {{ item.description }}</p>
         <p><strong>Category:</strong> {{ item.category }}</p>
         <p><strong>Reviews:</strong> {{ item.reviewCount }}</p>
-        
+
         <div v-if="item.reviews.length">
           <div v-for="review in item.reviews" :key="review.id">{{ review.comment }}</div>
         </div>
       </div>
-
+      <button class="add-to-cart-button" @click="addToCart(item.id)">Add to Cart</button>
       </div>
     </div>
     <p v-else>No items found.</p>
@@ -65,6 +65,15 @@ export default {
         console.error(error);
       }
     },
+    async addToCart(itemId) {
+        try {
+          const response = await axios.post(`http://127.0.0.1:8080/users/${this.$cookies.get('id')}/shoppingCart/items/${itemId}`);
+          alert('Item added to cart successfully!');
+        } catch (error) {
+          alert('Failed to add item to cart');
+          console.error(error);
+        }
+      },
   },
 };
 </script>
@@ -79,7 +88,22 @@ export default {
   margin-bottom: 15px;
   border-radius: 5px;
   width: 30%;
-  height: 600px;
+  height: 750px;
+}
+.add-to-cart-button {
+  background-color: #fc0339;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.add-to-cart-button:hover {
+  background-color: #ff7a8a;
 }
 .error {
   color: red;
