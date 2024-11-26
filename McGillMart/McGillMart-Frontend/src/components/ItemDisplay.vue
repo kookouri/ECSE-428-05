@@ -12,12 +12,12 @@
         <p><strong>Description:</strong> {{ item.description }}</p>
         <p><strong>Category:</strong> {{ item.category }}</p>
         <p><strong>Reviews:</strong> {{ item.reviewCount }}</p>
-        
+
         <div v-if="item.reviews.length">
           <div v-for="review in item.reviews" :key="review.id">{{ review.comment }}</div>
         </div>
       </div>
-
+      <button class="add-to-cart-button" @click="addToCart(item.id)">Add to Cart</button>
       </div>
     </div>
     <p v-else>No items found.</p>
@@ -26,6 +26,9 @@
 
 <script>
 import axios from 'axios';
+import config from "../../config";
+
+const backendUrl = "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
 
 export default {
   name: 'ItemList',
@@ -39,6 +42,7 @@ export default {
     return {
       items: [],
       error: null,
+      userId: null,
     };
   },
   computed: {
@@ -54,8 +58,18 @@ export default {
   },
   created() {
     this.fetchItems();
+    this.fetchUserId();
   },
   methods: {
+    async fetchUserId() {
+        try {
+          const response = await fetch(`${backendUrl}/users?email=${this.$cookies.get('username')}`);
+          const data = await response.json();
+          this.userId = data.accounts[0].id;
+        } catch (error) {
+          console.error('Error fetching user ID:', error);
+        }
+      },
     async fetchItems() {
       try {
         const response = await axios.get('http://127.0.0.1:8080/items');
@@ -65,6 +79,19 @@ export default {
         console.error(error);
       }
     },
+    async addToCart(itemId) {
+        if (!this.userId) {
+          alert('User ID not available');
+          return;
+        }
+        try {
+          const response = await axios.post(`http://127.0.0.1:8080/users/${this.userId}/shoppingCart/items/${itemId}`);
+          alert('Item added to cart successfully!');
+        } catch (error) {
+          alert('Failed to add item to cart');
+          console.error(error);
+        }
+      },
   },
 };
 </script>
@@ -79,7 +106,22 @@ export default {
   margin-bottom: 15px;
   border-radius: 5px;
   width: 30%;
-  height: 600px;
+  height: 750px;
+}
+.add-to-cart-button {
+  background-color: #fc0339;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.add-to-cart-button:hover {
+  background-color: #ff7a8a;
 }
 .error {
   color: red;
