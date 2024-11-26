@@ -62,21 +62,22 @@ export default {
     },
     methods: {
         fetchUser() {
-            fetch(backendUrl + `/users?email=${this.$cookies.get('username')}`, {
+            fetch(`${backendUrl}/users?email=${this.$cookies.get('username')}`, {
                 method: 'GET',
                 redirect: 'manual'
             })
-            .then(response => response.text())
+            .then(response => response.json()) // Change `response.text()` to `.json()` to parse directly
             .then(data => {
-                if (data) console.log("Data fetched:", data);
-                data = JSON.parse(data);
-                this.user.id = data.accounts[0].id;
-                this.user.name = data.accounts[0].name;
-                this.user.phoneNumber = data.accounts[0].phoneNumber;
-                this.user.email = data.accounts[0].email;
+                console.log("Fetched user data:", data);
+                const account = data.accounts[0];
+                this.user.id = account.id;
+                this.user.name = account.name;
+                this.user.phoneNumber = account.phoneNumber;
+                this.user.email = account.email;
             })
             .catch(error => {
                 console.error('Error fetching user:', error);
+                alert("Failed to fetch user data. Please try again.");
             });
         },
         updateUser() {
@@ -85,31 +86,39 @@ export default {
                 return;
             }
 
+            console.log("User data before update:", this.user);
+            console.log("Password (new):", this.password.new);
+
             const updateData = {
                 id: this.user.id,
                 email: this.user.email,
                 name: this.user.name,
-                password: this.password.new || this.password, 
+                password: this.password.new || undefined,
                 phoneNumber: this.user.phoneNumber
             };
 
+            console.log("Data sent to backend:", updateData);
+
             fetch(`${backendUrl}/users/${this.user.id}`, {
-                method: 'PUT', 
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(updateData)
             })
             .then(async response => {
+                console.log("Response status:", response.status);
+
                 if (response.ok) {
                     alert("Profile updated successfully!");
                 } else {
-                    const error = await response.json();
-                    alert(error.message); 
+                    const error = await response.json(); // This might be where "undefined" comes from
+                    console.log("Error response:", error);
+                    alert(error.message || "An error occurred");
                 }
             })
             .catch(error => {
-                console.error('Error updating user:', error);
+                console.error('Error during update:', error);
                 alert("An unexpected error occurred. Please try again.");
             });
         }
@@ -210,9 +219,11 @@ input {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    margin-bottom: 2em; /* Add white space below the button */
 }
 
 .save-button:hover {
     background-color: #b40027;
 }
+
 </style>
