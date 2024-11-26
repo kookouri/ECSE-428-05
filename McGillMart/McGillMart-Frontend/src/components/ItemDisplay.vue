@@ -26,9 +26,6 @@
 
 <script>
 import axios from 'axios';
-import config from "../../config";
-
-const backendUrl = "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
 
 export default {
   name: 'ItemList',
@@ -42,7 +39,6 @@ export default {
     return {
       items: [],
       error: null,
-      userId: null,
     };
   },
   computed: {
@@ -58,18 +54,8 @@ export default {
   },
   created() {
     this.fetchItems();
-    this.fetchUserId();
   },
   methods: {
-    async fetchUserId() {
-        try {
-          const response = await fetch(`${backendUrl}/users?email=${this.$cookies.get('username')}`);
-          const data = await response.json();
-          this.userId = data.accounts[0].id;
-        } catch (error) {
-          console.error('Error fetching user ID:', error);
-        }
-      },
     async fetchItems() {
       try {
         const response = await axios.get('http://127.0.0.1:8080/items');
@@ -80,12 +66,8 @@ export default {
       }
     },
     async addToCart(itemId) {
-        if (!this.userId) {
-          alert('User ID not available');
-          return;
-        }
         try {
-          const response = await axios.post(`http://127.0.0.1:8080/users/${this.userId}/shoppingCart/items/${itemId}`);
+          const response = await axios.post(`http://127.0.0.1:8080/users/${this.$cookies.get('id')}/shoppingCart/items/${itemId}`);
           alert('Item added to cart successfully!');
         } catch (error) {
           alert('Failed to add item to cart');
