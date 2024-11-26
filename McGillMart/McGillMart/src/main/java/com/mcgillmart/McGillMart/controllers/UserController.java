@@ -51,15 +51,15 @@ public class UserController {
 
     //--------------------------// Update Account //--------------------------//
 
-    @PutMapping(value={"/users/{id}", "/users/{id}/"})
-    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Integer id, @RequestBody UserRequestDTO account) {
-        try {
-            User updatedAccount = userService.updateUser(id, account.getEmail(), account.getName(), account.getPassword(), account.getPhoneNumber());
-            return new ResponseEntity<UserResponseDTO>(new UserResponseDTO(updatedAccount), HttpStatus.ACCEPTED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<UserResponseDTO>(new UserResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+    @PutMapping(value = {"/users/{id}", "/users/{id}/"})
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable("id") Integer id, @RequestBody UserRequestDTO account) {
+    try {
+        User updatedAccount = userService.updateUser(id, account.getEmail(), account.getName(), account.getPassword(), account.getPhoneNumber());
+        return new ResponseEntity<>(new UserResponseDTO(updatedAccount), HttpStatus.ACCEPTED);
+    } catch (IllegalArgumentException e) {
+        return new ResponseEntity<>(new UserResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
+}
     //--------------------------// Delete Account //--------------------------//
 
     @DeleteMapping(value={"/users/{id}", "/users/{id}/"})

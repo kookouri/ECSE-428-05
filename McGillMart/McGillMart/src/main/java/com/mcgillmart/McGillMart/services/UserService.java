@@ -2,6 +2,7 @@ package com.mcgillmart.McGillMart.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,8 +47,18 @@ public class UserService {
     @Transactional
     public User updateUser(Integer id, String email, String name, String password, String phoneNumber) {
         validUserInfo(email, password, name, phoneNumber);
-
-        User user = findUserById(id);
+        User user;
+        try {
+            user = findUserById(id);
+            System.out.println("User found: " + user.getName());
+        } catch (NoSuchElementException e) {
+            System.err.println("Error: User not found with ID " + id);
+            throw new IllegalArgumentException("User not found with ID " + id, e);
+        } catch (Exception e) {
+            System.err.println("An unexpected error occurred: " + e.getMessage());
+            throw new RuntimeException("An unexpected error occurred", e);
+        }
+        
 
         // If it is the same email, then dont check if it is unique (it is not since it is used for this exact account), else verify
         if (!user.getEmail().equalsIgnoreCase(email)) {
@@ -61,7 +72,7 @@ public class UserService {
             user.setPhoneNumber(phoneNumber);
         }
         
-
+        
         user.setPassword(password);
         user.setName(name);
         user.setMcGillMart(mcGillMartService.getMcGillMart());
