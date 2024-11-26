@@ -13,15 +13,15 @@
           <p><strong>Description:</strong> {{ item.description }}</p>
           <p><strong>Category:</strong> {{ item.category }}</p>
           <p><strong>Reviews:</strong> {{ item.reviewCount }}</p>
-          <p>
-            <button @click="removeItemFromCart(item)">Remove from cart</button>
-          </p>
           
           <div v-if="item.reviews.length">
             <div v-for="review in item.reviews" :key="review.id">{{ review.comment }}</div>
           </div>
         </div>
-  
+        <div> 
+          <button class="remove-from-cart-button" @click="removeFromCart(item)">Remove from Cart</button> 
+        </div>
+        
         </div>
       </div>
       <p v-else>No items in your cart.</p>
@@ -29,8 +29,9 @@
   </template>
   
   <script>
-//   import axios from 'axios';
-  import { store, mutations } from './CartStore.js';
+import axios from 'axios';
+import VueCookies from 'vue-cookies';
+import { store, mutations } from './CartStore.js';
   
   
   export default {
@@ -43,23 +44,26 @@
     },
     data() {
       return {
+        items: [],
+        error: null,
         cart_items: [],
       };
     },
     
     created() {
+      this.fetchItems();
       this.cart_items = store.value;
     },
     methods: {
-    //   async fetchItems() {
-    //     try {
-    //       const response = await axios.get('http://127.0.0.1:8080/items');
-    //       this.items = response.data;
-    //     } catch (error) {
-    //       this.error = 'Failed to load items';
-    //       console.error(error);
-    //     }
-    //   },
+      async fetchItems() {
+        try {
+          const response = await axios.get('http://127.0.0.1:8080/items');
+          this.items = response.data;
+        } catch (error) {
+          this.error = 'Failed to load items';
+          console.error(error);
+        }
+      },
   
       addItemToCart(item) {
         //this.cart_items.push(item);
@@ -67,11 +71,18 @@
       },
 
       removeItemFromCart(item) {
-        const index = this.cart_items.indexOf(item);
-        // if (index > -1) {
-        //     this.cart_items.splice(index, 1);
-        // }
         mutations.removeValue(item);
+      },
+      
+      async removeFromCart(item) {
+        try {
+          const userId = VueCookies.get('id');
+          await axios.delete(`http://127.0.0.1:8080/users/${userId}/shoppingCart/items/${item.id}`);
+          this.removeItemFromCart(item);
+          alert('Item removed from cart');
+        } catch (error) {
+          alert('Failed to remove item from cart', error);
+        }
       },
   
       checkStore(item) {
@@ -96,5 +107,24 @@
   .error {
     color: red;
   }
+
+  .remove-from-cart-button {
+  background-color: #fc0339;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.remove-from-cart-button:hover {
+  background-color: #ff7a8a;
+}
+.error {
+  color: red;
+}
   </style>
   

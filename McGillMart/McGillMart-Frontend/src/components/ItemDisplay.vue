@@ -12,9 +12,6 @@
         <p><strong>Description:</strong> {{ item.description }}</p>
         <p><strong>Category:</strong> {{ item.category }}</p>
         <p><strong>Reviews:</strong> {{ item.reviewCount }}</p>
-        <p>
-          <button @click="addItemToCart(item)">Add to cart</button>
-        </p>
         
         <div v-if="item.reviews.length">
           <div v-for="review in item.reviews" :key="review.id">{{ review.comment }}</div>
@@ -82,13 +79,17 @@ export default {
     },
 
     async addToCart(itemId) {
-        try {
-          const response = await axios.post(`http://127.0.0.1:8080/users/${this.$cookies.get('id')}/shoppingCart/items/${itemId}`);
-          alert('Item added to cart successfully!');
-        } catch (error) {
-          alert('Failed to add item to cart');
-          console.error(error);
+      try {
+        const response = await axios.post(`http://127.0.0.1:8080/users/${this.$cookies.get('id')}/shoppingCart/items/${itemId}`);
+        alert('Item added to cart successfully!');
+        const item = this.items.find(item => item.id === itemId);
+        if (item) {
+          this.addItemToCart(item);
         }
+      } catch (error) {
+        alert('Failed to add item to cart');
+        console.error(error);
+      }
       },
   },
 };
