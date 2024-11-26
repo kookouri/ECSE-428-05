@@ -7,7 +7,9 @@
             <div id="profile-toolbar">
                 <ul class="profile-toolbar-list">
                     <li class="active"><a class="active">View</a></li>
-                    <li><a href="">Edit</a></li>
+                    <li>
+                        <router-link to="/profile/edit">Edit</router-link>
+                    </li>
                     <li><a href="#/profile/orderHistory">Order History</a></li>
                 </ul>
             </div>

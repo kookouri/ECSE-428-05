@@ -1,0 +1,218 @@
+<template>
+    <div>
+        <toolbar/>
+        <div id="edit-profile-component">
+            <h2 style="margin-top: 10%; color: #fc0339">EDIT PROFILE</h2>
+            <hr/>
+            <div id="profile-toolbar">
+                <ul class="profile-toolbar-list">
+                    <li><a href="#/profile">View</a></li>
+                    <li class="active"><a class="active">Edit</a></li>
+                    <li><a href="#/profile/orderHistory">Order History</a></li>
+                </ul>
+            </div>
+            <form id="edit-profile-form" @submit.prevent="updateUser">
+                <div class="form-group">
+                    <label for="name"><b>Name:</b></label>
+                    <input type="text" id="name" v-model="user.name" placeholder="Enter your name" required />
+                </div>
+                <div class="form-group">
+                    <label for="email"><b>Email:</b></label>
+                    <input type="email" id="email" v-model="user.email" placeholder="Enter your email" required />
+                </div>
+                <div class="form-group">
+                    <label for="phoneNumber"><b>Phone Number:</b></label>
+                    <input type="tel" id="phoneNumber" v-model="user.phoneNumber" placeholder="Enter your phone number" required />
+                </div>
+                <div class="form-group">
+                    <label for="password"><b>New Password:</b></label>
+                    <input type="password" id="password" v-model="password.new" placeholder="Enter new password" />
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword"><b>Confirm New Password:</b></label>
+                    <input type="password" id="confirmPassword" v-model="password.confirm" placeholder="Confirm new password" />
+                </div>
+                <button type="submit" class="save-button">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</template>
+
+<script>
+import config from "../../config";
+
+const backendUrl = "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
+
+export default {
+    data() {
+        return {
+            user: {
+                name: "",
+                phoneNumber: "",
+                email: ""
+            },
+            password: {
+                new: "",
+                confirm: ""
+            }
+        };
+    },
+    mounted() {
+        this.fetchUser();
+    },
+    methods: {
+        fetchUser() {
+            fetch(backendUrl + `/users?email=${this.$cookies.get('username')}`, {
+                method: 'GET',
+                redirect: 'manual'
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data) console.log("Data fetched:", data);
+                data = JSON.parse(data);
+                this.user.id = data.accounts[0].id;
+                this.user.name = data.accounts[0].name;
+                this.user.phoneNumber = data.accounts[0].phoneNumber;
+                this.user.email = data.accounts[0].email;
+            })
+            .catch(error => {
+                console.error('Error fetching user:', error);
+            });
+        },
+        updateUser() {
+            if (this.password.new && this.password.new !== this.password.confirm) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            const updateData = {
+                id: this.user.id,
+                email: this.user.email,
+                name: this.user.name,
+                password: this.password.new || this.password, 
+                phoneNumber: this.user.phoneNumber
+            };
+
+            fetch(`${backendUrl}/users/${this.user.id}`, {
+                method: 'PUT', 
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updateData)
+            })
+            .then(async response => {
+                if (response.ok) {
+                    alert("Profile updated successfully!");
+                } else {
+                    const error = await response.json();
+                    alert(error.message); 
+                }
+            })
+            .catch(error => {
+                console.error('Error updating user:', error);
+                alert("An unexpected error occurred. Please try again.");
+            });
+        }
+    }
+};
+</script>
+
+<style scoped>
+p {
+    margin-bottom: 0%;
+}
+
+#profile-toolbar {
+    margin-bottom: 1em;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px #ccc solid;
+    width: 70%;
+}
+
+#profile-toolbar ul {
+    list-style-type: none;
+    margin: 0;
+    margin-right: 0.2%;
+    margin-bottom: -0.1%;
+    padding: 0;
+    overflow: hidden;
+    width: 70%;
+}
+
+#profile-toolbar li {
+    float: left;
+    padding-right: 0.5%;
+}
+
+#profile-toolbar li .active {
+    border-top-left-radius: 10%;
+    border-top-right-radius: 10%;
+    border: #ccc 1px solid;
+    border-bottom: 1px #ffff solid;
+}
+
+#profile-toolbar li a {
+    display: block;
+    color: #fc0339;
+    text-align: center;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 6px;
+    padding-right: 6px;
+    text-decoration: none;
+}
+
+#profile-toolbar li a:hover:not(.active) {
+    background-color: #f4f4f4;
+    border-top-left-radius: 10%;
+    border-top-right-radius: 10%;
+    border: #f4f4f4 0px solid;
+    color: #b40027;
+}
+
+#edit-profile-component {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 1em;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5em;
+    color: #333;
+}
+
+input {
+    width: 100%;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.save-button {
+    background-color: #fc0339;
+    color: #fff;
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.save-button:hover {
+    background-color: #b40027;
+}
+</style>

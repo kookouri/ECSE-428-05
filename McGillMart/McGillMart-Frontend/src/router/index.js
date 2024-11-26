@@ -7,6 +7,7 @@ import SignIn from '@/components/SignIn'
 import Registration from '@/components/Registration'
 import ViewCart from '@/components/ViewCart'
 import OrderHistory from '@/components/OrderHistory.vue'
+import EditProfile from '@/components/EditProfile.vue'
 
 Vue.use(Router);
 Vue.use(VueCookies);
@@ -42,6 +43,11 @@ export default new Router({
       path: '/profile/orderHistory',
       name: 'Order History',
       component: OrderHistory,
+    },
+    {
+      path: '/profile/edit',
+      name: 'Edit Profile',
+      component: EditProfile,
     }
   ]
 })
