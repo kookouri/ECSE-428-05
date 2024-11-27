@@ -66,9 +66,8 @@ export default {
                 method: 'GET',
                 redirect: 'manual'
             })
-            .then(response => response.json()) // Change `response.text()` to `.json()` to parse directly
+            .then(response => response.json())
             .then(data => {
-                console.log("Fetched user data:", data);
                 const account = data.accounts[0];
                 this.user.id = account.id;
                 this.user.name = account.name;
@@ -98,7 +97,6 @@ export default {
             } else {
                 updateData.password = this.user.password; 
             }
-            console.log("Data sent to backend:", updateData);
 
             fetch(`${backendUrl}/users/${this.user.id}`, {
                 method: 'PUT',
@@ -109,7 +107,6 @@ export default {
             })
             .then(async response => {
                 console.log("Response status:", response.status);
-
                 if (response.ok) {
                     alert("Profile updated successfully!");
                 } else {
