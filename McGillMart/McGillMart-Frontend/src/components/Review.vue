@@ -17,9 +17,9 @@
         <label for="password">Password:</label>
         <input type="password" v-model="review.password" readonly />
       </div>
-      <!-- Item Name -->
+      <!-- Item -->
       <div>
-        <label for="itemName">Item Name:</label>
+        <label for="item">Item:</label>
         <select v-model="review.itemId" required>
           <option v-for="item in items" :key="item.id" :value="item.id">
             {{ item.name }}
@@ -29,13 +29,7 @@
       <!-- Rating -->
       <div>
         <label for="rating">Rating:</label>
-        <input
-          type="number"
-          min="1"
-          max="5"
-          v-model.number="review.rating"
-          required
-        />
+        <input type="number" min="1" max="5" v-model.number="review.rating" required />
       </div>
       <!-- Comment -->
       <div>
@@ -46,31 +40,7 @@
       <button type="submit">Submit Review</button>
     </form>
 
-    <p v-if="message" :class="{ success: isSuccess, error: !isSuccess }">
-      {{ message }}
-    </p>
-
-    <!-- Section for displaying all items with their reviews -->
-    <div class="item-reviews">
-      <h2>All Items with Reviews</h2>
-      <div v-for="item in itemsWithReviews" :key="item.id" class="item-review-card">
-        <h3>{{ item.name }}</h3>
-        <p><strong>Price:</strong> ${{ item.price }}</p>
-        <p><strong>Description:</strong> {{ item.description }}</p>
-        <div v-if="item.reviews && item.reviews.length > 0">
-          <h4>Reviews:</h4>
-          <ul>
-            <li v-for="review in item.reviews" :key="review.id">
-              <strong>{{ review.userName }}</strong> ({{ review.date }}):
-              <em>"{{ review.comment }}"</em> - Rated: {{ review.rating }}/5
-            </li>
-          </ul>
-        </div>
-        <div v-else>
-          <p>No reviews yet for this item.</p>
-        </div>
-      </div>
-    </div>
+    <p v-if="message" :class="{ success: isSuccess, error: !isSuccess }">{{ message }}</p>
   </div>
 </template>
 
@@ -78,28 +48,20 @@
 import axios from "axios";
 import config from "../../config";
 
-const frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
-const backendUrl =
-  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
-
-const client = axios.create({
-  baseURL: backendUrl,
-  headers: { "Access-Control-Allow-Origin": frontendUrl },
-});
+const backendUrl = "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
 
 export default {
   data() {
     return {
       review: {
         email: "",
-        phoneNumber: "",
         password: "",
-        itemId: "", // Store the item ID for the POST request
+        phoneNumber: "",
+        itemId: null,
         rating: null,
         comment: "",
       },
       items: [],
-      itemsWithReviews: [], // To store items and their reviews
       message: "",
       isSuccess: true,
     };
@@ -107,7 +69,6 @@ export default {
   async mounted() {
     await this.fetchUser();
     await this.fetchItems();
-    await this.fetchItemsWithReviews();
   },
   methods: {
     async fetchUser() {
@@ -126,63 +87,65 @@ export default {
         this.review.email = parsedData.accounts[0].email;
         this.review.phoneNumber = parsedData.accounts[0].phoneNumber;
         this.review.password = this.$cookies.get("password");
+
+        console.log("User Details:");
+        console.log("Email:", this.review.email);
+        console.log("Phone Number:", this.review.phoneNumber);
+        console.log("Password:", this.review.password);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
     },
     async fetchItems() {
       try {
-        const response = await fetch(`${backendUrl}/items`, {
-          method: "GET",
-          redirect: "manual",
-        });
-        const data = await response.json();
-        this.items = data; // Store items in `items`
+        const response = await axios.get(backendUrl + "/items");
+        this.items = response.data;
       } catch (error) {
+        this.message = "Failed to load items.";
+        this.isSuccess = false;
         console.error("Error fetching items:", error);
-      }
-    },
-    async fetchItemsWithReviews() {
-      try {
-        const itemReviews = await Promise.all(
-          this.items.map(async (item) => {
-            const response = await axios.get(`${backendUrl}/items/${item.id}/reviews`);
-            return { ...item, reviews: response.data };
-          })
-        );
-        this.itemsWithReviews = itemReviews;
-      } catch (error) {
-        console.error("Error fetching items with reviews:", error);
       }
     },
     async submitReview() {
       try {
         const { email, phoneNumber, password, itemId, rating, comment } = this.review;
 
-        const userRequest = { email, phoneNumber, password };
-        const reviewRequest = { itemName: this.items.find((item) => item.id === itemId).name, rating, comment };
+        const reviewRequest = {
+          email,
+          phoneNumber,
+          password,
+          rating,
+          comment,
+        };
+
+        // Log the data being sent and the endpoint
+        console.log("Posting review to backend:", reviewRequest);
+        console.log(`POST URL: ${backendUrl}/items/${itemId}/reviews/`);
 
         const response = await axios.post(
           `${backendUrl}/items/${itemId}/reviews/`,
-          { user: userRequest, review: reviewRequest }
+          reviewRequest
         );
 
         if (response.status === 200 || response.status === 201) {
           this.message = "Review submitted successfully!";
           this.isSuccess = true;
           this.clearForm();
-          await this.fetchItemsWithReviews(); // Refresh the list of reviews
         } else {
           this.message = "Failed to submit review.";
           this.isSuccess = false;
         }
       } catch (error) {
-        this.message = `Error: ${error.message}`;
+        this.message =
+          error.response && error.response.data && error.response.data.message
+            ? `Error: ${error.response.data.message}`
+            : `Error: ${error.message}`;
         this.isSuccess = false;
+        console.error("Error posting review:", error);
       }
     },
     clearForm() {
-      this.review.itemId = "";
+      this.review.itemId = null;
       this.review.rating = null;
       this.review.comment = "";
     },
@@ -197,29 +160,36 @@ export default {
   padding: 20px;
 }
 
-.item-reviews {
-  margin-top: 30px;
-  padding: 20px;
+form {
+  display: flex;
+  flex-direction: column;
 }
 
-.item-review-card {
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 5px;
+label {
+  margin-top: 10px;
 }
 
-h3 {
-  margin-bottom: 5px;
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
+button {
+  padding: 10px 15px;
+  margin-top: 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
 }
 
-li {
-  margin-bottom: 10px;
+button:hover {
+  background-color: #0056b3;
 }
 
 .success {
