@@ -41,6 +41,27 @@
     </form>
 
     <p v-if="message" :class="{ success: isSuccess, error: !isSuccess }">{{ message }}</p>
+
+    <!-- Display All Reviews Sorted by Item Name -->
+    <h2>All Reviews</h2>
+    <div v-for="itemReviews in reviewsByItem" :key="itemReviews.itemId">
+      <h3>{{ itemReviews.itemName }}</h3>
+      <div v-if="itemReviews.reviews.length > 0">
+        <!-- Dropdown menu to show/hide reviews -->
+        <details>
+          <summary>Show Reviews</summary>
+          <div v-for="review in itemReviews.reviews" :key="review.id" class="review">
+            <p><strong>Rating:</strong> {{ review.rating }}</p>
+            <p><strong>Comment:</strong> {{ review.comment }}</p>
+            <p><strong>Date:</strong> {{ review.datePosted }}</p>
+            <p><strong>By:</strong> {{ review.username }}</p>
+          </div>
+        </details>
+      </div>
+      <div v-else>
+        <p>No reviews for this item yet.</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -62,6 +83,7 @@ export default {
         comment: "",
       },
       items: [],
+      reviewsByItem: [],
       message: "",
       isSuccess: true,
     };
@@ -69,6 +91,7 @@ export default {
   async mounted() {
     await this.fetchUser();
     await this.fetchItems();
+    await this.fetchReviews();
   },
   methods: {
     async fetchUser() {
@@ -79,13 +102,10 @@ export default {
         console.log("Username Cookie:", username);
         console.log("Password Cookie:", password);
 
-        const response = await axios.get(
-          `${backendUrl}/users?email=${username}`
-        );
+        const response = await axios.get(`${backendUrl}/users?email=${username}`);
 
-        console.log("Response Data:", response.data); // Log the response data
+        console.log("Response Data:", response.data);
 
-        // Adjust according to the actual structure of your response
         const accounts = response.data.accounts;
 
         if (accounts && accounts.length > 0) {
@@ -93,7 +113,7 @@ export default {
 
           this.review.email = user.email;
           this.review.phoneNumber = user.phoneNumber;
-          this.review.password = password; // Use the password from the cookie
+          this.review.password = password;
 
           console.log("User Details:");
           console.log("Email:", this.review.email);
@@ -114,10 +134,58 @@ export default {
       try {
         const response = await axios.get(backendUrl + "/items");
         this.items = response.data;
+
+        // Sort items by name
+        this.items.sort((a, b) => a.name.localeCompare(b.name));
       } catch (error) {
         this.message = "Failed to load items.";
         this.isSuccess = false;
         console.error("Error fetching items:", error);
+      }
+    },
+    async fetchReviews() {
+      try {
+        this.reviewsByItem = [];
+
+        // Fetch reviews for each item using item ID
+        for (const item of this.items) {
+          try {
+            const response = await axios.get(
+              `${backendUrl}/items/${item.id}/reviews/`
+            );
+            let reviews = response.data;
+
+            // Check if the response is a single object or an array
+            if (!Array.isArray(reviews)) {
+              // If the response is null or empty, set reviews to an empty array
+              if (reviews === null || reviews === "") {
+                reviews = [];
+              } else {
+                // Convert the single review object into an array
+                reviews = [reviews];
+              }
+            }
+
+            // Sort reviews by datePosted from most recent to least recent
+            reviews.sort((a, b) => new Date(b.datePosted) - new Date(a.datePosted));
+
+            this.reviewsByItem.push({
+              itemId: item.id,
+              itemName: item.name,
+              reviews: reviews,
+            });
+          } catch (error) {
+            console.error(`Error fetching reviews for item ${item.name}:`, error);
+            // If there's an error, still push an empty reviews array
+            this.reviewsByItem.push({
+              itemId: item.id,
+              itemName: item.name,
+              reviews: [],
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
       }
     },
     async submitReview() {
@@ -128,7 +196,7 @@ export default {
           email,
           phoneNumber,
           password,
-          rating: String(rating), // Ensure rating is a string
+          rating: String(rating),
           comment,
         };
 
@@ -147,6 +215,9 @@ export default {
           this.message = "Review submitted successfully!";
           this.isSuccess = true;
           this.clearForm();
+
+          // Refresh reviews after submitting a new one
+          await this.fetchReviews();
         } else {
           this.message = "Failed to submit review.";
           this.isSuccess = false;
@@ -217,5 +288,11 @@ button:hover {
 
 .error {
   color: red;
+}
+
+.review {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 </style>
