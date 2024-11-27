@@ -2,6 +2,16 @@
   <div class="items">
     <hr>
     <h1 class="item-list-title">Item List</h1>
+    
+    <div class="search-bar">
+      <input 
+        type="text" 
+        v-model="searchQuery" 
+        placeholder="Search for items..." 
+        class="search-input"
+      />
+    </div>
+
     <div v-if="error" class="error">{{ error }}</div>
     <div v-else-if="filteredItems.length" class="item-grid">
       <div v-for="item in filteredItems" :key="item.id" class="item-card p-2">
@@ -70,29 +80,50 @@ export default {
         const response = await axios.get("http://127.0.0.1:8080/items");
         this.items = response.data;
       } catch (error) {
-        this.error = 'Failed to load items';
+        this.error = "Failed to load items";
         console.error(error);
       }
     },
     async addToCart(itemId) {
-        try {
-          if (this.$cookies.get('id') === null) {
-            alert('You need to log in');
-          }
-          else {
-            const response = await axios.post(`http://127.0.0.1:8080/users/${this.$cookies.get('id')}/shoppingCart/items/${itemId}`);
-            alert('Item added to cart successfully!');
-          }
-        } catch (error) {
-          alert('Failed to add item to cart');
-          console.error(error);
+      try {
+        if (this.$cookies.get("id") === null) {
+          alert("You need to log in");
+        } else {
+          await axios.post(
+            `http://127.0.0.1:8080/users/${this.$cookies.get("id")}/shoppingCart/items/${itemId}`
+          );
+          alert("Item added to cart successfully!");
         }
-      },
+      } catch (error) {
+        alert("Failed to add item to cart");
+        console.error(error);
+      }
+    },
   },
 };
 </script>
 
+
 <style scoped>
+.search-bar {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.search-input {
+  width: 60%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #fc0339;
+  box-shadow: 0 0 5px rgba(252, 3, 57, 0.5);
+}
+
 .items {
   padding: 20px;
 }
@@ -128,7 +159,7 @@ export default {
 }
 
 .description-content {
-  max-height: 100px; /* Set a fixed height */
+  max-height: 100px; 
   overflow-y: auto;
   padding: 5px;
   background-color: #f9f9f9;
@@ -162,8 +193,6 @@ export default {
   background-color: #ff7a8a;
 }
 
-
-/* Responsive Design */
 @media (max-width: 768px) {
   .item-card {
     width: 100%;
