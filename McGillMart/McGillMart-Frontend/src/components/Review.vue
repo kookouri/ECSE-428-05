@@ -73,26 +73,40 @@ export default {
   methods: {
     async fetchUser() {
       try {
-        const response = await fetch(
-          `${backendUrl}/users?email=${this.$cookies.get("username")}`,
-          {
-            method: "GET",
-            redirect: "manual",
-          }
+        const username = this.$cookies.get("username");
+        const password = this.$cookies.get("password");
+
+        console.log("Username Cookie:", username);
+        console.log("Password Cookie:", password);
+
+        const response = await axios.get(
+          `${backendUrl}/users?email=${username}`
         );
 
-        const data = await response.text();
-        const parsedData = JSON.parse(data);
+        console.log("Response Data:", response.data); // Log the response data
 
-        this.review.email = parsedData.accounts[0].email;
-        this.review.phoneNumber = parsedData.accounts[0].phoneNumber;
-        this.review.password = this.$cookies.get("password");
+        // Adjust according to the actual structure of your response
+        const accounts = response.data.accounts;
 
-        console.log("User Details:");
-        console.log("Email:", this.review.email);
-        console.log("Phone Number:", this.review.phoneNumber);
-        console.log("Password:", this.review.password);
+        if (accounts && accounts.length > 0) {
+          const user = accounts[0];
+
+          this.review.email = user.email;
+          this.review.phoneNumber = user.phoneNumber;
+          this.review.password = password; // Use the password from the cookie
+
+          console.log("User Details:");
+          console.log("Email:", this.review.email);
+          console.log("Phone Number:", this.review.phoneNumber);
+          console.log("Password:", this.review.password);
+        } else {
+          this.message = "User not found.";
+          this.isSuccess = false;
+          console.error("No accounts found in response data.");
+        }
       } catch (error) {
+        this.message = "Error fetching user data.";
+        this.isSuccess = false;
         console.error("Error fetching user:", error);
       }
     },
@@ -114,20 +128,22 @@ export default {
           email,
           phoneNumber,
           password,
-          rating,
+          rating: String(rating), // Ensure rating is a string
           comment,
         };
 
-        // Log the data being sent and the endpoint
         console.log("Posting review to backend:", reviewRequest);
         console.log(`POST URL: ${backendUrl}/items/${itemId}/reviews/`);
 
         const response = await axios.post(
           `${backendUrl}/items/${itemId}/reviews/`,
-          reviewRequest
+          reviewRequest,
+          {
+            headers: { "Content-Type": "application/json" },
+          }
         );
 
-        if (response.status === 200 || response.status === 201) {
+        if (response.status >= 200 && response.status < 300) {
           this.message = "Review submitted successfully!";
           this.isSuccess = true;
           this.clearForm();
@@ -141,7 +157,10 @@ export default {
             ? `Error: ${error.response.data.message}`
             : `Error: ${error.message}`;
         this.isSuccess = false;
-        console.error("Error posting review:", error);
+        console.error(
+          "Error posting review:",
+          error.response ? error.response.data : error
+        );
       }
     },
     clearForm() {
