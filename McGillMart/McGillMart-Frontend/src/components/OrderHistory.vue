@@ -7,8 +7,8 @@
             <div id="profile-toolbar">
                 <ul class="profile-toolbar-list">
                     <li><a href="#/profile/view">View</a></li>
-                    <li><a href="">Edit</a></li>
-                    <li class="active"><a  class="active" href="#/profile/orderHistory">Order History</a></li>
+                    <li><a href="#/profile/edit">Edit</a></li>
+                    <li class="active"><a  class="active" href="#/profile/order_history">Order History</a></li>
                 </ul>
             </div>
             <div class="container">

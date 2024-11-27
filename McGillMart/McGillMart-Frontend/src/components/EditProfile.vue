@@ -6,9 +6,9 @@
             <hr/>
             <div id="profile-toolbar">
                 <ul class="profile-toolbar-list">
-                    <li><a href="#/profile">View</a></li>
+                    <li><a href="#/profile/view">View</a></li>
                     <li class="active"><a class="active">Edit</a></li>
-                    <li><a href="#/profile/orderHistory">Order History</a></li>
+                    <li><a href="#/profile/order_history">Order History</a></li>
                 </ul>
             </div>
             <form id="edit-profile-form" @submit.prevent="updateUser">
