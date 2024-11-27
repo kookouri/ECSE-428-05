@@ -3,20 +3,54 @@ package com.mcgillmart.McGillMart.dto;
 import java.time.LocalDate;
 
 public class ReviewRequestDTO {
+    private String email;
+    private String phoneNumber;
+    private String password;
     private int rating;
     private String comment;
     private LocalDate datePosted;
     private String username;
     private String itemName;
 
+    // Default Constructor
     public ReviewRequestDTO() {}
 
-    public ReviewRequestDTO(int rating, String comment, LocalDate datePosted, String username, String itemName) {
+    // Parameterized Constructor
+    public ReviewRequestDTO(String email, String phoneNumber, String password, int rating, String comment, 
+                            LocalDate datePosted, String username, String itemName) {
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
         this.rating = rating;
         this.comment = comment;
         this.datePosted = datePosted;
         this.username = username;
         this.itemName = itemName;
+    }
+
+    // Getters and Setters
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public int getRating() {
@@ -39,7 +73,7 @@ public class ReviewRequestDTO {
         return datePosted;
     }
 
-    public void setDatePosted(LocalDate  datePosted) {
+    public void setDatePosted(LocalDate datePosted) {
         this.datePosted = datePosted;
     }
 
