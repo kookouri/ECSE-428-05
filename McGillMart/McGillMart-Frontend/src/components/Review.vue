@@ -29,7 +29,13 @@
       <!-- Rating -->
       <div>
         <label for="rating">Rating:</label>
-        <input type="number" min="1" max="5" v-model.number="review.rating" required />
+        <input
+          type="number"
+          min="1"
+          max="5"
+          v-model.number="review.rating"
+          required
+        />
       </div>
       <!-- Comment -->
       <div>
@@ -40,12 +46,18 @@
       <button type="submit">Submit Review</button>
     </form>
 
-    <p v-if="message" :class="{'success': isSuccess, 'error': !isSuccess}">{{ message }}</p>
+    <p v-if="message" :class="{ success: isSuccess, error: !isSuccess }">
+      {{ message }}
+    </p>
 
     <!-- Section for displaying all items with their reviews -->
     <div class="item-reviews">
       <h2>All Items with Reviews</h2>
-      <div v-for="item in itemsWithReviews" :key="item.name" class="item-review-card">
+      <div
+        v-for="item in itemsWithReviews"
+        :key="item.name"
+        class="item-review-card"
+      >
         <h3>{{ item.name }}</h3>
         <p><strong>Price:</strong> ${{ item.price }}</p>
         <p><strong>Description:</strong> {{ item.description }}</p>
@@ -53,7 +65,7 @@
           <h4>Reviews:</h4>
           <ul>
             <li v-for="review in item.reviews" :key="review.id">
-              <strong>{{ review.userName }}</strong> ({{ review.date }}): 
+              <strong>{{ review.userName }}</strong> ({{ review.date }}):
               <em>"{{ review.comment }}"</em> - Rated: {{ review.rating }}/5
             </li>
           </ul>
@@ -70,7 +82,14 @@
 import axios from "axios";
 import config from "../../config";
 
-const backendUrl = "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
+const frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
+const backendUrl =
+  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
+
+const client = axios.create({
+  baseURL: backendUrl,
+  headers: { "Access-Control-Allow-Origin": frontendUrl },
+});
 
 export default {
   data() {
@@ -92,7 +111,7 @@ export default {
   async mounted() {
     await this.fetchUser();
     await this.fetchItems();
-    await this.fetchItemsWithReviews(); // Fetch reviews for all items
+    await this.fetchItemsWithReviews();
   },
   methods: {
     async fetchUser() {
@@ -117,35 +136,68 @@ export default {
     },
     async fetchItems() {
       try {
-        const response = await axios.get(backendUrl + "/items");
-        this.items = response.data;
+        const response = await fetch(`${backendUrl}/items`, {
+          method: "GET",
+          redirect: "manual",
+        });
+        const data = await response.json();
+        this.items = data; // Store items in `items`
       } catch (error) {
-        this.message = "Failed to load items.";
-        this.isSuccess = false;
         console.error("Error fetching items:", error);
       }
     },
     async fetchItemsWithReviews() {
       try {
-        const itemReviews = await Promise.all(
-          this.items.map(async (item) => {
-            const response = await axios.get(`${backendUrl}/items/${item.name}/reviews`);
-            return { ...item, reviews: response.data };
-          })
-        );
-        this.itemsWithReviews = itemReviews;
+        // Ensure that we have a list of item names
+        const itemNames = this.items.map((item) => item.name);
+        console.log("item names: ", itemNames);
+
+        for (const item of this.items) {
+          console.log("what is item.name here?", item.name);
+          console.log("what is encoded?", encodeURIComponent(item.name));
+          console.log("URL:", `${backendUrl}/items/${encodeURIComponent(item.name)}/reviews`);
+          const response = await fetch(
+            `${backendUrl}/items/${encodeURIComponent(item.name)}/reviews`,
+            {
+              method: "GET",
+              redirect: "manual",
+            }
+          );
+
+          console.log("RESPONSE:", response);
+          // Handle the response from each item
+          if (response.ok) {
+            const data = await response.json();
+            console.log(`Reviews for ${item.name}:`, data);
+          } else {
+            console.error(`Failed to fetch reviews for ${item.name}`);
+          }
+        }
+
+        const data = await response.json();
+        console.log("WHAT IS DATA: ", data);
+
+        // Process the returned data
+        // this.itemsWithReviews = this.items.map(item => {
+        //   const itemReviews = data.find(d => d.itemName === item.name);
+        //   return {
+        //     ...item,
+        //     reviews: itemReviews ? itemReviews.reviews : [],
+        //   };
+        // });
       } catch (error) {
         console.error("Error fetching items with reviews:", error);
       }
     },
     async submitReview() {
       try {
-        const { email, phoneNumber, password, itemName, rating, comment } = this.review;
+        const { email, phoneNumber, password, itemName, rating, comment } =
+          this.review;
 
         const userRequest = { email, phoneNumber, password };
         const reviewRequest = { itemName, rating, comment };
 
-        const response = await axios.post(
+        const response = await client.post(
           `${backendUrl}/items/${itemName}/reviews/`,
           null,
           {
