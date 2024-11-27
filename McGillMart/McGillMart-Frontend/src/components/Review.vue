@@ -20,8 +20,8 @@
       <!-- Item Name -->
       <div>
         <label for="itemName">Item Name:</label>
-        <select v-model="review.itemName" required>
-          <option v-for="item in items" :key="item.id" :value="item.name">
+        <select v-model="review.itemId" required>
+          <option v-for="item in items" :key="item.id" :value="item.id">
             {{ item.name }}
           </option>
         </select>
@@ -45,7 +45,7 @@
     <!-- Section for displaying all items with their reviews -->
     <div class="item-reviews">
       <h2>All Items with Reviews</h2>
-      <div v-for="item in itemsWithReviews" :key="item.name" class="item-review-card">
+      <div v-for="item in itemsWithReviews" :key="item.id" class="item-review-card">
         <h3>{{ item.name }}</h3>
         <p><strong>Price:</strong> ${{ item.price }}</p>
         <p><strong>Description:</strong> {{ item.description }}</p>
@@ -79,7 +79,7 @@ export default {
         email: "",
         phoneNumber: "",
         password: "",
-        itemName: "",
+        itemId: "", // Store the item ID for the POST request
         rating: null,
         comment: "",
       },
@@ -129,7 +129,7 @@ export default {
       try {
         const itemReviews = await Promise.all(
           this.items.map(async (item) => {
-            const response = await axios.get(`${backendUrl}/items/${item.name}/reviews`);
+            const response = await axios.get(`${backendUrl}/items/${item.id}/reviews`);
             return { ...item, reviews: response.data };
           })
         );
@@ -140,17 +140,14 @@ export default {
     },
     async submitReview() {
       try {
-        const { email, phoneNumber, password, itemName, rating, comment } = this.review;
+        const { email, phoneNumber, password, itemId, rating, comment } = this.review;
 
         const userRequest = { email, phoneNumber, password };
-        const reviewRequest = { itemName, rating, comment };
+        const reviewRequest = { itemName: this.items.find((item) => item.id === itemId).name, rating, comment };
 
         const response = await axios.post(
-          `${backendUrl}/items/${itemName}/reviews/`,
-          null,
-          {
-            params: { user: userRequest, review: reviewRequest },
-          }
+          `${backendUrl}/items/${itemId}/reviews/`,
+          { user: userRequest, review: reviewRequest }
         );
 
         if (response.status === 200 || response.status === 201) {
@@ -168,7 +165,7 @@ export default {
       }
     },
     clearForm() {
-      this.review.itemName = "";
+      this.review.itemId = "";
       this.review.rating = null;
       this.review.comment = "";
     },
