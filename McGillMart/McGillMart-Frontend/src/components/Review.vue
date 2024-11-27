@@ -323,7 +323,7 @@ export default {
   top: 10px;
   right: 10px;
   padding: 8px 12px;
-  background-color: #fc0339;;
+  background-color: #fc0339;
   color: white;
   border: none;
   border-radius: 4px;
