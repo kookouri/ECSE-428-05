@@ -95,16 +95,17 @@ public class ItemController {
     }
 
     //--------------------------// Add Review to Item //--------------------------//
-    @PostMapping(value = {"/items/{itemName}/reviews", "/items/{itemName}/reviews/"})
+    @PostMapping(value = {"/items/{id}/reviews", "/items/{id}/reviews/"})
     public ResponseEntity<ReviewResponseDTO> addReviewToItem(
-            @PathVariable String itemName, 
-            @RequestParam UserRequestDTO user,
-            @RequestParam ReviewRequestDTO review) {
+            @PathVariable Integer id, 
+            @RequestBody UserRequestDTO user,
+            @RequestBody ReviewRequestDTO review) {
         try {
+            ItemResponseDTO item = new ItemResponseDTO(itemService.findItemById(id));
             Review newReview = 
                 reviewService.addReview(
                     user.getEmail(), user.getPhoneNumber(), user.getPassword(), 
-                    review.getItemName(), review.getRating(), review.getComment());
+                    item.getName(), review.getRating(), review.getComment());
             return new ResponseEntity<ReviewResponseDTO>(new ReviewResponseDTO(newReview), HttpStatus.ACCEPTED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<ReviewResponseDTO>(new ReviewResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
