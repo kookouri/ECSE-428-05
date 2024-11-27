@@ -10,14 +10,14 @@ Feature: Checking Out The Shopping Cart (ID011)
         And the following items exist in the system (ID011)
             | id | name                    | price   | description                      | category 	    | url |
             | 0  | ECSE hoodie             | 50.0    | Hoodie for ECSE students         | Clothing 	    |  nothing.com |
-            | 1  | Desautels Pencil Case   | 12.0    | Pencil case with Desautels brand | Stationary    |  nothing.com |
+            | 1  | Desautels Pencil Case   | 12.0    | Pencil case with Desautels brand | Stationery    |  nothing.com |
             | 2  | Macroeconomics Textbook | 399.99  | Textbook for Macroeconomics      | Textbook 	    | nothing.com |
 
     Scenario Outline: Successfully check out a non-empty shopping cart.
         Given the following items are in the user's shopping card (ID011)
             | id | name                    | price   | description                      | category 	    | url |
             | 0  | ECSE hoodie             | 50.0    | Hoodie for ECSE students         | Clothing 	    |  nothing.com |
-            | 1  | Desautels Pencil Case   | 12.0    | Pencil case with Desautels brand | Stationary    |  nothing.com |
+            | 1  | Desautels Pencil Case   | 12.0    | Pencil case with Desautels brand | Stationery    |  nothing.com |
         When I attempt to check-out the shopping cart (ID011)
         Then the message "Successfully checked-out the shopping cart" will be raised. (ID011)
         And the number of items in my cart should be "0" (ID011)
