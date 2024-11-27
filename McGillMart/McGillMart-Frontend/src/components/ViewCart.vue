@@ -16,6 +16,10 @@
                 <div class="row my-2 mx-1 description-content">
                   {{ item.description }}
                 </div>
+
+                <div class="row mx-auto"> 
+                  <button class="remove-from-cart-button  mx-auto" @click="removeFromCart(item)">Remove from Cart</button> 
+                </div>
               </div>
             </div>
           </div>
@@ -71,6 +75,15 @@
             this.cartItems = account.shoppingCart || [];
           })
           .catch((error) => console.error("Error fetching user/cart:", error));
+      },
+      async removeFromCart(item) {
+        try {
+          await client.delete(`/users/${this.$cookies.get("id")}/shoppingCart/items/${item.id}`);
+          alert('Item removed from cart');
+          this.fetchUserAndCart();
+        } catch (error) {
+          alert('Failed to remove item from cart', error);
+        }
       },
       async checkout() {
         if (!this.user.id) {
@@ -162,5 +175,20 @@
   .checkout-button:hover {
     background-color: #0056b3;
   }
+
+  .remove-from-cart-button {
+  background-color: #fc0339;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.remove-from-cart-button:hover {
+  background-color: #ff7a8a;
+}
   </style>
   
