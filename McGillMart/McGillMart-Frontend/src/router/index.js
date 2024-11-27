@@ -30,7 +30,7 @@ export default new Router({
       component: Registration,
     },
     {
-      path: '/my-profile',
+      path: '/profile/view',
       name: 'View Profile',
       component: ViewProfile,
     },
@@ -40,7 +40,7 @@ export default new Router({
       component: ViewCart
     },
     {
-      path: '/profile/orderHistory',
+      path: '/profile/order_history',
       name: 'Order History',
       component: OrderHistory,
     },

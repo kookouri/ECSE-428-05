@@ -10,7 +10,7 @@
                     <li>
                         <router-link to="/profile/edit">Edit</router-link>
                     </li>
-                    <li><a href="#/profile/orderHistory">Order History</a></li>
+                    <li><a href="#/profile/order_history">Order History</a></li>
                 </ul>
             </div>
             <div id="profile-values">
