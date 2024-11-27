@@ -42,6 +42,7 @@ public class DatabaseInitializer implements CommandLineRunner {
         }
         else {
             System.err.println("McGillMart already created");
+            
         }
     }
 }

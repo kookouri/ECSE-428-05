@@ -70,7 +70,6 @@ export default {
     return {
       mounted: false,
       isLoggedIn: false,
-      searchQuery: "",
     };
   },
   mounted() {
@@ -91,9 +90,6 @@ export default {
       this.$cookies.remove("username");
       this.$cookies.remove("password");
       this.$router.push("/");
-    },
-    onSearch() {
-      this.$emit("search-items", this.searchQuery);
     },
   },
 };
