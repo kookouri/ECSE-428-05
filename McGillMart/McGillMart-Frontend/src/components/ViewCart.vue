@@ -80,16 +80,10 @@
   
         try {
           await client.post(`/users/${this.$cookies.get("id")}/checkout`);
-          await Promise.all(
-            this.cartItems.map((item) =>
-              fetch(`${backendUrl}/users/${this.user.id}/shoppingCart/items/${item.id}`, {
-                method: "DELETE",
-              })
-            )
-          );
   
-          this.cartItems = [];
+          this.fetchUserAndCart();
           alert("Checkout successful! Your cart is now empty.");
+
         } catch (error) {
           console.error("Error during checkout:", error);
           alert("Checkout failed. Please try again.");
