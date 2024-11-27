@@ -1,59 +1,86 @@
 <template>
   <div class="leave-review">
-    <h2>Leave a Review</h2>
-    <form @submit.prevent="submitReview">
-      <!-- User Email -->
-      <div>
-        <label for="email">Email:</label>
-        <input type="email" v-model="review.email" readonly />
-      </div>
-      <!-- User Phone Number -->
-      <div>
-        <label for="phoneNumber">Phone Number:</label>
-        <input type="text" v-model="review.phoneNumber" readonly />
-      </div>
-      <!-- User Password -->
-      <div>
-        <label for="password">Password:</label>
-        <input type="password" v-model="review.password" readonly />
-      </div>
-      <!-- Item -->
-      <div>
-        <label for="item">Item:</label>
-        <select v-model="review.itemId" required>
-          <option v-for="item in items" :key="item.id" :value="item.id">
-            {{ item.name }}
-          </option>
-        </select>
-      </div>
-      <!-- Rating -->
-      <div>
-        <label for="rating">Rating:</label>
-        <input type="number" min="1" max="5" v-model.number="review.rating" required />
-      </div>
-      <!-- Comment -->
-      <div>
-        <label for="comment">Comment:</label>
-        <textarea v-model="review.comment" required></textarea>
-      </div>
-      <!-- Submit Button -->
-      <button type="submit">Submit Review</button>
-    </form>
+    <!-- Home Button -->
+    <button class="home-button" @click="goHome">Home</button>
 
-    <p v-if="message" :class="{ success: isSuccess, error: !isSuccess }">{{ message }}</p>
+    <!-- Conditionally display the Leave a Review form -->
+    <div v-if="isLoggedIn">
+      <h2>Leave a Review</h2>
+      <form @submit.prevent="submitReview">
+        <!-- User Email -->
+        <div>
+          <label for="email">Email:</label>
+          <input type="email" v-model="review.email" readonly />
+        </div>
+        <!-- User Phone Number -->
+        <div>
+          <label for="phoneNumber">Phone Number:</label>
+          <input type="text" v-model="review.phoneNumber" readonly />
+        </div>
+        <!-- User Password -->
+        <div>
+          <label for="password">Password:</label>
+          <input type="password" v-model="review.password" readonly />
+        </div>
+        <!-- Item -->
+        <div>
+          <label for="item">Item:</label>
+          <select v-model="review.itemId" required>
+            <option v-for="item in items" :key="item.id" :value="item.id">
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
+        <!-- Rating -->
+        <div>
+          <label for="rating">Rating:</label>
+          <input
+            type="number"
+            min="1"
+            max="5"
+            v-model.number="review.rating"
+            required
+          />
+        </div>
+        <!-- Comment -->
+        <div>
+          <label for="comment">Comment:</label>
+          <textarea v-model="review.comment" required></textarea>
+        </div>
+        <!-- Submit Button -->
+        <button type="submit">Submit Review</button>
+      </form>
+
+      <p v-if="message" :class="{ success: isSuccess, error: !isSuccess }">
+        {{ message }}
+      </p>
+    </div>
+    <!-- Message and Sign In Button for users who are not signed in -->
+    <div v-else class="not-logged-in">
+      <p>Please sign in to leave a review.</p>
+      <button class="sign-in-button" @click="goToSignIn">Sign In</button>
+    </div>
 
     <!-- Display All Reviews Sorted by Item Name -->
     <h2>All Reviews</h2>
-    <div v-for="itemReviews in reviewsByItem" :key="itemReviews.itemId">
+    <div
+      v-for="itemReviews in reviewsByItem"
+      :key="itemReviews.itemId"
+      class="item-reviews"
+    >
       <h3>{{ itemReviews.itemName }}</h3>
       <div v-if="itemReviews.reviews.length > 0">
         <!-- Dropdown menu to show/hide reviews -->
         <details>
           <summary>Show Reviews</summary>
-          <div v-for="review in itemReviews.reviews" :key="review.id" class="review">
+          <div
+            v-for="review in itemReviews.reviews"
+            :key="review.id"
+            class="review"
+          >
             <p><strong>Rating:</strong> {{ review.rating }}</p>
             <p><strong>Comment:</strong> {{ review.comment }}</p>
-            <p><strong>Date:</strong> {{ review.datePosted }}</p>
+            <p><strong>Date:</strong> {{ formatDate(review.datePosted) }}</p>
             <p><strong>By:</strong> {{ review.username }}</p>
           </div>
         </details>
@@ -69,11 +96,13 @@
 import axios from "axios";
 import config from "../../config";
 
-const backendUrl = "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
+const backendUrl =
+  "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
 
 export default {
   data() {
     return {
+      isLoggedIn: false, // Data property to track login status
       review: {
         email: "",
         password: "",
@@ -89,11 +118,22 @@ export default {
     };
   },
   async mounted() {
-    await this.fetchUser();
+    this.checkLoginStatus(); // Check if the user is logged in
     await this.fetchItems();
     await this.fetchReviews();
+    if (this.isLoggedIn) {
+      await this.fetchUser();
+    }
   },
   methods: {
+    checkLoginStatus() {
+      const username = this.$cookies.get("username");
+      const password = this.$cookies.get("password");
+
+      // Set isLoggedIn based on the presence of username and password cookies
+      this.isLoggedIn = !!username && !!password;
+      console.log("Is Logged In:", this.isLoggedIn);
+    },
     async fetchUser() {
       try {
         const username = this.$cookies.get("username");
@@ -102,7 +142,9 @@ export default {
         console.log("Username Cookie:", username);
         console.log("Password Cookie:", password);
 
-        const response = await axios.get(`${backendUrl}/users?email=${username}`);
+        const response = await axios.get(
+          `${backendUrl}/users?email=${username}`
+        );
 
         console.log("Response Data:", response.data);
 
@@ -167,7 +209,9 @@ export default {
             }
 
             // Sort reviews by datePosted from most recent to least recent
-            reviews.sort((a, b) => new Date(b.datePosted) - new Date(a.datePosted));
+            reviews.sort(
+              (a, b) => new Date(b.datePosted) - new Date(a.datePosted)
+            );
 
             this.reviewsByItem.push({
               itemId: item.id,
@@ -175,7 +219,10 @@ export default {
               reviews: reviews,
             });
           } catch (error) {
-            console.error(`Error fetching reviews for item ${item.name}:`, error);
+            console.error(
+              `Error fetching reviews for item ${item.name}:`,
+              error
+            );
             // If there's an error, still push an empty reviews array
             this.reviewsByItem.push({
               itemId: item.id,
@@ -190,7 +237,14 @@ export default {
     },
     async submitReview() {
       try {
-        const { email, phoneNumber, password, itemId, rating, comment } = this.review;
+        const {
+          email,
+          phoneNumber,
+          password,
+          itemId,
+          rating,
+          comment,
+        } = this.review;
 
         const reviewRequest = {
           email,
@@ -239,6 +293,18 @@ export default {
       this.review.rating = null;
       this.review.comment = "";
     },
+    formatDate(dateString) {
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return new Date(dateString).toLocaleDateString(undefined, options);
+    },
+    goHome() {
+      // Navigate to the home page
+      this.$router.push("/");
+    },
+    goToSignIn() {
+      // Navigate to the sign-in page
+      this.$router.push("/login");
+    },
   },
 };
 </script>
@@ -248,11 +314,50 @@ export default {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
+  position: relative; /* Added to position the home button */
+}
+
+/* Home Button Styling */
+.home-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.home-button:hover {
+  background-color: #0056b3;
+}
+
+/* Sign In Button Styling */
+.not-logged-in {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.sign-in-button {
+  padding: 10px 15px;
+  margin-top: 10px;
+  background-color: #fc0339;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.sign-in-button:hover {
+  background-color: #218838;
 }
 
 form {
   display: flex;
   flex-direction: column;
+  margin-top: 50px; /* Adjusted to provide space for the home button */
 }
 
 label {
@@ -272,7 +377,7 @@ select {
 button {
   padding: 10px 15px;
   margin-top: 15px;
-  background-color: #007bff;
+  background-color: #fc0339;
   color: white;
   border: none;
   cursor: pointer;
@@ -294,5 +399,9 @@ button:hover {
   border: 1px solid #ccc;
   padding: 10px;
   margin-bottom: 10px;
+}
+
+.item-reviews {
+  margin-bottom: 20px;
 }
 </style>
