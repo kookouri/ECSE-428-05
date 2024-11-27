@@ -74,6 +74,7 @@ export default {
                 this.user.name = account.name;
                 this.user.phoneNumber = account.phoneNumber;
                 this.user.email = account.email;
+                this.user.password = this.$cookies.get('password');
             })
             .catch(error => {
                 console.error('Error fetching user:', error);
@@ -86,17 +87,17 @@ export default {
                 return;
             }
 
-            console.log("User data before update:", this.user);
-            console.log("Password (new):", this.password.new);
-
             const updateData = {
                 id: this.user.id,
                 email: this.user.email,
                 name: this.user.name,
-                password: this.password.new || undefined,
                 phoneNumber: this.user.phoneNumber
             };
-
+            if (this.password.new) {
+                updateData.password = this.password.new; 
+            } else {
+                updateData.password = this.user.password; 
+            }
             console.log("Data sent to backend:", updateData);
 
             fetch(`${backendUrl}/users/${this.user.id}`, {
