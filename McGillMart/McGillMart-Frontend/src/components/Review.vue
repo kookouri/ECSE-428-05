@@ -1,92 +1,74 @@
 <template>
   <div class="leave-review">
-    <!-- Home Button -->
-    <button class="home-button" @click="goHome">Home</button>
-
-    <!-- Conditionally display the Leave a Review form -->
-    <div v-if="isLoggedIn">
-      <h2>Leave a Review</h2>
-      <form @submit.prevent="submitReview">
-        <!-- User Email -->
-        <div>
-          <label for="email">Email:</label>
-          <input type="email" v-model="review.email" readonly />
-        </div>
-        <!-- User Phone Number -->
-        <div>
-          <label for="phoneNumber">Phone Number:</label>
-          <input type="text" v-model="review.phoneNumber" readonly />
-        </div>
-        <!-- User Password -->
-        <div>
-          <label for="password">Password:</label>
-          <input type="password" v-model="review.password" readonly />
-        </div>
-        <!-- Item -->
-        <div>
-          <label for="item">Item:</label>
-          <select v-model="review.itemId" required>
-            <option v-for="item in items" :key="item.id" :value="item.id">
-              {{ item.name }}
-            </option>
-          </select>
-        </div>
-        <!-- Rating -->
-        <div>
-          <label for="rating">Rating:</label>
-          <input
-            type="number"
-            min="1"
-            max="5"
-            v-model.number="review.rating"
-            required
-          />
-        </div>
-        <!-- Comment -->
-        <div>
-          <label for="comment">Comment:</label>
-          <textarea v-model="review.comment" required></textarea>
-        </div>
-        <!-- Submit Button -->
-        <button type="submit">Submit Review</button>
-      </form>
-
-      <p v-if="message" :class="{ success: isSuccess, error: !isSuccess }">
-        {{ message }}
-      </p>
-    </div>
-    <!-- Message and Sign In Button for users who are not signed in -->
-    <div v-else class="not-logged-in">
-      <p>Please sign in to leave a review.</p>
-      <button class="sign-in-button" @click="goToSignIn">Sign In</button>
-    </div>
-
-    <!-- Display All Reviews Sorted by Item Name -->
-    <h2>All Reviews</h2>
-    <div
-      v-for="itemReviews in reviewsByItem"
-      :key="itemReviews.itemId"
-      class="item-reviews"
-    >
-      <h3>{{ itemReviews.itemName }}</h3>
-      <div v-if="itemReviews.reviews.length > 0">
-        <!-- Dropdown menu to show/hide reviews -->
-        <details>
-          <summary>Show Reviews</summary>
-          <div
-            v-for="review in itemReviews.reviews"
-            :key="review.id"
-            class="review"
-          >
-            <p><strong>Rating:</strong> {{ review.rating }}</p>
-            <p><strong>Comment:</strong> {{ review.comment }}</p>
-            <p><strong>Date:</strong> {{ formatDate(review.datePosted) }}</p>
-            <p><strong>By:</strong> {{ review.username }}</p>
-          </div>
-        </details>
+    <h2>Leave a Review</h2>
+    <form @submit.prevent="submitReview">
+      <!-- User Email -->
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" v-model="review.email" readonly />
       </div>
-      <div v-else>
-        <p>No reviews for this item yet.</p>
+      <!-- User Phone Number -->
+      <div>
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="text" v-model="review.phoneNumber" readonly />
+      </div>
+      <!-- User Password -->
+      <div>
+        <label for="password">Password:</label>
+        <input type="password" v-model="review.password" readonly />
+      </div>
+      <!-- Item Name -->
+      <div>
+        <label for="itemName">Item Name:</label>
+        <select v-model="review.itemId" required>
+          <option v-for="item in items" :key="item.id" :value="item.id">
+            {{ item.name }}
+          </option>
+        </select>
+      </div>
+      <!-- Rating -->
+      <div>
+        <label for="rating">Rating:</label>
+        <input
+          type="number"
+          min="1"
+          max="5"
+          v-model.number="review.rating"
+          required
+        />
+      </div>
+      <!-- Comment -->
+      <div>
+        <label for="comment">Comment:</label>
+        <textarea v-model="review.comment" required></textarea>
+      </div>
+      <!-- Submit Button -->
+      <button type="submit">Submit Review</button>
+    </form>
+
+    <p v-if="message" :class="{ success: isSuccess, error: !isSuccess }">
+      {{ message }}
+    </p>
+
+    <!-- Section for displaying all items with their reviews -->
+    <div class="item-reviews">
+      <h2>All Items with Reviews</h2>
+      <div v-for="item in itemsWithReviews" :key="item.id" class="item-review-card">
+        <h3>{{ item.name }}</h3>
+        <p><strong>Price:</strong> ${{ item.price }}</p>
+        <p><strong>Description:</strong> {{ item.description }}</p>
+        <div v-if="item.reviews && item.reviews.length > 0">
+          <h4>Reviews:</h4>
+          <ul>
+            <li v-for="review in item.reviews" :key="review.id">
+              <strong>{{ review.userName }}</strong> ({{ review.date }}):
+              <em>"{{ review.comment }}"</em> - Rated: {{ review.rating }}/5
+            </li>
+          </ul>
+        </div>
+        <div v-else>
+          <p>No reviews yet for this item.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -96,8 +78,14 @@
 import axios from "axios";
 import config from "../../config";
 
+const frontendUrl = "http://" + config.dev.host + ":" + config.dev.port;
 const backendUrl =
   "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
+
+const client = axios.create({
+  baseURL: backendUrl,
+  headers: { "Access-Control-Allow-Origin": frontendUrl },
+});
 
 export default {
   data() {
@@ -112,7 +100,7 @@ export default {
         comment: "",
       },
       items: [],
-      reviewsByItem: [],
+      itemsWithReviews: [], // To store items and their reviews
       message: "",
       isSuccess: true,
     };
@@ -120,10 +108,7 @@ export default {
   async mounted() {
     this.checkLoginStatus(); // Check if the user is logged in
     await this.fetchItems();
-    await this.fetchReviews();
-    if (this.isLoggedIn) {
-      await this.fetchUser();
-    }
+    await this.fetchItemsWithReviews();
   },
   methods: {
     checkLoginStatus() {
@@ -136,36 +121,20 @@ export default {
     },
     async fetchUser() {
       try {
-        const username = this.$cookies.get("username");
-        const password = this.$cookies.get("password");
-
-        console.log("Username Cookie:", username);
-        console.log("Password Cookie:", password);
-
-        const response = await axios.get(
-          `${backendUrl}/users?email=${username}`
+        const response = await fetch(
+          `${backendUrl}/users?email=${this.$cookies.get("username")}`,
+          {
+            method: "GET",
+            redirect: "manual",
+          }
         );
 
-        console.log("Response Data:", response.data);
+        const data = await response.text();
+        const parsedData = JSON.parse(data);
 
-        const accounts = response.data.accounts;
-
-        if (accounts && accounts.length > 0) {
-          const user = accounts[0];
-
-          this.review.email = user.email;
-          this.review.phoneNumber = user.phoneNumber;
-          this.review.password = password;
-
-          console.log("User Details:");
-          console.log("Email:", this.review.email);
-          console.log("Phone Number:", this.review.phoneNumber);
-          console.log("Password:", this.review.password);
-        } else {
-          this.message = "User not found.";
-          this.isSuccess = false;
-          console.error("No accounts found in response data.");
-        }
+        this.review.email = parsedData.accounts[0].email;
+        this.review.phoneNumber = parsedData.accounts[0].phoneNumber;
+        this.review.password = this.$cookies.get("password");
       } catch (error) {
         this.message = "Error fetching user data.";
         this.isSuccess = false;
@@ -174,65 +143,29 @@ export default {
     },
     async fetchItems() {
       try {
-        const response = await axios.get(backendUrl + "/items");
-        this.items = response.data;
-
-        // Sort items by name
-        this.items.sort((a, b) => a.name.localeCompare(b.name));
+        const response = await fetch(`${backendUrl}/items`, {
+          method: "GET",
+          redirect: "manual",
+        });
+        const data = await response.json();
+        this.items = data; // Store items in `items`
       } catch (error) {
         this.message = "Failed to load items.";
         this.isSuccess = false;
         console.error("Error fetching items:", error);
       }
     },
-    async fetchReviews() {
+    async fetchItemsWithReviews() {
       try {
-        this.reviewsByItem = [];
-
-        // Fetch reviews for each item using item ID
-        for (const item of this.items) {
-          try {
-            const response = await axios.get(
-              `${backendUrl}/items/${item.id}/reviews/`
-            );
-            let reviews = response.data;
-
-            // Check if the response is a single object or an array
-            if (!Array.isArray(reviews)) {
-              // If the response is null or empty, set reviews to an empty array
-              if (reviews === null || reviews === "") {
-                reviews = [];
-              } else {
-                // Convert the single review object into an array
-                reviews = [reviews];
-              }
-            }
-
-            // Sort reviews by datePosted from most recent to least recent
-            reviews.sort(
-              (a, b) => new Date(b.datePosted) - new Date(a.datePosted)
-            );
-
-            this.reviewsByItem.push({
-              itemId: item.id,
-              itemName: item.name,
-              reviews: reviews,
-            });
-          } catch (error) {
-            console.error(
-              `Error fetching reviews for item ${item.name}:`,
-              error
-            );
-            // If there's an error, still push an empty reviews array
-            this.reviewsByItem.push({
-              itemId: item.id,
-              itemName: item.name,
-              reviews: [],
-            });
-          }
-        }
+        const itemReviews = await Promise.all(
+          this.items.map(async (item) => {
+            const response = await axios.get(`${backendUrl}/items/${item.id}/reviews`);
+            return { ...item, reviews: response.data };
+          })
+        );
+        this.itemsWithReviews = itemReviews;
       } catch (error) {
-        console.error("Error fetching reviews:", error);
+        console.error("Error fetching items with reviews:", error);
       }
     },
     async submitReview() {
@@ -246,16 +179,8 @@ export default {
           comment,
         } = this.review;
 
-        const reviewRequest = {
-          email,
-          phoneNumber,
-          password,
-          rating: String(rating),
-          comment,
-        };
-
-        console.log("Posting review to backend:", reviewRequest);
-        console.log(`POST URL: ${backendUrl}/items/${itemId}/reviews/`);
+        const userRequest = { email, phoneNumber, password };
+        const reviewRequest = { itemName: this.items.find((item) => item.id === itemId).name, rating, comment };
 
         const response = await axios.post(
           `${backendUrl}/items/${itemId}/reviews/`,
@@ -269,9 +194,7 @@ export default {
           this.message = "Review submitted successfully!";
           this.isSuccess = true;
           this.clearForm();
-
-          // Refresh reviews after submitting a new one
-          await this.fetchReviews();
+          await this.fetchItemsWithReviews(); // Refresh the list of reviews
         } else {
           this.message = "Failed to submit review.";
           this.isSuccess = false;
@@ -314,73 +237,27 @@ export default {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  position: relative; /* Added to position the home button */
 }
 
-/* Home Button Styling */
-.home-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 8px 12px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.item-reviews {
+  margin-top: 30px;
+  padding: 20px;
 }
 
-.home-button:hover {
-  background-color: #0056b3;
+.item-review-card {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
 }
 
-/* Sign In Button Styling */
-.not-logged-in {
-  text-align: center;
-  margin-top: 50px;
+h3 {
+  margin-bottom: 5px;
 }
 
-.sign-in-button {
-  padding: 10px 15px;
-  margin-top: 10px;
-  background-color: #fc0339;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.sign-in-button:hover {
-  background-color: #218838;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  margin-top: 50px; /* Adjusted to provide space for the home button */
-}
-
-label {
-  margin-top: 10px;
-}
-
-input,
-textarea,
-select {
-  width: 100%;
-  padding: 8px;
-  margin: 5px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  padding: 10px 15px;
-  margin-top: 15px;
-  background-color: #fc0339;
-  color: white;
-  border: none;
-  cursor: pointer;
+ul {
+  list-style-type: none;
+  padding: 0;
 }
 
 button:hover {
