@@ -39,7 +39,7 @@
                     zIndex: 1,
                   }"
                 >
-                  <router-link class="dropdown-item" to="/my-profile"
+                  <router-link class="dropdown-item" to="/profile/view"
                     ><b-icon icon="person"></b-icon>My Profile</router-link>
                   <router-link class="dropdown-item" to="/my-cart"
                     ><b-icon icon="cart"></b-icon>View Cart</router-link>
