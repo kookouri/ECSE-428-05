@@ -110,12 +110,13 @@ public class ItemController {
     }
 
     //--------------------------// Get Reviews for Item //--------------------------//
-    @GetMapping(value = {"/items/{itemName}/reviews"})
-    public ResponseEntity<List<ReviewResponseDTO>> getReviewsForItem(@PathVariable String itemName) {
+    @GetMapping(value = {"/items/{id}/reviews"})
+    public ResponseEntity<List<ReviewResponseDTO>> getReviewsForItem(@PathVariable Integer id) {
         try {
-            List<ReviewResponseDTO> reviews = reviewService.getReviewsForItem(itemName).stream()
+            ItemResponseDTO item = new ItemResponseDTO(itemService.findItemById(id));
+            List<ReviewResponseDTO> reviews = reviewService.getReviewsForItem(item.getName()).stream()
                     .map(ReviewResponseDTO::new).collect(Collectors.toList());
-            return new ResponseEntity<>(reviews, HttpStatus.FOUND);
+            return new ResponseEntity<>(reviews, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
