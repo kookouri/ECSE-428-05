@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Entity
 public class Item
 {
-  public enum Category { Electronics, Clothing, Textbook, Furniture, Stationary, Other }
+  public enum Category { Electronics, Clothing, Textbook, Furniture, Stationery, Other }
 
   @Id
   @GeneratedValue

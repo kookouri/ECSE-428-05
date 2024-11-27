@@ -1,157 +1,153 @@
 <template>
     <div>
-        <toolbar />
-        <div id="view-cart-component">
-            <h2 style="margin-top: 10%; color: #fc0339">NAME: {{ user.name }}</h2>
-            <hr />
-            <div id="cart-container">
-                <div v-if="cartItems.length > 0" id="cart-items">
-                    <div class="cart-item" v-for="item in cartItems" :key="item.id">
-                        <h3>{{ item.name }}</h3>
-                        <img :src="item.url" alt="Item Image" />
-                        <p><b>Price:</b> ${{ item.price }}</p>
-                        <p><b>Description:</b> {{ item.description }}</p>
-                    </div>
-                    <div id="checkout-section">
-                        <p><b>Total Items:</b> {{ cartItems.length }}</p>
-                        <button @click="checkout" class="checkout-button">Check Out</button>
-                    </div>
+      <toolbar />
+      <div id="view-cart-component">
+        <h2 class="user-name my-3">Shopping cart of {{ user.name }}</h2>
+        <div id="cart-container">
+          <div v-if="cartItems.length" id="cart-items" class="item-grid">
+            <div v-for="item in cartItems" :key="item.id" class="item-card">
+              <p class="item-name">{{ item.name }}</p>
+              <img :src="item.url" alt="Item Image" class="item-image" />
+              <div class="container">
+                <div class="row mx-1">
+                  <div><strong>Category:</strong> {{ item.category }}</div>
+                  <div class="ml-auto"><strong>Price:</strong> ${{ item.price.toFixed(2) }}</div>
                 </div>
-                <div v-else>
-                    <p>Your shopping cart is empty.</p>
+                <div class="row my-2 mx-1 description-content">
+                  {{ item.description }}
                 </div>
+              </div>
             </div>
+          </div>
+          <div v-else>
+            <p>Your shopping cart is empty.</p>
+          </div>
         </div>
+        <div id="checkout-section">
+          <p><b>Total Items:</b> {{ cartItems.length }}</p>
+          <button @click="checkout" class="checkout-button mb-5">Check Out</button>
+        </div>
+      </div>
     </div>
-</template>
-
-<script>
-import config from "../../config";
-import axios from "axios";
-
-const frontendUrl = 'http://' + config.dev.host + ':' + config.dev.port
-const backendUrl = "http://" + config.dev.backendHost + ":" + config.dev.backendPort;
-
-const client = axios.create({
-  baseURL: backendUrl,
-  headers: { 'Access-Control-Allow-Origin': frontendUrl }
-})
-
-export default {
+  </template>
+  
+  <script>
+  import axios from "axios";
+  import config from "../../config";
+  
+  const backendUrl = `http://${config.dev.backendHost}:${config.dev.backendPort}`;
+  const frontendUrl = `http://${config.dev.host}:${config.dev.port}`;
+  
+  const client = axios.create({
+    baseURL: backendUrl,
+    headers: { "Access-Control-Allow-Origin": frontendUrl },
+  });
+  
+  export default {
     data() {
-        return {
-            user: {
-                id: null,
-                name: "",
-                phoneNumber: "",
-                email: "",
-            },
-            cartItems: [],
-        };
+      return {
+        user: {
+          id: null,
+          name: "",
+          phoneNumber: "",
+          email: "",
+        },
+        cartItems: [],
+      };
     },
     mounted() {
-        this.fetchUserAndCart();
+      this.fetchUserAndCart();
     },
     methods: {
-        fetchUserAndCart() {
-            fetch(backendUrl + `/users?email=${this.$cookies.get('username')}`, {
-                method: "GET",
-                redirect: "manual",
-            })
-                .then((response) => response.text())
-                .then((data) => {
-                    if (data) console.log("Data fetched:", data);
-                    data = JSON.parse(data);
+      fetchUserAndCart() {
+        const username = this.$cookies.get("username");
+        fetch(`${backendUrl}/users?email=${username}`, {
+          method: "GET",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const account = data.accounts[0];
+            this.user = { ...account };
+            this.cartItems = account.shoppingCart || [];
+          })
+          .catch((error) => console.error("Error fetching user/cart:", error));
+      },
+      async checkout() {
+        if (!this.user.id) {
+          alert("Error: User ID is missing.");
+          return;
+        }
+  
+        try {
+          await client.post(`/users/${this.$cookies.get("id")}/checkout`);
+  
+          this.fetchUserAndCart();
+          alert("Checkout successful! Your cart is now empty.");
 
-                    const account = data.accounts[0];
-                    this.user.id = account.id; // Capture dynamic userId
-                    this.user.name = account.name;
-                    this.user.phoneNumber = account.phoneNumber;
-                    this.user.email = account.email;
-
-                    this.cartItems = account.shoppingCart || [];
-                })
-                .catch((error) => {
-                    console.error("Error fetching user or cart:", error);
-                });
-        },
-        async checkout() {
-            const userId = this.user.id; // Use dynamic userId from the fetched user data
-            if (!userId) {
-                console.error("User ID is missing, cannot proceed with checkout.");
-                alert("Error: User ID is missing.");
-                return;
-            }
-
-            // Perform the checkout
-            const response = await client.post(`/users/${this.$cookies.get('id')}/checkout`);
-
-            const deletePromises = this.cartItems.map((item) =>
-                fetch(`${backendUrl}/users/${userId}/shoppingCart/items/${item.id}`, {
-                    method: "DELETE",
-                })
-            );
-
-            Promise.all(deletePromises)
-                .then((responses) => {
-                    const allSuccessful = responses.every((res) => res.ok);
-                    if (allSuccessful) {
-                        alert("Checkout successful! Your cart is now empty.");
-                        this.cartItems = []; // Clear cart on the frontend
-                    } else {
-                        alert("Some items could not be removed. Please try again.");
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error during checkout:", error);
-                    alert("Checkout failed. Please try again.");
-                });
-        },
+        } catch (error) {
+          console.error("Error during checkout:", error);
+          alert("Checkout failed. Please try again.");
+        }
+      },
     },
-};
-</script>
-
-<style scoped>
-#view-cart-component {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-}
-
-#cart-container {
-    width: 70%;
-}
-
-#cart-items {
+  };
+  </script>
+  
+  <style scoped>
+  /* General Layout */
+  #view-cart-component {
+    text-align: center;
+  }
+  
+  .user-name {
+    color: #fc0339;
+  }
+  
+  /* Grid and Card Styling */
+  .item-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
-}
-
-.cart-item {
+  }
+  
+  .item-card {
     border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 15px;
-    text-align: center;
+    border-radius: 8px;
     width: 30%;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.cart-item img {
-    max-width: 100%;
-    border-radius: 10px;
+    max-width: 350px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+  }
+  
+  .item-name {
+    font-weight: bold;
     margin-bottom: 10px;
-}
-
-#checkout-section {
-    text-align: center;
+  }
+  
+  .item-image {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .description-content {
+    max-height: 100px;
+    overflow-y: auto;
+    padding: 5px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  /* Checkout Section */
+  #checkout-section {
     margin-top: 20px;
-}
-
-.checkout-button {
+  }
+  
+  .checkout-button {
     background-color: #007bff;
     color: white;
     padding: 15px 30px;
@@ -161,10 +157,10 @@ export default {
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.checkout-button:hover {
+  }
+  
+  .checkout-button:hover {
     background-color: #0056b3;
-}
-</style>
+  }
+  </style>
+  
