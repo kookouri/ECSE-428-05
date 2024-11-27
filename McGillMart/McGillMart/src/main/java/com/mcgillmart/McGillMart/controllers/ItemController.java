@@ -7,7 +7,6 @@ import com.mcgillmart.McGillMart.dto.ItemRequestDTO;
 import com.mcgillmart.McGillMart.dto.ItemResponseDTO;
 import com.mcgillmart.McGillMart.dto.ReviewRequestDTO;
 import com.mcgillmart.McGillMart.dto.ReviewResponseDTO;
-import com.mcgillmart.McGillMart.dto.UserRequestDTO;
 import com.mcgillmart.McGillMart.model.Item;
 import com.mcgillmart.McGillMart.model.Review;
 import com.mcgillmart.McGillMart.services.ItemService;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -97,14 +95,13 @@ public class ItemController {
     //--------------------------// Add Review to Item //--------------------------//
     @PostMapping(value = {"/items/{id}/reviews", "/items/{id}/reviews/"})
     public ResponseEntity<ReviewResponseDTO> addReviewToItem(
-            @PathVariable Integer id, 
-            @RequestBody UserRequestDTO user,
+            @PathVariable Integer id,
             @RequestBody ReviewRequestDTO review) {
         try {
             ItemResponseDTO item = new ItemResponseDTO(itemService.findItemById(id));
             Review newReview = 
                 reviewService.addReview(
-                    user.getEmail(), user.getPhoneNumber(), user.getPassword(), 
+                    review.getEmail(), review.getPhoneNumber(), review.getPassword(), 
                     item.getName(), review.getRating(), review.getComment());
             return new ResponseEntity<ReviewResponseDTO>(new ReviewResponseDTO(newReview), HttpStatus.ACCEPTED);
         } catch (IllegalArgumentException e) {
