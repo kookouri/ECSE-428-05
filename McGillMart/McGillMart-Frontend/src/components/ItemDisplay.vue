@@ -173,6 +173,25 @@ export default {
 </script>
 
 <style scoped>
+.search-bar {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.search-input {
+  width: 60%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #fc0339;
+  box-shadow: 0 0 5px rgba(252, 3, 57, 0.5);
+}
+
 .items {
   padding: 20px;
 }
