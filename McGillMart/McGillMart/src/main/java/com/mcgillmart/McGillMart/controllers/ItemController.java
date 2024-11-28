@@ -110,7 +110,7 @@ public class ItemController {
     }
 
     //--------------------------// Get Reviews for Item //--------------------------//
-    @GetMapping(value = {"/items/{id}/reviews"})
+    @GetMapping(value = {"/items/{id}/reviews", "/items/{id}/reviews/"})
     public ResponseEntity<List<ReviewResponseDTO>> getReviewsForItem(@PathVariable Integer id) {
         try {
             ItemResponseDTO item = new ItemResponseDTO(itemService.findItemById(id));

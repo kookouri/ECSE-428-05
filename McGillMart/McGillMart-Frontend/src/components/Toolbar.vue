@@ -18,6 +18,11 @@
                 >Sign Up</router-link
               >
             </li>
+            <li class="nav-item">
+              <router-link to="/" class="nav-link"
+                >Home</router-link
+              >
+            </li>
             <li v-if="isLoggedIn" class="nav-item">
               <div v-if="isLoggedIn" class="nav-item dropdown">
                 <a
