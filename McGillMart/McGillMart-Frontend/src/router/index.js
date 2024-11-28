@@ -7,6 +7,7 @@ import SignIn from '@/components/SignIn'
 import Registration from '@/components/Registration'
 import ViewCart from '@/components/ViewCart'
 import OrderHistory from '@/components/OrderHistory.vue'
+import EditProfile from '@/components/EditProfile.vue'
 import Settings from '@/components/Settings'
 import Review from '@/components/Review'
 
@@ -31,7 +32,7 @@ export default new Router({
       component: Registration,
     },
     {
-      path: '/my-profile',
+      path: '/profile/view',
       name: 'View Profile',
       component: ViewProfile,
     },
@@ -41,15 +42,21 @@ export default new Router({
       component: ViewCart,
     },
     {
-      path: '/profile/orderHistory',
+      path: '/profile/order_history',
       name: 'Order History',
       component: OrderHistory,
+    },
+    {
+
+      path: '/profile/edit',
+      name: 'Edit Profile',
+      component: EditProfile,
     },
     {
       path: '/review',
       name: 'Review',
       component: Review,
-    },
+    }
   ]
 })
 
