@@ -18,6 +18,11 @@
                 >Sign Up</router-link
               >
             </li>
+            <li class="nav-item">
+              <router-link to="/" class="nav-link"
+                >Home</router-link
+              >
+            </li>
             <li v-if="isLoggedIn" class="nav-item">
               <div v-if="isLoggedIn" class="nav-item dropdown">
                 <a
@@ -70,7 +75,6 @@ export default {
     return {
       mounted: false,
       isLoggedIn: false,
-      searchQuery: "",
     };
   },
   mounted() {
@@ -91,9 +95,6 @@ export default {
       this.$cookies.remove("username");
       this.$cookies.remove("password");
       this.$router.push("/");
-    },
-    onSearch() {
-      this.$emit("search-items", this.searchQuery);
     },
   },
 };

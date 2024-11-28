@@ -8,6 +8,8 @@ import Registration from '@/components/Registration'
 import ViewCart from '@/components/ViewCart'
 import OrderHistory from '@/components/OrderHistory.vue'
 import EditProfile from '@/components/EditProfile.vue'
+import Settings from '@/components/Settings'
+import Review from '@/components/Review'
 
 Vue.use(Router);
 Vue.use(VueCookies);
@@ -37,7 +39,7 @@ export default new Router({
     {
       path: '/my-cart',
       name: 'View Cart',
-      component: ViewCart
+      component: ViewCart,
     },
     {
       path: '/profile/order_history',
@@ -45,9 +47,15 @@ export default new Router({
       component: OrderHistory,
     },
     {
+
       path: '/profile/edit',
       name: 'Edit Profile',
       component: EditProfile,
+    },
+    {
+      path: '/review',
+      name: 'Review',
+      component: Review,
     }
   ]
 })

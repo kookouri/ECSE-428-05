@@ -7,7 +7,6 @@ import com.mcgillmart.McGillMart.dto.ItemRequestDTO;
 import com.mcgillmart.McGillMart.dto.ItemResponseDTO;
 import com.mcgillmart.McGillMart.dto.ReviewRequestDTO;
 import com.mcgillmart.McGillMart.dto.ReviewResponseDTO;
-import com.mcgillmart.McGillMart.dto.UserRequestDTO;
 import com.mcgillmart.McGillMart.model.Item;
 import com.mcgillmart.McGillMart.model.Review;
 import com.mcgillmart.McGillMart.services.ItemService;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -95,16 +93,16 @@ public class ItemController {
     }
 
     //--------------------------// Add Review to Item //--------------------------//
-    @PostMapping(value = {"/items/{itemName}/reviews", "/items/{itemName}/reviews/"})
+    @PostMapping(value = {"/items/{id}/reviews", "/items/{id}/reviews/"})
     public ResponseEntity<ReviewResponseDTO> addReviewToItem(
-            @PathVariable String itemName, 
-            @RequestParam UserRequestDTO user,
-            @RequestParam ReviewRequestDTO review) {
+            @PathVariable Integer id,
+            @RequestBody ReviewRequestDTO review) {
         try {
+            ItemResponseDTO item = new ItemResponseDTO(itemService.findItemById(id));
             Review newReview = 
                 reviewService.addReview(
-                    user.getEmail(), user.getPhoneNumber(), user.getPassword(), 
-                    review.getItemName(), review.getRating(), review.getComment());
+                    review.getEmail(), review.getPhoneNumber(), review.getPassword(), 
+                    item.getName(), review.getRating(), review.getComment());
             return new ResponseEntity<ReviewResponseDTO>(new ReviewResponseDTO(newReview), HttpStatus.ACCEPTED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<ReviewResponseDTO>(new ReviewResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -112,12 +110,13 @@ public class ItemController {
     }
 
     //--------------------------// Get Reviews for Item //--------------------------//
-    @GetMapping(value = {"/items/{itemName}/reviews"})
-    public ResponseEntity<List<ReviewResponseDTO>> getReviewsForItem(@PathVariable String itemName) {
+    @GetMapping(value = {"/items/{id}/reviews", "/items/{id}/reviews/"})
+    public ResponseEntity<List<ReviewResponseDTO>> getReviewsForItem(@PathVariable Integer id) {
         try {
-            List<ReviewResponseDTO> reviews = reviewService.getReviewsForItem(itemName).stream()
+            ItemResponseDTO item = new ItemResponseDTO(itemService.findItemById(id));
+            List<ReviewResponseDTO> reviews = reviewService.getReviewsForItem(item.getName()).stream()
                     .map(ReviewResponseDTO::new).collect(Collectors.toList());
-            return new ResponseEntity<>(reviews, HttpStatus.FOUND);
+            return new ResponseEntity<>(reviews, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

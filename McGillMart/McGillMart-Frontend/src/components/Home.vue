@@ -1,25 +1,13 @@
 <template>
   <div id="home"> 
-    <Toolbar @search-items="searchItems" />
+    <Toolbar />
     <Title />
-    <ItemDisplay :searchQuery="searchQuery" />
+    <ItemDisplay/>
     <Footer />
   </div>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      searchQuery: '',
-    };
-  },
-  methods: {
-    searchItems(query) {
-      this.searchQuery = query;
-    },
-  },
-};
 </script>
 
 <style scoped>

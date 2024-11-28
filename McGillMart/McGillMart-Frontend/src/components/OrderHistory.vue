@@ -1,16 +1,25 @@
-<template>
+<template> 
     <div>
         <toolbar/>
         <div id="order-history-component">
+            <!-- User Name -->
             <h2 style="margin-top: 10%; color: #fc0339">NAME: {{ this.$cookies.get('name') }}</h2>
+            
+            <!-- Review Item Link -->
+            <a href="#/review" class="review-link">Review Item</a>
+            
             <hr/>
+            
+            <!-- Profile Toolbar -->
             <div id="profile-toolbar">
                 <ul class="profile-toolbar-list">
                     <li><a href="#/profile/view">View</a></li>
-                    <li><a href="#/profile/edit">Edit</a></li>
-                    <li class="active"><a  class="active" href="#/profile/order_history">Order History</a></li>
+                    <li><a href="">Edit</a></li>
+                    <li class="active"><a class="active" href="#/profile/orderHistory">Order History</a></li>
                 </ul>
             </div>
+            
+            <!-- Transactions Container -->
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 mb-4" 
@@ -43,12 +52,12 @@ export default {
         };
     },
     mounted() {
-        // Fetch accounts data when the component is created
+        // Fetch transactions data when the component is created
         this.fetchTransactions();
     },
     methods: {
         fetchTransactions() {
-            fetch(backendUrl + `/users/${this.$cookies.get('id')}/transactions`, {
+            fetch(`${backendUrl}/users/${this.$cookies.get('id')}/transactions`, {
                 method: 'GET',
                 redirect: 'manual' // Prevents automatic following of redirects
             })
@@ -62,11 +71,11 @@ export default {
                         console.error("Redirection location is missing.");
                     }
                 } else {
-                    
                     return response.json(); // Handle regular response
                 }
             })
             .then(data => {
+                console.log("WHAT IS TRANSACTIONS:", data.transactions);
                 this.transactions = data.transactions; // Assuming the API returns an array of transactions
             })
             .catch(error => {
@@ -76,7 +85,6 @@ export default {
     }
 };
 </script>
-
 
 <style scoped>
 
@@ -134,11 +142,31 @@ p {
 }
 
 #order-history-component {
+    position: relative; /* To position the link absolutely within this container */
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     width: 100%;
+}
+
+/* Styling for the Review Item Link */
+.review-link {
+    position: absolute;
+    top: 20px; /* Adjust vertical position as needed */
+    right: 20px; /* Adjust horizontal position as needed */
+    background-color: #fc0339;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.review-link:hover {
+    background-color: #e60030; /* Darker shade on hover */
 }
 
 hr {
