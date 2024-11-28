@@ -217,7 +217,7 @@ public class UserServiceTest {
         });
 
         assertNotNull(e);
-        assertEquals("There is no user with ID 999.", e.getMessage());
+        assertEquals("There is no user with ID 999", e.getMessage());
     }
 
     @Test

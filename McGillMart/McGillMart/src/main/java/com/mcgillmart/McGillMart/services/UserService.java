@@ -51,9 +51,9 @@ public class UserService {
         try {
             user = findUserById(id);
             System.out.println("User found: " + user.getName());
-        } catch (NoSuchElementException e) {
+        } catch (IllegalArgumentException e) {
             System.err.println("Error: User not found with ID " + id);
-            throw new IllegalArgumentException("User not found with ID " + id, e);
+            throw new IllegalArgumentException("There is no user with ID " + id, e);
         } catch (Exception e) {
             System.err.println("An unexpected error occurred: " + e.getMessage());
             throw new RuntimeException("An unexpected error occurred", e);
