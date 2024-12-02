@@ -29,6 +29,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Debug directory structure
+        run: ls -R
+        working-directory: /home/runner/work/ECSE-428-05/ECSE-428-05/
+
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
