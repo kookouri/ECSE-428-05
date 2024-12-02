@@ -1,0 +1,53 @@
+name: Build and Test Spring Boot with PostgreSQL
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: sportcenter
+          POSTGRES_DB: mcgillmart
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Set up PostgreSQL environment variables
+        run: |
+          echo "SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/mcgillmart" >> $GITHUB_ENV
+          echo "SPRING_DATASOURCE_USERNAME=postgres" >> $GITHUB_ENV
+          echo "SPRING_DATASOURCE_PASSWORD=sportcenter" >> $GITHUB_ENV
+
+      - name: Run tests
+        run: ./gradlew clean test
